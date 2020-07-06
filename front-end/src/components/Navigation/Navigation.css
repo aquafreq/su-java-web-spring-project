@@ -1,0 +1,13 @@
+div.nav {
+    font-family: fantasy;
+    font-size: xx-large;
+    padding: 10px 25px;
+    margin-left: 52%;
+}
+
+div.nav > a > strong {
+    border: solid hsl(315, 89%, 18%) ;
+    padding: 0 20px;
+    text-shadow: blueviolet;
+    font-style: italic;
+}

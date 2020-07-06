@@ -1,7 +1,9 @@
 package com.example.english.service;
 
-import com.example.english.domain.model.ServiceModelWord;
+import com.example.english.data.entity.Word;
+import com.example.english.data.model.ServiceModelWord;
+import com.example.english.data.model.binding.WordBindingModel;
 
 public interface WordService {
-    void addWord(ServiceModelWord word);
+    Word create(WordBindingModel word);
 }
