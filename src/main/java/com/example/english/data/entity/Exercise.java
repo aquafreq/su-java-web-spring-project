@@ -5,8 +5,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -14,6 +15,14 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "exercises")
 public class Exercise extends BaseEntity{
-    private String answer;
-    private String question;
+
+    @ElementCollection
+    private Collection<String> questions = new ArrayList<>();
+
+    @ElementCollection
+    private Collection<String> answers = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private GrammarCategory category;
 }

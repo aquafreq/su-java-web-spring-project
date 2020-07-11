@@ -39,7 +39,7 @@ public class User extends BaseEntity implements UserDetails {
 
     //list of comments and likes maybe?
 
-    @OneToMany(orphanRemoval = true)
+    @OneToMany(orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     @MapKey(name = "name")
     private Map<String, CategoryWithWords> categoryWithWords = new LinkedHashMap<>();
@@ -51,7 +51,6 @@ public class User extends BaseEntity implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Set<Role> authorities = new HashSet<>();
 
-    @Transient
     private boolean isEnabled = true;
     @Transient
     private boolean isAccountNonExpired = true;
@@ -63,6 +62,12 @@ public class User extends BaseEntity implements UserDetails {
     public User(String username, String password) {
         setUsername(username);
         setPassword(password);
+    }
+
+    public User(String username, String password, String email) {
+        setUsername(username);
+        setPassword(password);
+        setEmail(email);
     }
 
 //    @Override

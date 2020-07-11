@@ -8,5 +8,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 public class RoleServiceModel {
+    private String id;
     private String authority;
 }

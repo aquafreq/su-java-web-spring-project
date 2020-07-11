@@ -1,21 +1,16 @@
 import React, {useState} from 'react';
-import {MDBBtn} from "mdbreact";
+import {MDBAlert, MDBBtn} from "mdbreact";
 
-import userService from "../../services/UserService";
-
-const Register = () => {
+const Register = ({register}) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
-
-    const registerHandler = () => {
-        userService.register(username,
-            password,
-            email);
-    }
+    const [error, setError] = useState('');
 
     return (
         <div>
+            <h1>Register</h1>
+            {error && <MDBAlert color="danger"> {error}</MDBAlert>}
             <form action="/register">
                 <div>
                     <label>Username:</label>
@@ -35,9 +30,19 @@ const Register = () => {
                            type="email" placeholder="Email"/>
                 </div>
             </form>
-            <MDBBtn onClick={registerHandler} gradient="purple">Purple</MDBBtn>
-            <MDBBtn onClick={registerHandler} gradient="peach">Peach</MDBBtn>
-            <MDBBtn onClick={registerHandler} gradient="aqua">Aqua</MDBBtn>
+            <MDBBtn onClick={async (e) => {
+                e.preventDefault()
+
+                const error = await register(username, password, email)
+
+                if (error) {
+                    setError(error.response.data)
+                    setUsername('')
+                    setPassword('')
+                    setEmail('')
+                }
+            }
+            } gradient="purple">Purple</MDBBtn>
         </div>
     );
 }

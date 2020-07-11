@@ -1,0 +1,20 @@
+.Nav {
+    font-family: fantasy;
+    font-size: 240%;
+    padding: 0 25px;
+    margin-left: auto;
+    float: right;
+}
+
+.Nav > a > strong {
+    border: solid hsl(315, 89%, 18%) thick;
+    padding: 0 20px;
+    text-shadow: blueviolet;
+    font-style: italic;
+}
+
+.AdminNav {
+    float: left;
+}
+
+

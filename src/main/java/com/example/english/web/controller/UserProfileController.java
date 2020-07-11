@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
-@RequestMapping("api/users")
+@RequestMapping("/users")
 @RequiredArgsConstructor
-public class UserController {
+public class UserProfileController {
     private final WordService wordService;
     private final UserService userService;
     private final ModelMapper modelMapper;
@@ -31,4 +31,9 @@ public class UserController {
                 created(builder.path("/api/users/create-word")
                         .buildAndExpand(register.getId()).toUri()).build();
     }
+
+    //todo : getProfile
+    //
+
+
 }

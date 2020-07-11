@@ -1,0 +1,54 @@
+.Body {
+    background: rgb(2, 0, 36);
+    background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(138, 7, 147, 1) 35%, rgba(0, 212, 255, 1) 100%);
+    font-size: 24px;
+    font-family: "Font Awesome\ 5 Free", sans-serif;
+    /*width: auto;*/
+    /*height: auto;*/
+    margin-bottom: auto;
+    padding-bottom: inherit;
+
+}
+
+.Body input, .Body textarea {
+    margin: auto;
+    width: 50%;
+}
+
+.AddCategory {
+    width: 50%;
+    padding-left: 9%;
+    margin-top: 5%;
+    display: inline-block;
+    text-align: center;
+}
+
+.ChooseCategory {
+    width: 50%;
+    float: right;
+    display: inline-block;
+    text-align: center;
+    /*padding: 50px 80px;*/
+}
+
+.ChooseCategory select {
+    font-size: medium;
+}
+
+.ChooseCategory > div {
+    margin: 14%;
+    width: auto;
+    height: auto;
+}
+
+.AddExercise {
+    margin-top: 5%;
+    padding-bottom: 5%;
+    display: inline-flex;
+    width: 90%;
+    margin-inline-start: 17px;
+}
+
+.Row {
+    margin-left: fill;
+}

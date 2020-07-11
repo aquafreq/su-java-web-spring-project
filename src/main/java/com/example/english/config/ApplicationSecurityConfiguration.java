@@ -47,9 +47,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))
                 .addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/api/auth/login", "/api/auth/register").permitAll()
-                .anyRequest().authenticated();
-
+                .antMatchers("/api/auth/**").permitAll();
 
     }
 

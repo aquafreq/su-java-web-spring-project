@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
-        setFilterProcessesUrl("/**");
+        setFilterProcessesUrl("api/auth/login");
     }
 
     @Override
@@ -71,27 +72,10 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .signWith(Keys.hmacShaKeyFor(SECRET.getBytes()), SignatureAlgorithm.HS256)
                 .compact();
 
-        UserResponseModel map = new UserResponseModel(
-                user.getId(),
-                user.getUsername(),
-                user.getAuthorities()
-                        .stream()
-                        .map(Role::getAuthority)
-                        .collect(Collectors.toList())
-        );
-
-        String s = map.toString();
-
-        Cookie cookie = new Cookie("user", s);
-        cookie.setPath("/");
-        cookie.setHttpOnly(false);
-        Cookie cookie1 = (Cookie) cookie.clone();
-        cookie1.setPath("/");
-        cookie1.setHttpOnly(false);
-
-        res.addCookie(cookie);
-        cookie1.setDomain("");
-        res.addCookie(cookie1);
+        logger.info(token);
+        logger.info(user);
+//        String responseModelString = map.toString();
+//        res.addHeader("user", responseModelString);
         res.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
 //        chain.doFilter(req,res);
     }

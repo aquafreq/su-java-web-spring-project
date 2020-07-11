@@ -2,6 +2,7 @@ package com.example.english.web.filter;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 
 import static com.example.english.constants.SecurityConstants.*;
 
+@Slf4j
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
@@ -61,6 +63,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                                 authorities);
             }
         }
+        logger.info(usernamePasswordAuthenticationToken);
 
         return usernamePasswordAuthenticationToken;
     }

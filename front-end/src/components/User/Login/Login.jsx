@@ -1,18 +1,16 @@
 import React, {useState} from 'react';
-import {FormControl, InputLabel, Input, FormGroup, Button, FilledInput} from '@material-ui/core';
 
-const Login = ({login, props}) => {
+import {FormControl, InputLabel, Input, FormGroup, Button, FilledInput} from '@material-ui/core';
+import {MDBAlert} from "mdbreact";
+
+const Login = ({login}) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-
-    // function handleSubmit() {
-    //     return () => {
-    //         userService.login(username, password);
-    //     };
-    // }
+    const [error, setError] = useState('');
 
     return (
         <>
+            {error && <MDBAlert color="danger"> {error}</MDBAlert>}
             <form action="/login" method="post">
                 <FormControl>
                     <h5>Login</h5>
@@ -28,7 +26,15 @@ const Login = ({login, props}) => {
                                value={password} onChange={(ev) => setPassword(ev.target.value)}
                         />
                     </FormControl>
-                    <Button onClick={() => login(username, password)}>Login</Button>
+                    <Button onClick={async (e) => {
+                        e.preventDefault();
+                        if (await login(username, password)) {
+                            setError('Incorrect username or password')
+                            setUsername('')
+                            setPassword('')
+                        }
+                    }
+                    }>Login</Button>
                 </FormControl>
             </form>
         </>
