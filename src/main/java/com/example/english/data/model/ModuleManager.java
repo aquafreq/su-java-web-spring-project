@@ -1,14 +1,14 @@
 package com.example.english.data.model;
 
 import com.example.english.data.entity.Word;
-import com.example.english.data.entity.CategoryWithWords;
+import com.example.english.data.entity.WordCategory;
 
 import java.util.*;
 
 public class ModuleManager {
-    private Map<Integer, CategoryWithWords> modules;
+    private Map<Integer, WordCategory> modules;
 
-    public ModuleManager(List<CategoryWithWords> modules) {
+    public ModuleManager(List<WordCategory> modules) {
         this.modules = new HashMap<>();
         setModules(modules);
     }
@@ -16,24 +16,24 @@ public class ModuleManager {
     public ModuleManager() {
     }
 
-    public Map<Integer, CategoryWithWords> getModules() {
+    public Map<Integer, WordCategory> getModules() {
         return modules;
     }
 
-    public void setModules(Map<Integer, CategoryWithWords> modules) {
+    public void setModules(Map<Integer, WordCategory> modules) {
         this.modules = modules;
     }
 
-    public void setModules(List<CategoryWithWords> modules) {
+    public void setModules(List<WordCategory> modules) {
         int[] count = {0};
         modules.forEach(m -> this.modules.putIfAbsent(count[0]++, m));
     }
 
-    public CategoryWithWords chooseModule(int moduleNumber) {
+    public WordCategory chooseModule(int moduleNumber) {
         return this.modules.get(moduleNumber);
     }
 
-    public Collection<CategoryWithWords> selectAllModules() {
+    public Collection<WordCategory> selectAllModules() {
         return this.modules.values();
     }
 

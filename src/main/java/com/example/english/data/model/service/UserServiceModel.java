@@ -19,7 +19,7 @@ public class UserServiceModel{
     private String username;
     @NonNull
     private String password;
-    private boolean isEnabled;
+    private boolean isEnabled = true;
     @NonNull
     private String email;
 

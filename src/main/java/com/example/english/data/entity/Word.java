@@ -1,5 +1,6 @@
 package com.example.english.data.entity;
 
+import com.example.english.data.model.Game;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,26 +17,18 @@ public class Word extends BaseEntity {
     private String name;
     private String definition;
     private boolean guessed;
+    @ManyToOne
+    @JoinColumn(name = "game_id")
+    private Game Game;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "category_id")
-    private CategoryWithWords categoryWithWords;
-
-    public Word(CategoryWithWords categoryWithWords, String wordName, String definition) {
-        this.name = wordName;
-        this.categoryWithWords = categoryWithWords;
-        this.definition = definition;
-    }
-
-    public Word(String name, String definition) {
-        setName(name);
-        setDefinition(definition);
-    }
+    private WordCategory wordCategory;
 
     @Override
     public String toString() {
-        return "From module: " + categoryWithWords.getName() + "-> Word: " + this.getName();
+        return "From module: " + wordCategory.getName() + "-> Word: " + this.getName();
     }
 
     public boolean testAnswer(String word, String type) {

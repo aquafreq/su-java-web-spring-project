@@ -2,10 +2,12 @@ import axios from 'axios'
 
 export default {
     fetchCategories: () => {
-        return axios.get('/content/all/categories')
+        return axios.get('/api/content/category/all')
     },
-    addCategory: (category) => {
-        return axios.post('/content/create/category', {name: category})
+    createCategory: (category) => {
+        return axios.post('/api/content/category/create', {name: category})
+    },
+    createExercise: (exercise) => {
+        return axios.post('/api/content/exercise/create', {name: exercise})
     }
-
 }

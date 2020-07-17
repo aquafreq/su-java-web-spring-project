@@ -56,6 +56,8 @@ public class ApplicationInit implements CommandLineRunner {
     private static List<UserServiceModel> users() {
         return List.of(
                 new UserServiceModel("fizz", "fizz", "fizz@fizz.fizz"),
+                new UserServiceModel("fizz2", "fizz", "fizz22@fizz.fizz"),
+                new UserServiceModel("fizz22", "fizz", "fizz222@fizz.fizz"),
                 new UserServiceModel("wow", "wow", "wow@wow.wow"),
                 new UserServiceModel("zxc", "zxc", "zxc@zxc.zxc")
         );

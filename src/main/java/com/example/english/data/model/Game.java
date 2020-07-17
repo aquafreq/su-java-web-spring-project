@@ -1,7 +1,7 @@
 package com.example.english.data.model;
 
 import com.example.english.data.entity.Word;
-import com.example.english.data.entity.CategoryWithWords;
+import com.example.english.data.entity.WordCategory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -127,7 +127,7 @@ public class Game {
         play();
     }
 
-    public void startAGameWithASingleModule(CategoryWithWords module, String gameType) {
+    public void startAGameWithASingleModule(WordCategory module, String gameType) {
         if (module == null || module.getWordsCount()== 0) {
             System.out.println("Select another module, this one has no words." + System.lineSeparator() +
                     "Choose all or a module number:");
@@ -165,7 +165,7 @@ public class Game {
             this.startGameWithAllModules(gameType);
         } else {
             System.out.println("Module " + moduleType + " is chosen");
-            CategoryWithWords module = moduleManager.chooseModule(Integer.parseInt(moduleType) - 1);
+            WordCategory module = moduleManager.chooseModule(Integer.parseInt(moduleType) - 1);
             this.startAGameWithASingleModule(module, gameType);
         }
     }

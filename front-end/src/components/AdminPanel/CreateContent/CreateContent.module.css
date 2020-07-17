@@ -6,8 +6,7 @@
     /*width: auto;*/
     /*height: auto;*/
     margin-bottom: auto;
-    padding-bottom: inherit;
-
+    padding: 8px 0;
 }
 
 .Body input, .Body textarea {
@@ -16,16 +15,18 @@
 }
 
 .AddCategory {
-    width: 50%;
-    padding-left: 9%;
+    width: 45%;
+    /*padding-left: 9%;*/
     margin-top: 5%;
     display: inline-block;
     text-align: center;
 }
 
 .ChooseCategory {
-    width: 50%;
+    width: 45%;
     float: right;
+    margin-right: 0;
+    margin-top: 5%;
     display: inline-block;
     text-align: center;
     /*padding: 50px 80px;*/
@@ -36,7 +37,7 @@
 }
 
 .ChooseCategory > div {
-    margin: 14%;
+    margin: 8%;
     width: auto;
     height: auto;
 }
@@ -51,4 +52,8 @@
 
 .Row {
     margin-left: fill;
+}
+
+.AddCategory {
+    position: inherit;
 }

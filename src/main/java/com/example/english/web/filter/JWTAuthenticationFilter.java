@@ -13,10 +13,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -35,7 +38,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
-        setFilterProcessesUrl("api/auth/login");
+        setFilterProcessesUrl("/auth/login");
     }
 
     @Override
@@ -52,6 +55,10 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
             return authenticationManager.authenticate(usernamePasswordAuthenticationToken);
         } catch (IOException ignored) {
+            return null;
+        } catch (DisabledException ex) {
+            res.setStatus(401);
+            res.setHeader("error", ex.getMessage());
             return null;
         }
     }
@@ -74,9 +81,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         logger.info(token);
         logger.info(user);
-//        String responseModelString = map.toString();
-//        res.addHeader("user", responseModelString);
+
         res.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
-//        chain.doFilter(req,res);
     }
 }

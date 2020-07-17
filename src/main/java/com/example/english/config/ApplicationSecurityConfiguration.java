@@ -1,126 +1,73 @@
 package com.example.english.config;
 
+import com.example.english.service.UserService;
 import com.example.english.web.filter.JWTAuthenticationFilter;
 import com.example.english.web.filter.JWTAuthorizationFilter;
+import com.example.english.web.filter.CsrfTokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 
-//@Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
+//@PropertySource("classpath:application.properties")
 public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    private final UserDetailsService userDetailsService;
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf().disable()
-                .cors()
-                .configurationSource(corsConfigurationSource())
+                .cors().configurationSource(corsConfigurationSource())
                 .and()
-//                .csrf()
-//                .csrfTokenRepository(csrfTokenRepository())
-//                .disable()
+//                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 //                .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
-                .addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/api/auth/**").permitAll();
-
-    }
-
-    //disable so postman can send requests
-    @Bean
-    CsrfTokenRepository csrfTokenRepository() {
-        HttpSessionCsrfTokenRepository repository =
-                new HttpSessionCsrfTokenRepository();
-        repository.setSessionAttributeName("_csrf");
-        return repository;
-    }
-
-
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH");
+                .antMatchers("/api/auth/**").permitAll()
+                .and()
+//                .addFilterAt(new CsrfTokenFilter(), JWTAuthenticationFilter.class)
+                .addFilterAfter(new JWTAuthenticationFilter(authenticationManager()), CsrfFilter.class)
+                .addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.applyPermitDefaultValues();
+        corsConfiguration.addAllowedMethod(HttpMethod.PATCH);
+        corsConfiguration.addAllowedMethod(HttpMethod.DELETE);
+        corsConfiguration.setAllowCredentials(true);
+//        corsConfiguration.addExposedHeader(
+//                "Authorization, x-xsrf-token, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, "
+//                        + "Content-Type, Access-Control-Request-Method, Custom-Filter-Header");
+
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**",
-                new CorsConfiguration().applyPermitDefaultValues());
+        source.registerCorsConfiguration("/**", corsConfiguration);
         return source;
     }
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+        auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
     }
 }
-
-//@Configuration
-//@EnableWebSecurity
-//public class SpringSecurityConfigurationBasicAuth extends WebSecurityConfigurerAdapter {
-//
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        //        http
-////                .csrf().disable()
-////                .authorizeRequests()
-////                .antMatchers(HttpMethod.OPTIONS,"/**").permitAll()
-////                .anyRequest().authenticated()
-////                .and()
-////                //.formLogin().and()
-////                .httpBasic();
-//
-//        http
-//                .csrf()
-//                .csrfTokenRepository(csrfTokenRepository())
-//            .and()
-//                .authorizeRequests()
-//                .antMatchers("/css/*").permitAll()
-//                .antMatchers("/login", "/register").anonymous()
-//                .antMatchers("/admin/**").hasAuthority("ADMIN")
-//                .anyRequest().authenticated()
-//            .and()
-//                .formLogin()
-//                .loginPage("/login")
-//                .usernameParameter("username")
-//                .passwordParameter("password")
-//                .defaultSuccessUrl("/")
-//            .and()
-//                .logout();
-//    }
-//
-//    private CsrfTokenRepository csrfTokenRepository() {
-//        HttpSessionCsrfTokenRepository repository =
-//                new HttpSessionCsrfTokenRepository();
-//        repository.setSessionAttributeName("_csrf");
-//        return repository;
-//    }
-//
-//}
-//
-//

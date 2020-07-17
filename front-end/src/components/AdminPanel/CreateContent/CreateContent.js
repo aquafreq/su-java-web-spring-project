@@ -24,7 +24,7 @@ export default function CreateContent() {
         e.preventDefault()
 
         const value = inputRef.current.value;
-        contentService.addCategory(value)
+        contentService.createCategory(value)
             .then(() => alert('category ' + value + ' sent successful'))
             .then(() => setIsSent(true))
         inputRef.current.value = ''

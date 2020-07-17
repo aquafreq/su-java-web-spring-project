@@ -1,6 +1,5 @@
 package com.example.english.data.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -42,7 +41,7 @@ public class User extends BaseEntity implements UserDetails {
     @OneToMany(orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     @MapKey(name = "name")
-    private Map<String, CategoryWithWords> categoryWithWords = new LinkedHashMap<>();
+    private Map<String, WordCategory> categoryWithWords = new LinkedHashMap<>();
 
     @ToString.Exclude
     @ManyToMany(fetch = FetchType.EAGER)

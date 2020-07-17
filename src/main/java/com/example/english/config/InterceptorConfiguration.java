@@ -8,17 +8,17 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@Configuration
+//@Configuration
 public class InterceptorConfiguration implements WebMvcConfigurer {
-    private final JwtInterceptor jwtInterceptor;
+//    private final JwtInterceptor jwtInterceptor;
 
-    public InterceptorConfiguration(JwtInterceptor jwtInterceptor) {
-        this.jwtInterceptor = jwtInterceptor;
-    }
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(jwtInterceptor)
-                .addPathPatterns("/api/auth/login");
-    }
+//    public InterceptorConfiguration(JwtInterceptor jwtInterceptor) {
+//        this.jwtInterceptor = jwtInterceptor;
+//    }
+//
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(jwtInterceptor)
+//                .addPathPatterns("/api/auth/login");
+//    }
 }

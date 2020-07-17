@@ -2,17 +2,11 @@ import React from 'react'
 import {MDBBtn} from "mdbreact";
 
 const Home = () => {
-    const styles = {
-        border: 'dotted red'
-    }
-    const pStyles = {
-        color: '#6a1b9a',
-    }
 
     return (
-        <div style={styles}>
+        <div style={{display: 'inline-grid'}}>
             <h1>Hello, its the home page</h1>
-            <p styles={pStyles}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor facere error, quas
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor facere error, quas
                 placeat inventore est molestiae cupiditate voluptatem optio sit saepe aliquid dignissimos doloribus iste
                 quo quod asperiores obcaecati illum.
                 Pariatur, facilis obcaecati. Laborum reprehenderit sunt quo! Eveniet reprehenderit velit possimus

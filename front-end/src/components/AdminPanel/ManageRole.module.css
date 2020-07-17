@@ -1,0 +1,123 @@
+tbody tr:hover {
+    background-color: lawngreen;
+    font-weight: bolder;
+    font-style: italic;
+    font-size: 50px;
+}
+
+@media screen and (max-width: 850px) {
+    .container {
+        min-width: 300px;
+
+    }
+}
+
+@media screen and (max-width: 350px) {
+    .container {
+        min-width: 100px;
+    }
+
+    .table {
+        background-color: red;
+    }
+}
+
+.container {
+    background-color: lightcyan;
+    width: auto;
+    text-align: center;
+    overflow-x: auto;
+    margin: 20px 20px;
+
+    table-layout: fixed;
+    color: indigo;
+}
+
+.table {
+    border: dashed 3px purple;
+    border-collapse: collapse;
+    border-spacing: 28px;
+}
+
+th, td {
+    vertical-align: middle;
+    border: solid 3px rebeccapurple;
+    height: 50px;
+    border-bottom: 1mm dotted darkblue;
+}
+
+tr > td {
+    font-size: 16px;
+}
+
+.table td {
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.tableHead tr {
+    background-color: mediumspringgreen;
+}
+
+
+.tableHead th {
+    color: black;
+    font-size: 30px;
+    font-family: "Font Awesome\ 5 Free", sans-serif;
+    padding: 0 1%;
+}
+
+tr:nth-child(even) {
+    background-color: lightsteelblue;
+}
+
+.user {
+    background-color: chartreuse;
+}
+
+.user-roles {
+    background-color: red;
+}
+
+.roles-to-manage {
+    background-color: purple;
+}
+
+.disable > button, .enable > button {
+    border-radius: 16px;
+    padding: 8px 18px;
+    font-size: 18px;
+    transition-duration: 0.4s;
+}
+
+.disable > button, .enable > button {
+    color: white;
+}
+
+.disable > button {
+    background-color: red;
+}
+
+
+.enable > button {
+    background-color: green;
+}
+
+.disable > button:hover,
+.enable > button:hover {
+    cursor: pointer;
+    font-weight: 800;
+    border: solid 3px black;
+    box-shadow: 3px 3px #888888;
+}
+
+.role > button:hover {
+    cursor: pointer;
+    background-color: lightgreen;
+}
+
+.role > button {
+    margin: 2px 1px 2px 1px;
+}
+
+

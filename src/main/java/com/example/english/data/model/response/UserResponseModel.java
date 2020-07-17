@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 public class UserResponseModel extends RepresentationModel<UserResponseModel> {
     private String id;
     private String username;
+    private String email;
     private boolean isEnabled;
     private List<RoleResponseModel> authorities;
 

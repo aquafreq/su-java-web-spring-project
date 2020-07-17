@@ -1,12 +1,9 @@
-import React from 'react';
+import React from 'react'
+import styles from './Footer.module.css'
 
-const styles = {
-    color: 'purple',
-    backgroundColor: "lightblue",
-    padding: "10px",
-    fontFamily: "Arial"
-}
-
-const Footer = () => (<div><footer style={styles}>top footer</footer></div>);
+const Footer = () => (
+    <div className={styles.footer}>
+        <footer>top footer</footer>
+    </div>);
 
 export default Footer;

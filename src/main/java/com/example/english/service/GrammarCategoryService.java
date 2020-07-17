@@ -17,4 +17,6 @@ public interface GrammarCategoryService {
     GrammarCategoryServiceModel getGrammarCategory(String name);
 
     Collection<GrammarCategoryServiceModel> getAll();
+
 }
+

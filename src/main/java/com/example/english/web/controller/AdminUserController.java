@@ -6,6 +6,7 @@ import com.example.english.data.model.service.RoleServiceModel;
 import com.example.english.service.RoleService;
 import com.example.english.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -23,48 +24,92 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
+@Slf4j
 public class AdminUserController {
     private final ModelMapper modelMapper;
     private final UserService userService;
     private final RoleService roleService;
 
-    @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
+    @PreAuthorize(value = "hasAnyRole('ADMIN','ROOT_ADMIN')")
     @PatchMapping("/user/{id}/add-role/{roleId}")
     public ResponseEntity<UserResponseModel> giveUserRole(@PathVariable String id, @PathVariable String roleId) {
 
         UserResponseModel userResponseModel =
                 modelMapper.map(userService.giveUserRole(id, roleId)
                         , UserResponseModel.class);
-
+        mapUserLinks(getAllRoleIds()).accept(userResponseModel);
         return ResponseEntity.ok(userResponseModel);
     }
 
-    @GetMapping("/user/{id}")
-    public ResponseEntity<UserResponseModel> getUser(@PathVariable String id) {
-        UserResponseModel responseModel =
-                modelMapper.map(userService.getUserById(id),
-                        UserResponseModel.class);
-
-        return ResponseEntity.ok(responseModel);
+    @PreAuthorize(value = "hasAnyRole('ADMIN','ROOT_ADMIN')")
+    @PatchMapping("/user/{id}/remove-role/{roleId}")
+    public ResponseEntity<UserResponseModel> removeUserRole(@PathVariable String id, @PathVariable String roleId) {
+        UserResponseModel userResponseModel = modelMapper.map(userService.removeUserRole(id, roleId),
+                UserResponseModel.class);
+        mapUserLinks(getAllRoleIds()).accept(userResponseModel);
+        return ResponseEntity.ok(userResponseModel);
     }
 
+    @PreAuthorize(value = "hasAnyRole('ADMIN','ROOT_ADMIN')")
     @GetMapping("/user/all")
     public CollectionModel<EntityModel<UserResponseModel>> getAllUsers() {
-        List<String> allRoles = roleService.getAllRoles()
-                .stream()
-                .map(RoleServiceModel::getId)
-                .collect(Collectors.toList());
+        List<String> allRoles = getAllRoleIds();
 
         List<UserResponseModel> userResponseModels = userService.getAllUsers()
                 .stream()
                 .map(x -> modelMapper.map(x, UserResponseModel.class))
-                .peek(mapLinks(allRoles))
+                .peek(mapUserLinks(allRoles))
                 .collect(Collectors.toList());
 
         return CollectionModel.wrap(userResponseModels);
     }
 
-    private Consumer<UserResponseModel> mapLinks(List<String> allRoles) {
+    @PreAuthorize(value = "hasAnyRole('ADMIN','ROOT_ADMIN')")
+    @GetMapping(value = "/user/roles", produces = "application/json")
+    public List<String> getUserRoles(String id) {
+        return userService.getUserRoles(id);
+    }
+
+    @PreAuthorize(value = "hasAnyRole('ADMIN','ROOT_ADMIN')")
+    @GetMapping(value = "/role/all", produces = "application/json")
+    public List<RoleResponseModel> getUserRoles() {
+        return roleService.getAllRoles()
+                .stream()
+                .map(r -> modelMapper.map(r, RoleResponseModel.class))
+                .collect(Collectors.toList());
+    }
+
+
+    @PreAuthorize(value = "hasAnyRole('ADMIN','ROOT_ADMIN')")
+    @PatchMapping("/user/disable/{id}")
+    public ResponseEntity<UserResponseModel> disableUser(@PathVariable String id) {
+        UserResponseModel userResponseModel = modelMapper.map(userService.forbidUser(id),
+                UserResponseModel.class);
+
+        return ResponseEntity.ok(userResponseModel);
+    }
+
+    @PreAuthorize(value = "hasAnyRole('ADMIN','ROOT_ADMIN')")
+    @PatchMapping("/user/permit/{id}")
+    public ResponseEntity<UserResponseModel> permitUser(@PathVariable String id) {
+        UserResponseModel userResponseModel = modelMapper.map(userService.permitUser(id),
+                UserResponseModel.class);
+
+        return ResponseEntity.ok(userResponseModel);
+    }
+
+    @PreAuthorize(value = "hasAnyRole('ADMIN','ROOT_ADMIN')")
+    @GetMapping(value = "/user/{id}", produces = "application/hal+json")
+    public ResponseEntity<UserResponseModel> getUser(@PathVariable String id) {
+        UserResponseModel responseModel =
+                modelMapper.map(userService.getUserById(id),
+                        UserResponseModel.class);
+
+        mapUserLinks(getAllRoleIds()).accept(responseModel);
+        return ResponseEntity.ok(responseModel);
+    }
+
+    private Consumer<UserResponseModel> mapUserLinks(List<String> allRoles) {
         return u -> {
             String id = u.getId();
 
@@ -102,35 +147,10 @@ public class AdminUserController {
         };
     }
 
-    @GetMapping("/user/roles")
-    public List<String> getUserRoles(String id) {
-        return userService.getUserRoles(id);
-    }
-
-    @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @PatchMapping("/user/{id}/remove-role/{roleId}")
-    public ResponseEntity<UserResponseModel> removeUserRole(@PathVariable String id, @PathVariable String roleId) {
-        UserResponseModel userResponseModel = modelMapper.map(userService.removeUserRole(roleId, id),
-                UserResponseModel.class);
-
-        return ResponseEntity.ok(userResponseModel);
-    }
-
-    @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @PatchMapping("/user/disable/{id}")
-    public ResponseEntity<UserResponseModel> disableUser(@PathVariable String id) {
-        UserResponseModel userResponseModel = modelMapper.map(userService.forbidUser(id),
-                UserResponseModel.class);
-
-        return ResponseEntity.ok(userResponseModel);
-    }
-
-    @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @PatchMapping("/user/permit/{id}")
-    public ResponseEntity<UserResponseModel> permitUser(@PathVariable String id) {
-        UserResponseModel userResponseModel = modelMapper.map(userService.permitUser(id),
-                UserResponseModel.class);
-
-        return ResponseEntity.ok(userResponseModel);
+    private List<String> getAllRoleIds() {
+        return roleService.getAllRoles()
+                .stream()
+                .map(RoleServiceModel::getId)
+                .collect(Collectors.toList());
     }
 }

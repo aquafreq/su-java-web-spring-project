@@ -1,0 +1,17 @@
+.SearchBar > section h5, input, select{
+    background-color: whitesmoke;
+    margin: 10px 4px;
+    display: inline-flex;
+}
+
+.SearchBar > section button {
+    border: solid 2px lightsteelblue;
+
+    opacity: 0.9;
+    transition: 0.3s;
+}
+
+.SearchBar > section button:hover {
+    box-shadow: 3px 3px mediumpurple;
+
+}

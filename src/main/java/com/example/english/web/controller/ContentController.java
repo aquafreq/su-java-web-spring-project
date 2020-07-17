@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -26,8 +27,8 @@ public class ContentController {
     private final ExerciseService exerciseService;
     private final ModelMapper modelMapper;
 
-//    @PreAuthorize(value = "hasRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
-    @PostMapping("/create/category")
+    @PreAuthorize(value = "hasAnyRole('ADMIN', 'MODERATOR')")
+    @PostMapping("/category/create")
     public ResponseEntity<GrammarCategoryResponseModel> createCategory(@RequestBody GrammarCategoryBindingModel grammarCategoryBindingModel, UriComponentsBuilder builder) {
         GrammarCategoryResponseModel categoryResponseModel =
                 modelMapper.map(grammarCategoryService.create(
@@ -38,8 +39,8 @@ public class ContentController {
         return created.body(categoryResponseModel);
     }
 
-//    @PreAuthorize(value = "hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR')")
-    @PostMapping("/create/exercise")
+    @PreAuthorize(value = "hasAnyRole('ADMIN','MODERATOR')")
+    @PostMapping("/exercise/create")
     public ResponseEntity<ExerciseResponseModel> createExercise(ExerciseBindingModel exerciseBindingModel, UriComponentsBuilder builder) {
         ExerciseServiceModel exerciseServiceModel = exerciseService
                 .create(modelMapper.map(exerciseBindingModel, ExerciseServiceModel.class));
@@ -52,8 +53,8 @@ public class ContentController {
     }
 
 
-//    @PreAuthorize(value = "hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR')")
-    @GetMapping("/all/categories")
+    @PreAuthorize(value = "hasAnyRole('ADMIN','MODERATOR')")
+    @GetMapping("/category/all")
     public ResponseEntity<List<GrammarCategoryResponseModel>> getAllGrammarCategories() {
         List<GrammarCategoryResponseModel> categoryResponseModelList =
                 grammarCategoryService.getAll()

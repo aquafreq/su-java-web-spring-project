@@ -3,7 +3,9 @@ package com.example.english.service.impl;
 import com.example.english.data.entity.Role;
 import com.example.english.data.entity.User;
 import com.example.english.data.model.response.UserResponseModel;
+import com.example.english.data.model.service.GameServiceModel;
 import com.example.english.data.model.service.RoleServiceModel;
+import com.example.english.data.model.service.UserProfileServiceModel;
 import com.example.english.data.model.service.UserServiceModel;
 import com.example.english.data.repository.UserRepository;
 import com.example.english.service.RoleService;
@@ -31,26 +33,20 @@ public class UserServiceImpl implements UserService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
-
-//        User user = userRepository.findByUsername(username);
-//        if (user == null) {
-//            throw new UsernameNotFoundException(username);
-//        }
-//        return new User(user.getUsername(), user.getPassword());
     }
 
-    @Override
-    public Optional<UserResponseModel> logUser(@RequestBody UserServiceModel user) {
-//        UserDetails byUsername = userRepository.getByUsername(user.getUsername());
-//        if (byUsername.getPassword().equals(user.getPassword())){
-//        }
-//        UserDetails userDetails = loadUserByUsername(user.getUsername());
-
-        Optional<User> byUsername = userRepository.findByUsername(user.getUsername());
-        User user1 = byUsername.orElseThrow();
-        UserResponseModel map = modelMapper.map(user1, UserResponseModel.class);
-        return Optional.of(map);
-    }
+//    @Override
+//    public Optional<UserResponseModel> logUser(@RequestBody UserServiceModel user) {
+////        UserDetails byUsername = userRepository.getByUsername(user.getUsername());
+////        if (byUsername.getPassword().equals(user.getPassword())){
+////        }
+////        UserDetails userDetails = loadUserByUsername(user.getUsername());
+//
+//        Optional<User> byUsername = userRepository.findByUsername(user.getUsername());
+//        User user1 = byUsername.orElseThrow();
+//        UserResponseModel map = modelMapper.map(user1, UserResponseModel.class);
+//        return Optional.of(map);
+//    }
 
     @Override
     public Optional<User> register(UserServiceModel userServiceModel) throws IllegalArgumentException {
@@ -70,7 +66,10 @@ public class UserServiceImpl implements UserService {
         user.getAuthorities().add(roleService.getRoleByName("ROLE_USER"));
 
         if (userRepository.count() == 0) {
-            user.getAuthorities().add(roleService.getRoleByName("ROLE_ADMIN"));
+            Arrays.asList(
+                    roleService.getRoleByName("ROLE_ADMIN"),
+                    roleService.getRoleByName("ROLE_ROOT_ADMIN")
+            ).forEach(r -> user.getAuthorities().add(r));
         }
 
         return Optional.of(userRepository.save(user));
@@ -81,9 +80,8 @@ public class UserServiceImpl implements UserService {
         return userRepository.count();
     }
 
-
     @Override
-    public UserServiceModel giveUserRole(String roleId, String userId) {
+    public UserServiceModel giveUserRole(String userId, String roleId) {
         Role userRole = modelMapper.map(roleService.getRoleById(roleId),
                 Role.class);
 
@@ -94,10 +92,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserServiceModel removeUserRole(String roleId, String userId) {
-        Role userRole = modelMapper.map(roleService.getRoleById(roleId), Role.class);
+    public UserServiceModel removeUserRole(String userId, String roleId) {
         User user = userRepository.findById(userId).orElseThrow();
-        user.getAuthorities().remove(userRole);
+        user.setAuthorities(user.getAuthorities()
+                .stream()
+                .filter(a -> !a.getId().equals(roleId))
+                .collect(Collectors.toSet()));
+
         return modelMapper.map(userRepository.save(user),
                 UserServiceModel.class);
     }
@@ -111,7 +112,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserServiceModel permitUser(String id) {
-        User user = userRepository.findById(id).orElseThrow();
+        User user = userRepository.findById(id)
+                .orElseThrow();
+
         user.setEnabled(true);
         return modelMapper.map(userRepository.save(user), UserServiceModel.class);
     }
@@ -151,4 +154,23 @@ public class UserServiceImpl implements UserService {
                 userRepository.findById(id).orElseThrow(),
                 UserServiceModel.class);
     }
+
+    @Override
+    public GameServiceModel getUserGameById(String id) {
+        return null;
+    }
+
+    @Override
+    public String getUserByUsername(String username) {
+        return userRepository
+                .findByUsername(username)
+                .map(User::getUsername)
+                .orElseThrow();
+    }
+
+    @Override
+    public UserProfileServiceModel getUserProfile(UserProfileServiceModel profileServiceModel) {
+        userRepository.
+    }
+
 }

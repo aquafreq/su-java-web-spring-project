@@ -4,44 +4,61 @@ import styles from './Navigation.module.css'
 import {MDBDropdown, MDBDropdownItem, MDBDropdownMenu, MDBDropdownToggle} from "mdbreact";
 
 const Navigation = ({user, logout}) => {
-    return (
-        <div>{user.username ? <strong style={{
-            color: 'blue',
-            border: 'solid 30px #eb34c9',
-            background: 'linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(176,27,195,0.49653364763874297) 35%, rgba(0,212,255,0.5665616588432247) 100%)',
-            fontSize: '-webkit-xxx-large',
-        }}>Hello, {user.username}</strong> : null}
+    const hasRoleAdmin = !!user.authorities.filter(r => r.authority === 'ROLE_ADMIN').length
+    const hasAnyRole = user.authorities.length > 1;
 
-            <div className={styles.Nav}>
-                {user.authorities.includes('ADMIN', 'MODERATOR') ?
-                    <div className={styles.AdminNav}>
-                        <MDBDropdown>
-                            <MDBDropdownToggle caret color="secondary">
-                                ADMINISTRATION
-                            </MDBDropdownToggle>
-                            <MDBDropdownMenu basic>
-                                <Link to="/administration/create-content"><MDBDropdownItem>Create content</MDBDropdownItem></Link>
-                                {
-                                    user.authorities.includes('ADMIN') ?
-                                        <> <MDBDropdownItem divider/>
-                                            <Link to="/administration/manage-roles"><MDBDropdownItem>Manage
-                                                roles</MDBDropdownItem></Link>
-                                        </> : null
-                                }
-                            </MDBDropdownMenu>
-                        </MDBDropdown>
-                    </div> : null
-                }
-                <Link to="/"> <strong>Home</strong></Link>
-                {user.authorities.length ? <Link to="/logout" onClick={logout}><strong>Logout</strong></Link>
-                    : <>
-                        <Link to="/login"><strong>Login</strong></Link>
-                        <Link to="/register"><strong>Register</strong></Link>
-                    </>
-                }
-            </div>
+    function username() {
+        return user.username ?
+            <span> <strong>Hello, {user.username}</strong> </span> : null
+    }
+
+    function administrationBar() {
+        return hasAnyRole ?
+            <div className={styles.AdminNav}>
+                <MDBDropdown>
+                    <MDBDropdownToggle caret color="secondary">
+                        ADMINISTRATION
+                    </MDBDropdownToggle>
+                    <MDBDropdownMenu basic>
+                        <Link to="/administration/create-content">
+                            <MDBDropdownItem>Create
+                                content</MDBDropdownItem>
+                        </Link>
+
+                        {
+                            hasRoleAdmin ?
+                                <> <
+                                    MDBDropdownItem divider/>
+                                    <Link to="/administration/manage-roles">
+                                        <MDBDropdownItem>Manage roles</MDBDropdownItem>
+                                    </Link>
+                                </> : null
+                        }
+                    </MDBDropdownMenu>
+                </MDBDropdown>
+            </div> : null;
+    }
+
+    return (
+        <div className={styles.container}>
+            <header className={styles.Nav}>
+                {administrationBar()}
+                {username()}
+                <ul>
+                    <li>
+                        <Link to="/"> <strong>Home</strong></Link>
+                    </li>
+                    {user.authorities.length ?
+                        <li><Link to="/logout" onClick={logout}><strong>Logout</strong></Link></li>
+                        : <>
+                            <li><Link to="/login"><strong>Login</strong></Link></li>
+                            <li><Link to="/register"><strong>Register</strong></Link></li>
+                        </>
+                    }
+                </ul>
+            </header>
         </div>
     )
 }
 
-export default Navigation;
+export default Navigation

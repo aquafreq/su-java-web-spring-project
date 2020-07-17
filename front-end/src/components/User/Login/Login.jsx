@@ -27,11 +27,12 @@ const Login = ({login}) => {
                         />
                     </FormControl>
                     <Button onClick={async (e) => {
-                        e.preventDefault();
-                        if (await login(username, password)) {
-                            setError('Incorrect username or password')
+                        const error = await login(username, password);
+                        if (error) {
+                            setError(error.response.headers.error || 'Incorrect username or password')
                             setUsername('')
                             setPassword('')
+                            e.preventDefault();
                         }
                     }
                     }>Login</Button>
