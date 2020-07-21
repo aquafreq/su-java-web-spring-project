@@ -51,6 +51,8 @@ public class User extends BaseEntity implements UserDetails {
     private Set<Role> authorities = new HashSet<>();
 
     private boolean isEnabled = true;
+
+    //то фикс
     @Transient
     private boolean isAccountNonExpired = true;
     @Transient
