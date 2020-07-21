@@ -1,1 +1,0 @@
-web: java -jar target/english-1.0.2.RELEASE.jar
