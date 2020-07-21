@@ -3,7 +3,6 @@ package com.example.english.config;
 import com.example.english.service.UserService;
 import com.example.english.web.filter.JWTAuthenticationFilter;
 import com.example.english.web.filter.JWTAuthorizationFilter;
-import com.example.english.web.filter.CsrfTokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -21,15 +20,16 @@ import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
-//@PropertySource("classpath:application.properties")
 public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {

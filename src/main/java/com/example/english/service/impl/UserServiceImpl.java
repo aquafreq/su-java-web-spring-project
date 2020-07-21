@@ -2,9 +2,7 @@ package com.example.english.service.impl;
 
 import com.example.english.data.entity.Role;
 import com.example.english.data.entity.User;
-import com.example.english.data.model.response.UserResponseModel;
-import com.example.english.data.model.service.GameServiceModel;
-import com.example.english.data.model.service.RoleServiceModel;
+import com.example.english.data.entity.UserProfile;
 import com.example.english.data.model.service.UserProfileServiceModel;
 import com.example.english.data.model.service.UserServiceModel;
 import com.example.english.data.repository.UserRepository;
@@ -16,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -68,8 +65,11 @@ public class UserServiceImpl implements UserService {
         if (userRepository.count() == 0) {
             Arrays.asList(
                     roleService.getRoleByName("ROLE_ADMIN"),
-                    roleService.getRoleByName("ROLE_ROOT_ADMIN")
-            ).forEach(r -> user.getAuthorities().add(r));
+                    roleService.getRoleByName("ROLE_ROOT_ADMIN"),
+                    roleService.getRoleByName("ROLEMODERATOR")
+            ).forEach(r -> {
+                user.getAuthorities().add(r);
+            });
         }
 
         return Optional.of(userRepository.save(user));
@@ -156,11 +156,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public GameServiceModel getUserGameById(String id) {
-        return null;
-    }
-
-    @Override
     public String getUserByUsername(String username) {
         return userRepository
                 .findByUsername(username)
@@ -169,8 +164,36 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserProfileServiceModel getUserProfile(UserProfileServiceModel profileServiceModel) {
-        userRepository.
+    public UserProfileServiceModel saveProfile(UserProfileServiceModel userProfileServiceModel) {
+        User user = userRepository.findByUsername(userProfileServiceModel.getUsername()).orElseThrow();
+        UserProfile map = modelMapper.map(userProfileServiceModel, UserProfile.class);
+        user.setUserProfile(map);
+        return modelMapper.map(userRepository.save(user).getUserProfile(),
+                UserProfileServiceModel.class);
     }
 
+    @Override
+    public void deleteProfile(String id) {
+        User user = userRepository.findById(id).orElseThrow();
+        user.setUserProfile(null);
+        //da sa vidi
+    }
+
+    @Override
+    public UserProfileServiceModel updateProfile(UserProfileServiceModel userProfileServiceModel) {
+        User user = userRepository.findByUsername(userProfileServiceModel.getUsername()).orElseThrow();
+
+        user.setUserProfile(modelMapper.map(userProfileServiceModel, UserProfile.class));
+
+        return modelMapper.map(userRepository.save(user).getUserProfile(), UserProfileServiceModel.class);
+    }
+
+    @Override
+    public UserProfileServiceModel getUserProfileById(String id) {
+
+        return modelMapper.map(
+                userRepository.findByUserProfileId(id),
+                UserProfileServiceModel.class);
+
+    }
 }

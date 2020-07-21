@@ -3,30 +3,25 @@ package com.example.english.service.impl;
 import com.example.english.data.entity.Word;
 import com.example.english.data.model.service.WordServiceModel;
 import com.example.english.data.repository.WordRepository;
-import com.example.english.service.WordCategoryService;
 import com.example.english.service.WordService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class WordServiceImpl implements WordService {
     private final ModelMapper modelMapper;
-    private final WordCategoryService wordCategoryService;
     private final WordRepository repository;
 
     @Override
     public WordServiceModel createWord(WordServiceModel wordServiceModel) {
         Word map = modelMapper.map(wordServiceModel,
                 Word.class);
-
-        wordCategoryService.addWordToCategories(wordServiceModel);
-
         return modelMapper
                 .map(repository.save(map), WordServiceModel.class);
     }
@@ -61,5 +56,15 @@ public class WordServiceImpl implements WordService {
     public WordServiceModel getWordById(String wordId) {
         return modelMapper.map(repository.findById(wordId)
                 , WordServiceModel.class);
+    }
+
+    @Override
+    public Collection<WordServiceModel> getWordsById(List<String> words) {
+        return repository
+                .findAll()
+                .stream()
+                .filter(w -> words.contains(w.getId()))
+                .map(w -> modelMapper.map(w, WordServiceModel.class))
+                .collect(Collectors.toList());
     }
 }

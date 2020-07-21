@@ -12,11 +12,9 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@XSlf4j
 public class LogServiceImpl implements LogService {
     private final LogRepository logRepository;
     private final UserService userService;
-
 
     @Override
     public void logMessage(Log log) {

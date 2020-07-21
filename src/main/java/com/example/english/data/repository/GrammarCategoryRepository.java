@@ -2,10 +2,13 @@ package com.example.english.data.repository;
 
 
 import com.example.english.data.entity.GrammarCategory;
+import com.example.english.data.model.service.GrammarCategoryServiceModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface GrammarCategoryRepository extends JpaRepository<GrammarCategory, String> {
-    GrammarCategory findByName(String name);
+    Optional<GrammarCategory> findByName(String name);
 }

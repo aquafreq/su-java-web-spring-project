@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class WordResponseModel {
+    private String id;
     private String word;
     private String definition;
 }

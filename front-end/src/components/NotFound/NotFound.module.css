@@ -1,0 +1,22 @@
+.error {
+    color: red;
+    height: 100%;
+    font-size: 73px;
+    /* width: 100%; */
+    text-align: center;
+    position: inherit;
+    background-color: darkturquoise;
+}
+.error p {
+    font-family: Sylfaen, fantasy;
+}
+
+.error {
+    background: mediumpurple;
+}
+
+.error a span:hover {
+    background-color: initial;
+    border: 5px solid indigo;
+    color: lightgreen;
+}

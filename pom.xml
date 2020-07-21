@@ -10,11 +10,13 @@
     </parent>
     <groupId>com.example</groupId>
     <artifactId>english</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.2.RELEASE</version>
     <name>english</name>
     <description>Web project</description>
 
     <properties>
+            <maven.compiler.source>1.8</maven.compiler.source>
+            <maven.compiler.target>1.8</maven.compiler.target>
         <java.version>11</java.version>
 <!--        <frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>-->
 <!--        <node.version>v10.16.3</node.version>-->
@@ -113,20 +115,22 @@
             <artifactId>spring-hateoas</artifactId>
             <version>1.1.0.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>2.5.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
                 <version>1.6</version>
                 <configuration>
-                    <workingDirectory>src/frontend</workingDirectory>
+                    <workingDirectory>front-end</workingDirectory>
                     <installDirectory>target</installDirectory>
                 </configuration>
                 <executions>
@@ -177,6 +181,14 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>10</source>
+                    <target>10</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -2,7 +2,9 @@ package com.example.english.service;
 
 
 import com.example.english.data.entity.GrammarCategory;
+import com.example.english.data.model.response.ContentResponseModel;
 import com.example.english.data.model.response.GrammarCategoryResponseModel;
+import com.example.english.data.model.service.ContentServiceModel;
 import com.example.english.data.model.service.GrammarCategoryServiceModel;
 
 import java.util.Collection;
@@ -18,5 +20,6 @@ public interface GrammarCategoryService {
 
     Collection<GrammarCategoryServiceModel> getAll();
 
+    ContentServiceModel uploadContent(ContentServiceModel serviceModel);
 }
 

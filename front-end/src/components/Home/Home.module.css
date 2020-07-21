@@ -1,0 +1,75 @@
+.home-container {
+}
+
+.home-container h1, h3,h4 {
+    text-align: center;
+}
+.home-container > h4 div {
+    display: inline-block;
+    color: black;
+    font-size: 50px;
+}
+
+.links {
+    text-align: center;
+    position: fixed;
+    width: 100%;
+    height: 39px;
+    bottom: 10%;
+}
+
+.links a {
+    font-family: Constantia, sans-serif;
+    font-size: 30px;
+    text-align: center;
+    color: cornsilk;
+    transition: background-color .5s;
+}
+
+.links a:hover {
+    color: white;
+}
+.links a:first-child {
+    float: left;
+    margin-left: 3%;
+}
+
+.links a:last-child {
+    float: right;
+    margin-right: 3%;
+}
+
+.links a:hover {
+    font-size: 32px;
+    text-decoration-color: mediumorchid;
+    text-decoration-line: underline;
+    text-decoration-width: 20px;
+}
+
+.home-container h3, h4 {
+    color: black;
+}
+
+.home-container h4 > div {
+    width: 40px;
+    margin-bottom: 3%;
+}
+
+.content-container li{
+    width: 260px;
+    list-style-type: none;
+    display: inline-block;
+    border: 2px solid midnightblue;
+    background-color: violet;
+    border-radius: 6px;
+    margin: 4px;
+    text-align: justify;
+}
+
+.content-container li a:hover {
+    color: white;
+}
+
+.content-container li a{
+    color: black;
+}

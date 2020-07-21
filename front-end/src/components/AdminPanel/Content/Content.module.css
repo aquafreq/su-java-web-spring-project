@@ -1,0 +1,69 @@
+.main-container {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-size: 24px;
+    position: inherit;
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-weight: 700;
+    color: black;
+}
+
+.main-container h2 {
+    text-decoration: black;
+    text-decoration-line: underline;
+    text-decoration-width: 6px;
+    font-family: "Malgun Gothic Semilight", serif;
+    font-size: 34px;
+}
+
+.comments {
+    width: 50%;
+    display: inline-grid;
+}
+
+.my-comment {
+    margin-bottom: 50px;
+}
+
+.comment-section {
+    margin-top: 5%;
+}
+
+.comment-section > div.comments textarea {
+    margin: 4px;
+    background-color: #888888;
+    color: black;
+    resize: both;
+    border: 5px solid #96147b;
+    border-radius: 3px;
+    box-sizing: border-box;
+    float: left;
+    clear: both;
+    width: 600px;
+}
+
+.comment-section h5 {
+    font-weight: bold;
+    font-size: 30px;
+}
+
+.comment-section section label > p {
+    margin-top: 15px;
+    font-weight: bold;
+    font-size: 25px;
+    font-family: "Droid Serif", serif;
+}
+
+.comment-section label form textarea {
+    width: 400px;
+    line-height: 24px;
+    min-height: 22px;
+    overflow-y: hidden; /* fixes scrollbar flash - kudos to @brettjonesdev */
+    padding-top: 1.1em;
+}
+
+
+.comment-section label form textarea::-webkit-input-placeholder {
+    text-align: center;
+}

@@ -11,6 +11,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import static javax.persistence.CascadeType.*;
+
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Data
@@ -30,18 +32,16 @@ public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @OneToOne
+    @OneToOne(cascade = {PERSIST})
     private UserStats userStats;
+
+    @OneToOne(cascade = {PERSIST},fetch = FetchType.EAGER)
+    private UserProfile userProfile = new UserProfile();
 
     @DateTimeFormat(pattern = "dd-MMM-yyyy HH:mm:ss")
     private LocalDateTime registrationDate = LocalDateTime.now();
 
     //list of comments and likes maybe?
-
-    @OneToMany(orphanRemoval = true, fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    @MapKey(name = "name")
-    private Map<String, WordCategory> categoryWithWords = new LinkedHashMap<>();
 
     @ToString.Exclude
     @ManyToMany(fetch = FetchType.EAGER)
@@ -58,39 +58,4 @@ public class User extends BaseEntity implements UserDetails {
     @Transient
     private boolean isCredentialsNonExpired = true;
 
-    public User(String username, String password) {
-        setUsername(username);
-        setPassword(password);
-    }
-
-    public User(String username, String password, String email) {
-        setUsername(username);
-        setPassword(password);
-        setEmail(email);
-    }
-
-//    @Override
-//    public Collection<Role> getAuthorities() {
-//        return authorities;
-//    }
-//
-//    @Override
-//    public boolean isAccountNonExpired() {
-//        return isAccountNonExpired;
-//    }
-//
-//    @Override
-//    public boolean isAccountNonLocked() {
-//        return isAccountNonLocked;
-//    }
-//
-//    @Override
-//    public boolean isCredentialsNonExpired() {
-//        return isCredentialsNonExpired;
-//    }
-//
-//    @Override
-//    public boolean isEnabled() {
-//        return isEnabled;
-//    }
 }

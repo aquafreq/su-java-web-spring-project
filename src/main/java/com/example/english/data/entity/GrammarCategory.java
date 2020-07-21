@@ -1,34 +1,36 @@
 package com.example.english.data.entity;
 
 import lombok.*;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(exclude = {"content","exercises"},callSuper = true)
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "grammar_categories")
+@Table
 @RequiredArgsConstructor
-public class GrammarCategory extends BaseEntity {
-
-    //tenses, conditionals, relative clauses, pronouns, phrasal verbs...etcs
+public class GrammarCategory extends BaseEntity{
     @NonNull
     @Column(unique = true)
     private String name;
 
-    //    @Enumerated
-    //    private LevelOfLanguage levelOfLanguage;
-
-    //the content of the category page , if conds => if conds explanation etc
-    @ElementCollection
-    private Collection<String> content = new ArrayList<>();
+    @OneToMany(mappedBy = "category",fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL})
+    @ToString.Exclude
+    private Collection<Content> content = new ArrayList<>();
 
     //followd by if conds => if conds explanation etc exercises
     //zada4kite + vuprosite i otgovorite
     @OneToMany(mappedBy = "category")
+    @ToString.Exclude
     private List<Exercise> exercises = new ArrayList<>();
+
+
 }

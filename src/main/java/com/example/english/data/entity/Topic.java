@@ -23,5 +23,4 @@ public class Topic extends BaseEntity {
     @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "user_id")
     private List<User> followers;
-
 }

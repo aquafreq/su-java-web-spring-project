@@ -4,7 +4,6 @@ import com.example.english.data.model.binding.UserRegisterBindingModel;
 import com.example.english.data.model.response.UserResponseModel;
 import com.example.english.data.model.service.UserServiceModel;
 import com.example.english.service.UserService;
-import com.example.english.service.GameService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -26,7 +25,6 @@ import java.security.Principal;
 public class AuthController {
     private final ModelMapper modelMapper;
     private final UserService userService;
-    private final GameService gameService;
 
     @PreAuthorize("isAnonymous()")
     @PostMapping(value = "/register")

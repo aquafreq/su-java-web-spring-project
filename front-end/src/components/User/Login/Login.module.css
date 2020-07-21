@@ -1,0 +1,52 @@
+.container {
+    text-align: center;
+    font-family: "Font Awesome\ 5 Free", sans-serif;
+}
+
+.container form {
+    margin-top: 10%;
+}
+
+.container label, input {
+    font-size: 22px;
+    margin: 3px 3px;
+}
+
+.container input {
+    background-color: bisque;
+    border: 2px purple solid;
+    border-radius: 8px;
+}
+
+.container input:focus {
+    border: 4px solid deeppink;
+}
+
+.container input:hover {
+    background-color: lightcoral;
+}
+
+/*.container *:after {*/
+/*    box-sizing: border-box;*/
+/*}*/
+
+.container .error {
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 22px;
+}
+
+.container button {
+    margin: 0 22% 0 22%;
+    color: mediumvioletred;
+}
+
+.container button:hover {
+    box-shadow: 4px 4px #555555;
+    background-color: #888888;
+    user-focus-pointer: yes;
+}
+
+.container button:after {
+    content: " >>>";
+}

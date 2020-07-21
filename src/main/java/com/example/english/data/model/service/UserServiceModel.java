@@ -24,4 +24,9 @@ public class UserServiceModel{
     private String email;
 
     private Set<RoleServiceModel> authorities = new HashSet<>();
+
+    public UserServiceModel setId(String id) {
+        this.id = id;
+        return this;
+    }
 }

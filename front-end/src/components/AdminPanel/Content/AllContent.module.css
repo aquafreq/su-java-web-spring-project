@@ -1,0 +1,79 @@
+.all-content {
+    text-align: center;
+}
+
+.no-content {
+    background-color: magenta;
+    text-align: center;
+    font-family: "Droid Sans Mono Dotted", fantasy;
+    border: solid 6px purple;
+    padding: 16px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+}
+
+.no-content a {
+    color: mediumblue;
+}
+
+.no-content a > span {
+    color: gold;
+}
+
+.no-content-h {
+    margin-top: 15%;
+    font-size: 30px;
+    font-weight: bold;
+    font-family: Sylfaen, fantasy;
+}
+.no-content-h a{
+    margin-top: 15%;
+    font-size: 40px;
+    font-weight: bold;
+    font-family: "Cambria Math", fantasy;
+
+}
+
+.no-content a > span:hover {
+    color: darkviolet;
+}
+
+.no-content a:hover {
+    font-weight: bold;
+    font-size: 34px;
+}
+
+.content {
+    margin-top: 4%;
+    font-size: 28px;
+    font-weight: 700;
+    display: inline-block;
+}
+
+.content h3 {
+    border: 2px dotted violet;
+    padding: 10px;
+    font-size: 34px;
+    font-family: "Segoe UI Emoji", serif;
+    display: inline-flex;
+}
+
+.content em{
+    color: black;
+    font-size: 28px;
+}
+.content em > a{
+    font-size: 32px;
+    color: mediumturquoise;
+}
+
+.content em > a:hover{
+    color: mediumblue;
+    font-size: 36px;
+    padding: 5px;
+    text-decoration: midnightblue;
+    text-decoration-line: underline;
+}

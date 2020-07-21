@@ -1,0 +1,17 @@
+.loadingWrap {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 300px;
+    height: 300px;
+    font: 34px bolder;
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    opacity: 1;
+}
+
+.loadingWrap div {
+    padding-left: 10%;
+}

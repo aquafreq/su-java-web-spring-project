@@ -1,8 +1,10 @@
-import React, {useCallback, useContext, useEffect, useMemo, useState} from "react"
+import React, {useCallback, useContext, useDebugValue, useEffect, useMemo, useState} from "react"
 import userService from "../../services/UserService"
 import styles from './ManageRole.module.css'
 import UserContext from "../../auth/UserContext";
 import SearchBar from "./SearchBar/SearchBar";
+import Navigation from "../Navigation/Navigation";
+import Footer from "../Footer/Footer";
 
 const ROLE_PREFIX = 'ROLE_'
 const EMPTY_STRING = ''
@@ -31,7 +33,6 @@ export default function () {
                             u.display = true
                             return u
                         })
-
                 setUsers(users)
 
                 const roles =
@@ -66,6 +67,7 @@ export default function () {
             Disable: styles.disable,
             Enable: styles.enable,
         }
+
         return Button(colorMap[action], updateUser, action)
     }
 
@@ -117,8 +119,12 @@ export default function () {
                             <td>{u.id}</td>
                             <td>{u.username}</td>
                             <td>{u.email}</td>
-                            <td><button onClick={(e => userService.userProfile(u._links.self.href))}>Link</button></td>
-                            <td>{enableDisableUser(u)}</td>
+                            <td>
+                                <button onClick={(() => userService.userProfile(u._links.self.href))}>Link</button>
+                            </td>
+                            <td>{
+                                !u.authorities.filter(a => a.authority !== 'ROLE_USER').length ? enableDisableUser(u) : null
+                            }</td>
                             <td>{u.authorities.map((auth, i) =>
                                 <span
                                     key={auth.id}> {roles[auth.id]}{i !== u.authorities.length - 1 ? ',\u00A0' : null}
@@ -152,8 +158,10 @@ export default function () {
 
     return (
         <div className={styles.container}>
+            <Navigation/>
             <SearchBar filter={filter}/>
             {!isLoading ? filter('', '') : <div>Loading ....</div>}
+            <Footer/>
         </div>
     )
 }

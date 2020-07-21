@@ -1,10 +1,37 @@
+.picWrapper{
+    background-image: url("https://i.pinimg.com/736x/b7/56/fe/b756fe9a976079410a33df02340463cd.jpg");
+    opacity: 0.4;
+    background-size: 12%;
+    background-attachment: fixed;
+    background-position: right;
+}
+
 .footer {
-    color: purple;
-    background-color: lightblue;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     position: fixed;
     left: 0;
     bottom: 0;
     width: 100%;
+    font-size: 26px;
     text-align: center;
+    font-weight: bold;
+    display: inline-block;
+    color: snow;
+}
+
+.footer span {
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 24px;
+    color: snow;
+}
+.footer h6 {
+    font-size: 25px;
+    font-weight: bolder;
+    color: #96147b;
+    line-height: 0.6;
+}
+
+.footer span:hover {
+    text-decoration: none;
+    text-shadow: 1px 1px 1px #555;
 }

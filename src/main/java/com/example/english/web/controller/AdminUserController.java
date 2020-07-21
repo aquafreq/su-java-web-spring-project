@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -37,7 +38,7 @@ public class AdminUserController {
         UserResponseModel userResponseModel =
                 modelMapper.map(userService.giveUserRole(id, roleId)
                         , UserResponseModel.class);
-        mapUserLinks(getAllRoleIds()).accept(userResponseModel);
+        mapUserLinks(filterRole("ROLE_ROOT_ADMIN")).accept(userResponseModel);
         return ResponseEntity.ok(userResponseModel);
     }
 
@@ -46,14 +47,15 @@ public class AdminUserController {
     public ResponseEntity<UserResponseModel> removeUserRole(@PathVariable String id, @PathVariable String roleId) {
         UserResponseModel userResponseModel = modelMapper.map(userService.removeUserRole(id, roleId),
                 UserResponseModel.class);
-        mapUserLinks(getAllRoleIds()).accept(userResponseModel);
+
+        mapUserLinks(filterRole("ROLE_ROOT_ADMIN")).accept(userResponseModel);
         return ResponseEntity.ok(userResponseModel);
     }
 
     @PreAuthorize(value = "hasAnyRole('ADMIN','ROOT_ADMIN')")
     @GetMapping("/user/all")
     public CollectionModel<EntityModel<UserResponseModel>> getAllUsers() {
-        List<String> allRoles = getAllRoleIds();
+        List<String> allRoles = filterRole("ROLE_ROOT_ADMIN");
 
         List<UserResponseModel> userResponseModels = userService.getAllUsers()
                 .stream()
@@ -105,12 +107,23 @@ public class AdminUserController {
                 modelMapper.map(userService.getUserById(id),
                         UserResponseModel.class);
 
-        mapUserLinks(getAllRoleIds()).accept(responseModel);
+        List<String> filteredRoles = filterRole("ROLE_ROOT_ADMIN");
+        mapUserLinks(filteredRoles).accept(responseModel);
+
         return ResponseEntity.ok(responseModel);
+    }
+
+    private List<String> filterRole(String filterRole) {
+        return getAllRoleIds()
+                .stream()
+                .filter(r -> !r.getAuthority().equals(filterRole))
+                .map(RoleServiceModel::getId)
+                .collect(Collectors.toList());
     }
 
     private Consumer<UserResponseModel> mapUserLinks(List<String> allRoles) {
         return u -> {
+
             String id = u.getId();
 
             Link getUserInfo = linkTo(methodOn(AdminUserController.class)
@@ -141,16 +154,14 @@ public class AdminUserController {
                             .removeUserRole(u.getId(), r)).withRel("remove-user-role"))
                     .collect(Collectors.toList());
 
+
             u.add(disable, permit, getUserInfo);
             u.add(rolesToGive);
             u.add(rolesToRemove);
         };
     }
 
-    private List<String> getAllRoleIds() {
-        return roleService.getAllRoles()
-                .stream()
-                .map(RoleServiceModel::getId)
-                .collect(Collectors.toList());
+    private List<RoleServiceModel> getAllRoleIds() {
+        return roleService.getAllRoles();
     }
 }

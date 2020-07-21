@@ -8,5 +8,5 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class GameResponseModel {
-        private List<WordCategoryResponseModel> wordCategories;
+        private List<CategoryWordsResponseModel> wordCategories;
 }

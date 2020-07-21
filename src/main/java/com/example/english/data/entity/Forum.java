@@ -13,8 +13,6 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 public class Forum extends BaseEntity{
-    private String name;
-
     @OneToMany
     private Set<User> participants;
 

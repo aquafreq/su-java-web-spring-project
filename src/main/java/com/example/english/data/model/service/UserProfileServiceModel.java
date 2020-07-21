@@ -14,7 +14,6 @@ public class UserProfileServiceModel {
     private String activity;
     private Collection<String> hobbies;
     private String profilePicture;
-    private GameServiceModel wordsGame;
     private LocalDate birthDate;
     private String nationality;
 }

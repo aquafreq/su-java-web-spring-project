@@ -1,11 +1,15 @@
 package com.example.english.web.controller;
 
+import com.example.english.data.model.binding.CommentBindingModel;
+import com.example.english.data.model.binding.ContentBindingModel;
 import com.example.english.data.model.binding.ExerciseBindingModel;
 import com.example.english.data.model.binding.GrammarCategoryBindingModel;
-import com.example.english.data.model.response.ExerciseResponseModel;
-import com.example.english.data.model.response.GrammarCategoryResponseModel;
+import com.example.english.data.model.response.*;
+import com.example.english.data.model.service.CommentServiceModel;
+import com.example.english.data.model.service.ContentServiceModel;
 import com.example.english.data.model.service.ExerciseServiceModel;
 import com.example.english.data.model.service.GrammarCategoryServiceModel;
+import com.example.english.service.ContentService;
 import com.example.english.service.ExerciseService;
 import com.example.english.service.GrammarCategoryService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +20,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +30,7 @@ import java.util.stream.Collectors;
 public class ContentController {
     private final GrammarCategoryService grammarCategoryService;
     private final ExerciseService exerciseService;
+    private final ContentService contentService;
     private final ModelMapper modelMapper;
 
     @PreAuthorize(value = "hasAnyRole('ADMIN', 'MODERATOR')")
@@ -52,19 +58,63 @@ public class ContentController {
         return created.body(exerciseResponseModel);
     }
 
-
-    @PreAuthorize(value = "hasAnyRole('ADMIN','MODERATOR')")
-    @GetMapping("/category/all")
-    public ResponseEntity<List<GrammarCategoryResponseModel>> getAllGrammarCategories() {
-        List<GrammarCategoryResponseModel> categoryResponseModelList =
-                grammarCategoryService.getAll()
-                        .stream()
-                        .map(c -> modelMapper.map(c, GrammarCategoryResponseModel.class))
-                        .collect(Collectors.toList());
-
-        return ResponseEntity.ok(categoryResponseModelList);
+    @GetMapping(value = "/category/all", produces = "application/json")
+    public List<String> getAllGrammarCategories() {
+        return grammarCategoryService
+                .getAll()
+                .stream()
+                .map(GrammarCategoryServiceModel::getName)
+//                .map(m -> modelMapper.map(m, GrammarNameResponseModel.class))
+                .collect(Collectors.toList());
     }
 
-    //remove category, edit category
-    //remove exercise, edit exercise
+    @GetMapping("/category/{name}")
+    public ResponseEntity<GrammarCategoryResponseModel> getGrammarCategoryContent(@PathVariable String name) {
+        GrammarCategoryResponseModel responseModel =
+                modelMapper.map(grammarCategoryService.getGrammarCategory(name),
+                        GrammarCategoryResponseModel.class);
+
+        return ResponseEntity.ok(responseModel);
+    }
+
+    @PreAuthorize(value = "hasAnyRole('ROOT_ADMIN', 'ADMIN', 'MODERATOR')")
+    @PostMapping("/add")
+    public ResponseEntity<ContentResponseModel> createContent(
+            @RequestBody ContentBindingModel model) {
+        ContentResponseModel map = modelMapper.map(
+                grammarCategoryService
+                        .uploadContent(modelMapper.map(model, ContentServiceModel.class)),
+                ContentResponseModel.class);
+
+        String path = String.format("/category/%s/%s", map.getCategoryId(), map.getTitle());
+        return ResponseEntity.created(URI.create(path)).body(map);
+    }
+
+    @GetMapping(value = "/category/{categoryId}/{contentId}")
+    public ResponseEntity<ContentResponseModel> getContent(@PathVariable String categoryId, @PathVariable String contentId) {
+        ContentResponseModel responseModel =
+                modelMapper.map(contentService.getContentByCategoryAndId(categoryId, contentId),
+                        ContentResponseModel.class);
+        return ResponseEntity.ok(responseModel);
+    }
+
+    @PostMapping(value = "/category/{categoryId}/{contentId}")
+    public ResponseEntity<CommentResponseModel> addComment(
+            @PathVariable String categoryId,
+            @PathVariable String contentId,
+            @RequestBody CommentBindingModel commentBindingModel,
+            UriComponentsBuilder uriComponentsBuilder) {
+        CommentServiceModel map = modelMapper.map(commentBindingModel, CommentServiceModel.class);
+
+        CommentServiceModel commentServiceModel = contentService.addCommentToContent(map);
+
+        CommentResponseModel responseModel = modelMapper.map(commentServiceModel, CommentResponseModel.class);
+
+        String path = String.format("/category/%s/%s", categoryId, contentId);
+
+        return ResponseEntity
+                .created(uriComponentsBuilder.path(path).build().toUri())
+                .body(responseModel);
+    }
+
 }

@@ -22,6 +22,4 @@ public class LogInterceptor extends HandlerInterceptorAdapter {
         //ne6to
         return super.preHandle(request, response, handler);
     }
-
-
 }
