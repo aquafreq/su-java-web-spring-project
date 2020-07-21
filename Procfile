@@ -1,1 +1,1 @@
-web: java -jar target/english-1.0.2.RELEASE.jar
+web: java -jar com.example.english/english-1.0.2.RELEASE.jar
