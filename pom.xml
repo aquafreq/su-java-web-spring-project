@@ -206,7 +206,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.mypackage.MyClass</mainClass>
+                            <mainClass>com.example.english.EnglishApplication</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
