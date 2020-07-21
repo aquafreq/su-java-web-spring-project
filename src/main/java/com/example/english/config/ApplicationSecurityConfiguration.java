@@ -43,7 +43,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/auth/**").permitAll()
+                .antMatchers("/auth/**").permitAll()
                 .and()
 //                .addFilterAt(new CsrfTokenFilter(), JWTAuthenticationFilter.class)
                 .addFilterAfter(new JWTAuthenticationFilter(authenticationManager()), CsrfFilter.class)

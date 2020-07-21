@@ -2,7 +2,7 @@ import axios from 'axios'
 
 axios.defaults.withCredentials = true
 
-const BASE_URL_PATH = '/api/auth'
+const BASE_URL_PATH = '/auth'
 const LOGIN = '/login'
 const REGISTER = '/register'
 const LOGOUT = '/logout'
@@ -18,7 +18,7 @@ const userService = {
     //     return axios.post(BASE_URL_PATH + LOGOUT, {})
     // },
     createWord: (word, definition) => {
-        return axios.post("api/users/create-word")
+        return axios.post("/users/create-word")
     },
     getCurrentUser: (token) => {
         if (token)
@@ -30,8 +30,8 @@ const userService = {
                 }
             )
     },
-    fetchAllUsers: () => axios.get('/api/admin/user/all'),
-    fetchAllRoles: () => axios.get('/api/admin/role/all'),
+    fetchAllUsers: () => axios.get('/admin/user/all'),
+    fetchAllRoles: () => axios.get('/admin/role/all'),
     updateUser: url => axios.patch(url),
     userProfile: url => axios.get(url),
 }
