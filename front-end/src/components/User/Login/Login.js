@@ -6,7 +6,7 @@ import Navigation from "../../Navigation/Navigation"
 import Footer from "../../Footer/Footer"
 import styles from './Login.module.css'
 import RegisterLoginNav from "../../Navigation/RegisterLoginNav"
-import { useHistory} from "react-router-dom"
+import {useHistory} from "react-router-dom"
 
 const Login = ({login}) => {
     const [username, setUsername] = useState('')
@@ -15,12 +15,14 @@ const Login = ({login}) => {
     const history = useHistory()
 
     return (
-        <div className={styles.container}>
+        <>
             <Navigation/>
-            {error && <MDBAlert className={styles.error} color="danger"> {error}</MDBAlert>}
-            <form action="/login" method="post">
-                <FormControl>
-                    <h2>Login</h2>
+            <div className={styles.container}>
+
+                {error && <MDBAlert className={styles.error} color="danger"> {error}</MDBAlert>}
+                <form action="/login" method="post">
+                    <FormControl>
+                        <h2>Login</h2>
                         <label
                             htmlFor="username">
                             <input type="text"
@@ -42,22 +44,23 @@ const Login = ({login}) => {
                                    value={password} onChange={(ev) => setPassword(ev.target.value)}
                             />
                         </label>
-                    <button onClick={async (e) => {
-                        e.preventDefault()
-                        const error = await login(username, password)
-                        if (error) {
-                            setError(error.response.headers.error || 'Incorrect username or password!')
-                            setUsername('')
-                            setPassword('')
+                        <button onClick={async (e) => {
+                            e.preventDefault()
+                            const error = await login(username, password)
+                            if (error) {
+                                setError(error.response.headers.error || 'Incorrect username or password!')
+                                setUsername('')
+                                setPassword('')
+                            }
                         }
-                    }
-                    }>Login
-                    </button>
-                </FormControl>
-            </form>
-            <RegisterLoginNav path={history.location.pathname} />
+                        }>Login
+                        </button>
+                    </FormControl>
+                </form>
+                <RegisterLoginNav path={history.location.pathname}/>
+            </div>
             <Footer/>
-        </div>
+        </>
     )
 }
 export default Login

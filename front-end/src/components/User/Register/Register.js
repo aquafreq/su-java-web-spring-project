@@ -15,8 +15,9 @@ const Register = ({register}) => {
     const history = useHistory()
 
     return (
+        <>
+        <Navigation/>
         <div>
-            <Navigation/>
             <div className={styles.container}>
                 <form>
                     <h1>Register</h1>
@@ -52,9 +53,10 @@ const Register = ({register}) => {
                     } gradient="purple">Register</MDBBtn>
                 </form>
                 <RegisterLoginNav path={history.location.pathname} />
-                <Footer/>
             </div>
         </div>
+    <Footer/>
+    </>
     )
 }
 
