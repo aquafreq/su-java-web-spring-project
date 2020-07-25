@@ -1,0 +1,15 @@
+.wrapper {
+    margin-top: 6%;
+    text-align: center;
+}
+.user-details {
+    background-color: lightsteelblue;
+    display: flow-root;
+    margin: auto;
+    width: 50%;
+    border: 3px solid green;
+    padding: 10px;
+}
+.wrapper > a {
+    font-size: 30px;
+}

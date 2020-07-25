@@ -30,7 +30,6 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
-
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity

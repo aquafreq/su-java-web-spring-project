@@ -1,20 +1,24 @@
-import React, {useState} from 'react';
-import {MDBAlert, MDBBtn} from "mdbreact";
-import Navigation from "../../Navigation/Navigation";
-import Footer from "../../Footer/Footer";
+import React, {useState} from 'react'
+import {MDBAlert, MDBBtn} from "mdbreact"
+import Navigation from "../../Navigation/Navigation"
+import Footer from "../../Footer/Footer"
+import {useHistory} from "react-router-dom"
+
 import styles from './Register.module.css'
+import RegisterLoginNav from "../../Navigation/RegisterLoginNav"
 
 const Register = ({register}) => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [email, setEmail] = useState('');
-    const [error, setError] = useState('');
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const [email, setEmail] = useState('')
+    const [error, setError] = useState('')
+    const history = useHistory()
 
     return (
         <div>
             <Navigation/>
             <div className={styles.container}>
-                <form action="/register">
+                <form>
                     <h1>Register</h1>
                     {error && <MDBAlert color="danger"> {error}</MDBAlert>}
                     <div>
@@ -47,10 +51,11 @@ const Register = ({register}) => {
                     }
                     } gradient="purple">Register</MDBBtn>
                 </form>
+                <RegisterLoginNav path={history.location.pathname} />
                 <Footer/>
             </div>
         </div>
-    );
+    )
 }
 
-export default Register;
+export default Register

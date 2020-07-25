@@ -1,15 +1,18 @@
-import React, {useState} from 'react';
+import React, {useState} from 'react'
 
-import {FormControl} from '@material-ui/core';
-import {MDBAlert} from "mdbreact";
-import Navigation from "../../Navigation/Navigation";
-import Footer from "../../Footer/Footer";
+import {FormControl} from '@material-ui/core'
+import {MDBAlert} from "mdbreact"
+import Navigation from "../../Navigation/Navigation"
+import Footer from "../../Footer/Footer"
 import styles from './Login.module.css'
+import RegisterLoginNav from "../../Navigation/RegisterLoginNav"
+import { useHistory} from "react-router-dom"
 
 const Login = ({login}) => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const [error, setError] = useState('')
+    const history = useHistory()
 
     return (
         <div className={styles.container}>
@@ -34,7 +37,6 @@ const Login = ({login}) => {
                             <input type="password"
                                    id="username"
                                    aria-describedby="my-helper-text"
-                                   autoFocus
                                    placeholder="Password..."
                                    name="password"
                                    value={password} onChange={(ev) => setPassword(ev.target.value)}
@@ -47,15 +49,15 @@ const Login = ({login}) => {
                             setError(error.response.headers.error || 'Incorrect username or password!')
                             setUsername('')
                             setPassword('')
-                            e.preventDefault();
                         }
                     }
                     }>Login
                     </button>
                 </FormControl>
             </form>
+            <RegisterLoginNav path={history.location.pathname} />
             <Footer/>
         </div>
     )
 }
-export default Login;
+export default Login

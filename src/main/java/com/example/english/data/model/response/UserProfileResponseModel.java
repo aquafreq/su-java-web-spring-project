@@ -9,12 +9,11 @@ import java.util.Collection;
 @Data
 @NoArgsConstructor
 public class UserProfileResponseModel {
-    private String username;
-    private String activity;
     private Collection<String> hobbies;
-    private String profilePicture;
-    private GameResponseModel game;
     private LocalDate birthDate;
     private String nationality;
-
+    private String levelOfLanguage;
+    private String levelExperience;
+    private String username;
+    private String email;
 }

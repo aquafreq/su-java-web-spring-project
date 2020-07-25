@@ -10,4 +10,7 @@ public interface ContentService {
     ContentServiceModel getContentByCategoryAndId(String category, String contentId);
 
     CommentServiceModel addCommentToContent(CommentServiceModel commentServiceModel);
+
+    String getContentName(String contentId);
+
 }

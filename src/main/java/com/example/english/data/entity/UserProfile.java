@@ -1,5 +1,7 @@
 package com.example.english.data.entity;
 
+import com.example.english.data.entity.enumerations.LevelExperience;
+import com.example.english.data.entity.enumerations.LevelOfLanguage;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -14,20 +16,17 @@ import java.util.*;
 @Entity
 @NoArgsConstructor
 public class UserProfile extends BaseEntity {
-    private String username;
-    private String activity;
+
+    private LevelOfLanguage levelOfLanguage;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> hobbies = new HashSet<>();
-    private String profilePicture;
 
     private LocalDate birthDate;
     private String nationality;
+    private LevelExperience levelExperience;
 
-    @OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_words_id")
     private Set<CategoryWords> categoryWords = new HashSet<>();
-
-//    @OneToOne
-//    @JoinColumn(name = "user_id", referencedColumnName = "id")
-//    private User user;
 }

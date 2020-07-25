@@ -1,46 +1,63 @@
-import React, {useEffect, useLayoutEffect, useRef, useState} from "react"
+import React, {useContext, useEffect, useLayoutEffect, useRef, useState} from "react"
 
-import contentService from "../../../services/contentService";
-import {MDBBtn, MDBCard, MDBCardBody, MDBCol, MDBContainer, MDBIcon, MDBInput, MDBRow} from "mdbreact";
+import contentService from "../../../services/contentService"
+import {MDBBtn, MDBCard, MDBCardBody, MDBCol, MDBContainer, MDBIcon, MDBInput, MDBRow} from "mdbreact"
 import styles from './CreateContent.module.css'
 import {loremIpsum, LoremIpsum, name, username} from "react-lorem-ipsum"
-import Navigation from "../../Navigation/Navigation";
-import Footer from "../../Footer/Footer";
-
-//TODO da sa oprai
-
-
+import Navigation from "../../Navigation/Navigation"
+import Footer from "../../Footer/Footer"
+import UserContext from "../../../auth/UserContext"
 
 export default function CreateContent() {
+    const userContext = useContext(UserContext)
     const [sent, setIsSent] = useState(false)
     const [categories, setCategories] = useState([])
     const [description, setDescription] = useState('')
     const [title, setTitle] = useState('')
-    const inputRef = useRef('')
+    const [category, setCategory] = useState('')
+    const [level, setLevel] = useState('')
+    const [levels, setLevels] = useState([])
+    const chosenCategory = useRef('')
 
     useLayoutEffect(() => {
-        contentService
-            .fetchCategories()
-            .then(r => setCategories(r.data))
+        Promise.all(
+            [contentService.fetchCategories(),
+                contentService.fetchGrammarLevels()])
+            .then(([categories, levels]) => {
+                setCategories(categories.data)
+                setLevels(levels.data)
+                setLevel(levels.data[0] || '')
+            })
             .then(() => setIsSent(false))
     }, [sent])
 
     const handleCategorySubmit = (e) => {
         e.preventDefault()
-
-        const value = inputRef.current.value;
-        contentService.createCategory(value)
-            .then(() => alert('category ' + value + ' sent successful'))
-            .then(() => setIsSent(true))
-        inputRef.current.value = ''
+        contentService
+            .createCategory(category)
+            .then(() => alert('category ' + category + ' creaed successful'))
+            .then(() => {
+                setCategory('')
+                setIsSent(true)
+            })
     }
 
     function handleSubmit(e) {
         e.preventDefault()
-        //validate
-        debugger
-        debugger
-        contentService.createContent({title, description})
+
+        const content = {
+            authorId: userContext.id,
+            title,
+            description,
+            categoryId: chosenCategory.current.value,
+            difficulty: level
+        }
+
+        contentService.createContent(content)
+            .then(() => {
+                setTitle('')
+                setDescription('')
+            })
     }
 
     return (
@@ -61,10 +78,12 @@ export default function CreateContent() {
                                         </strong>
                                     </label>
                                     <input
-                                        ref={inputRef}
+                                        value={category}
                                         type="text"
                                         id="defaultFormCardNameEx"
-                                        className="form-control"/>
+                                        className="form-control"
+                                        onChange={e => setCategory(e.target.value)}
+                                    />
                                     <div className="text-center py-4 mt-3">
                                         <MDBBtn className="btn btn-outline-purple" type="submit"
                                                 onClick={handleCategorySubmit}
@@ -79,22 +98,19 @@ export default function CreateContent() {
                     </MDBCol>
                 </MDBRow>
             </MDBContainer>
-
-
             <form>
                 <div className={styles.chooseCategory}>
                     <div>
                         <h3>Choose category for an exercise or a content</h3>
                         <select className="browser-default custom-select"
-                                onChange={(e) => e.target.value}
+                                ref={chosenCategory}
                                 required
                         >
                             <option>Choose category</option>
-                            {categories.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
+                            {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                         </select>
                     </div>
                 </div>
-
                 <div className={styles.addContent}>
                     <MDBContainer>
                         <MDBRow className={styles.block}>
@@ -128,59 +144,24 @@ export default function CreateContent() {
                                             value={description}
                                             onChange={(e) => setDescription(e.target.value)}
                                         />
+                                        <label>
+                                            Select the difficulty level of the uploaded lesson
+                                            <select onChange={e => setLevel(e.target.value)}>
+                                                {levels.map((l, i) => <option key={i} value={l}>{l}</option>)}
+                                            </select>
+                                        </label>
                                         <div className="text-center py-4 mt-3">
                                             <MDBBtn
                                                 onClick={handleSubmit}
                                                 className="btn btn-outline-purple" type="submit">
-                                                Add content
+                                                Upload lesson
                                                 <MDBIcon far icon="paper-plane" className="ml-2"/>
                                             </MDBBtn>
                                         </div>
-
                                     </MDBCardBody>
                                 </MDBCard>
                             </MDBCol>
                         </MDBRow>
-                        {/*<MDBRow className={styles.block}>*/}
-                        {/*    <MDBCol md="6">*/}
-                        {/*        <MDBCard>*/}
-                        {/*            <MDBCardBody>*/}
-                        {/*                <form>*/}
-                        {/*                    <p className="h4 text-center py-4">Add exercise for chosen category</p>*/}
-                        {/*                    <label*/}
-                        {/*                        htmlFor="name"*/}
-                        {/*                        className="grey-text font-weight-light"*/}
-                        {/*                    >*/}
-                        {/*                        Exercise name*/}
-                        {/*                    </label>*/}
-                        {/*                    <input*/}
-                        {/*                        type="text"*/}
-                        {/*                        id="name"*/}
-                        {/*                        className="form-control"*/}
-                        {/*                    />*/}
-                        {/*                    <br/>*/}
-                        {/*                    <label*/}
-                        {/*                        htmlFor="defaultFormCardEmailEx"*/}
-                        {/*                        className="grey-text font-weight-light"*/}
-                        {/*                    >*/}
-                        {/*                       To do lol*/}
-                        {/*                    </label>*/}
-                        {/*                    <input*/}
-                        {/*                        type="email"*/}
-                        {/*                        id="defaultFormCardEmailEx"*/}
-                        {/*                        className="form-control"*/}
-                        {/*                    />*/}
-                        {/*                    <div className="text-center py-4 mt-3">*/}
-                        {/*                        <MDBBtn className="btn btn-outline-purple" type="submit">*/}
-                        {/*                            Send*/}
-                        {/*                            <MDBIcon far icon="paper-plane" className="ml-2"/>*/}
-                        {/*                        </MDBBtn>*/}
-                        {/*                    </div>*/}
-                        {/*                </form>*/}
-                        {/*            </MDBCardBody>*/}
-                        {/*        </MDBCard>*/}
-                        {/*    </MDBCol>*/}
-                        {/*</MDBRow>*/}
                     </MDBContainer>
                 </div>
             </form>
@@ -189,5 +170,5 @@ export default function CreateContent() {
     )
 }
 
-//import { LoremIpsum, Avatar } from 'react-lorem-ipsum';
-//import { loremIpsum, name, surname, fullname, username } from 'react-lorem-ipsum';
+//import { LoremIpsum, Avatar } from 'react-lorem-ipsum'
+//import { loremIpsum, name, surname, fullname, username } from 'react-lorem-ipsum'

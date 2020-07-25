@@ -32,16 +32,16 @@ public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @OneToOne(cascade = {PERSIST})
-    private UserStats userStats;
+    @OneToOne(cascade = {PERSIST,MERGE},fetch = FetchType.EAGER)
+    @ToString.Exclude
+    private UserStats userStats = new UserStats();
 
-    @OneToOne(cascade = {PERSIST},fetch = FetchType.EAGER)
+    @OneToOne(cascade = {ALL},fetch = FetchType.EAGER)
+    @ToString.Exclude
     private UserProfile userProfile = new UserProfile();
 
     @DateTimeFormat(pattern = "dd-MMM-yyyy HH:mm:ss")
     private LocalDateTime registrationDate = LocalDateTime.now();
-
-    //list of comments and likes maybe?
 
     @ToString.Exclude
     @ManyToMany(fetch = FetchType.EAGER)

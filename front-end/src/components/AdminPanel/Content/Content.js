@@ -10,8 +10,6 @@ import Footer from "../../Footer/Footer"
 import UserContext from "../../../auth/UserContext";
 import {Loading} from "../../Loading/Loading";
 
-let d = 0
-
 export default function() {
     const history = useHistory()
     const [comments, setComments] = useState([])
@@ -26,6 +24,7 @@ export default function() {
 
     function fetchData() {
         const urlString = history.location.pathname
+        debugger
 
         contentService
             .getContent(urlString)

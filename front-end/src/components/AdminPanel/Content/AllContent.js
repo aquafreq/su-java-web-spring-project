@@ -28,14 +28,14 @@ export default function ({userId}) {
     }, [])
 
     function getPathname(name) {
-        return name.toLocaleLowerCase().split(' ').join('-');
+        return name.toLocaleLowerCase().split(' ').join('-')
     }
 
     const renderContent = () => {
 
         if (isLoading) return <Loading/>
 
-        if (!Object.keys(category).length  || !category.content.length) return <div className={styles['no-content']}><h3>
+        if (!Object.keys(category).length || !category.content.length) return <div className={styles['no-content']}><h3>
             <Link to="/">Sorry...<br/> No content found for this topic!
                 <br/>
                 Press <span>♦</span> to go back home
@@ -50,7 +50,7 @@ export default function ({userId}) {
         return <div className={styles.content}>
             <h3>Currently available resources</h3>
             <p>What you can read about {category.name}</p>
-        {
+            {
                 category.content.map(content => {
                         return (
                             <div key={content.id}>
@@ -63,9 +63,13 @@ export default function ({userId}) {
                                         {content.title}
                                     </Link>
                                 </h3>
+                                &nbsp;{content.difficulty}
                                 <br/>
                                 <em>by author:
-                                    <Link to={{pathname: `/user/profile/${content.author.id}`, contentId: content.id}}>
+                                    <Link to={{
+                                        pathname: `/user/profile/${content.author.id}`,
+                                        contentId: content.id
+                                    }}>
                                         {content.author.username}
                                     </Link>
                                 </em>

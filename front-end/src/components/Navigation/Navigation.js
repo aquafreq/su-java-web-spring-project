@@ -6,16 +6,18 @@ import UserContext from "../../auth/UserContext";
 
 const Navigation = () => {
     const userContext = useContext(UserContext)
-    const hasRoleAdmin = !!userContext.userRoles.filter(r => r.authority === 'ROLE_ADMIN').length
-    const hasAnyRole = userContext.userRoles.length > 1;
+    const hasRole = role => userContext.userRoles.includes(role)
 
     function username() {
         return userContext.username ?
-            <span> <strong>Hello, {userContext.username}</strong> </span> : null
+            <span> <Link
+                to={`/user/profile/${userContext.id}`}><strong>Hello, {userContext.username}</strong></Link></span> : null
     }
 
     function administrationBar() {
-        return hasAnyRole ?
+        return (hasRole('ROLE_MODERATOR') ||
+            hasRole('ROLE_ADMIN') ||
+            hasRole('ROLE_ROOT_ADMIN')) ?
             <div className={styles.AdminNav}>
                 <MDBDropdown>
                     <MDBDropdownToggle caret color="secondary">
@@ -23,12 +25,10 @@ const Navigation = () => {
                     </MDBDropdownToggle>
                     <MDBDropdownMenu basic>
                         <Link to="/administration/create-content">
-                            <MDBDropdownItem>Create
-                                content</MDBDropdownItem>
+                            <MDBDropdownItem>Create content</MDBDropdownItem>
                         </Link>
-
                         {
-                            hasRoleAdmin ?
+                            hasRole("ROLE_ADMIN") || hasRole("ROLE_ROOT_ADMIN") ?
                                 <> <
                                     MDBDropdownItem divider/>
                                     <Link to="/administration/manage-roles">

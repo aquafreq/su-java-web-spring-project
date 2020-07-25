@@ -8,6 +8,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class CategoryWordsServiceModel {
+    private String id;
     private String name;
     private List<WordServiceModel> words;
 }

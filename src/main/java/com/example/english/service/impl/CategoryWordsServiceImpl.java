@@ -6,6 +6,7 @@ import com.example.english.data.model.service.CategoryWordsServiceModel;
 import com.example.english.data.model.service.WordServiceModel;
 import com.example.english.data.repository.CategoryWordsRepository;
 import com.example.english.service.CategoryWordsService;
+import com.example.english.service.UserService;
 import com.example.english.service.WordService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -23,9 +24,11 @@ public class CategoryWordsServiceImpl implements CategoryWordsService {
     private final WordService wordService;
 
     @Override
-    public CategoryWordsServiceModel addCategory(CategoryWordsServiceModel categoryWordsServiceModel) {
-        CategoryWords map = modelMapper.map(categoryWordsServiceModel, CategoryWords.class);
-        return modelMapper.map(repository.save(map), CategoryWordsServiceModel.class);
+    public CategoryWordsServiceModel addCategory(String category) {
+        CategoryWords categoryWords = new CategoryWords(category);
+
+        return modelMapper.map(repository.save(categoryWords),
+                CategoryWordsServiceModel.class);
     }
 
     @Override
@@ -67,19 +70,5 @@ public class CategoryWordsServiceImpl implements CategoryWordsService {
                 .remove(map);
 
         repository.save(categoryWords);
-    }
-
-    @Override
-    public CategoryWordsServiceModel addWordToCategory(WordServiceModel wordServiceModel) {
-//        Word word = modelMapper.map(wordService.createWord(wordServiceModel), Word.class);
-
-        Word word = modelMapper.map(wordServiceModel, Word.class);
-
-        CategoryWords byName = repository.findByName(wordServiceModel.getCategory());
-
-        //da sa vidi adli  4e garmi za56ototnqma tekaf word
-        byName.getWords().add(word);
-
-        return modelMapper.map(repository.save(byName),CategoryWordsServiceModel.class);
     }
 }

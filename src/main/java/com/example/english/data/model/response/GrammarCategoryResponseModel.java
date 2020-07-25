@@ -13,5 +13,4 @@ public class GrammarCategoryResponseModel {
     private String id;
     private String name;
     private Collection<ContentResponseModel> content;
-    private List<ExerciseServiceModel> exercises;
 }

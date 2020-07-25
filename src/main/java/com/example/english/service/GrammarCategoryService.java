@@ -21,5 +21,9 @@ public interface GrammarCategoryService {
     Collection<GrammarCategoryServiceModel> getAll();
 
     ContentServiceModel uploadContent(ContentServiceModel serviceModel);
+
+    GrammarCategoryServiceModel getGrammarCategoryById(String id);
+
+    String getGrammarCategoryName(String categoryId);
 }
 

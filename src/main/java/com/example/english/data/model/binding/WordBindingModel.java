@@ -8,6 +8,5 @@ import lombok.NoArgsConstructor;
 @Data
 public class WordBindingModel {
     private String name;
-    private String category;
     private String definition;
 }

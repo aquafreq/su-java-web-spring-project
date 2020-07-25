@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ContentBindingModel {
     private String title;
+    private String difficulty;
     private String authorId;
     private String description;
     private LocalDateTime created = LocalDateTime.now();

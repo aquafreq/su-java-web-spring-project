@@ -123,11 +123,10 @@ public class AdminUserController {
 
     private Consumer<UserResponseModel> mapUserLinks(List<String> allRoles) {
         return u -> {
-
             String id = u.getId();
 
-            Link getUserInfo = linkTo(methodOn(AdminUserController.class)
-                    .getUser(id)).withSelfRel();
+            Link getUserInfo = linkTo(methodOn(UserController.class)
+                    .getUserProfile(id)).withSelfRel();
 
             Link disable = linkTo(methodOn(AdminUserController.class)
                     .disableUser(id)).withRel("disable-user");

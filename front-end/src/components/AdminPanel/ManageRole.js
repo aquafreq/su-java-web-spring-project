@@ -1,10 +1,11 @@
-import React, {useCallback, useContext, useDebugValue, useEffect, useMemo, useState} from "react"
+import React, {useCallback, useContext, useEffect, useMemo, useState} from "react"
 import userService from "../../services/UserService"
 import styles from './ManageRole.module.css'
-import UserContext from "../../auth/UserContext";
-import SearchBar from "./SearchBar/SearchBar";
-import Navigation from "../Navigation/Navigation";
-import Footer from "../Footer/Footer";
+import UserContext from "../../auth/UserContext"
+import SearchBar from "./SearchBar/SearchBar"
+import Navigation from "../Navigation/Navigation"
+import Footer from "../Footer/Footer"
+import {useHistory} from 'react-router-dom'
 
 const ROLE_PREFIX = 'ROLE_'
 const EMPTY_STRING = ''
@@ -14,7 +15,9 @@ export default function () {
     const [users, setUsers] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const [roles, setRoles] = useState({})
-    const {id, userRoles} = useContext(UserContext);
+    const {id, userRoles} = useContext(UserContext)
+    const history = useHistory()
+
     const Button = (style, handler, action, index) =>
         <span className={style} key={index}><button onClick={handler}>{action}</button></span>
 
@@ -28,6 +31,14 @@ export default function () {
                 const users =
                     r[0].data._embedded
                         .userResponseModelList
+                        .filter(u => {
+                                if (u.authorities.map(a => a.authority).includes('ROLE_ROOT_ADMIN')) {
+                                    u.isRootAdmin = true
+                                }
+
+                                return u
+                            }
+                        )
                         .filter(u => u.id !== (id || userId))
                         .map(u => {
                             u.display = true
@@ -75,7 +86,7 @@ export default function () {
         return async e => {
             e.preventDefault()
             const response = await userService.updateUser(url)
-            const newUser = await response.data;
+            const newUser = await response.data
             setUsers(users => {
                 const newState = [...users]
                 const oldUser = newState[getUserIndex(users, newUser.id)]
@@ -83,7 +94,7 @@ export default function () {
                 oldUser._links = newUser._links
                 return newState
             })
-        };
+        }
     }
 
     const getLinkRole = element => roles[element.split('/').pop()]
@@ -91,8 +102,8 @@ export default function () {
     const renderRoleLink = ({href}, i = null) =>
         Button(styles.role, roleHandler(href), getLinkRole(href), i)
 
-    const roleClickHandler = (element) => {
-        if (element)
+    const roleClickHandler = (element, {isRootAdmin}) => {
+        if (element && !isRootAdmin)
             return Array.isArray(element) ?
                 element.map((el, i) => renderRoleLink(el, i)) : renderRoleLink(element)
     }
@@ -120,7 +131,13 @@ export default function () {
                             <td>{u.username}</td>
                             <td>{u.email}</td>
                             <td>
-                                <button onClick={(() => userService.userProfile(u._links.self.href))}>Link</button>
+                                <button onClick={(() => {
+                                    const url = u._links.self.href
+                                    history.push(
+                                        `/user/${url.substring(url.lastIndexOf('/') + 1)}/details`,
+                                        url)
+                                })}>Link
+                                </button>
                             </td>
                             <td>{
                                 !u.authorities.filter(a => a.authority !== 'ROLE_USER').length ? enableDisableUser(u) : null
@@ -128,10 +145,11 @@ export default function () {
                             <td>{u.authorities.map((auth, i) =>
                                 <span
                                     key={auth.id}> {roles[auth.id]}{i !== u.authorities.length - 1 ? ',\u00A0' : null}
-                                    </span>
-                            )}</td>
-                            <td>{roleClickHandler(u._links['give-user-role'])}</td>
-                            <td>{roleClickHandler(u._links['remove-user-role'])}</td>
+                                </span>
+                            )}
+                            </td>
+                            <td>{roleClickHandler(u._links['give-user-role'], u)}</td>
+                            <td>{roleClickHandler(u._links['remove-user-role'], u)}</td>
                         </tr>) : null
                     })
                 }
@@ -157,12 +175,15 @@ export default function () {
     }
 
     return (
-        <div className={styles.container}>
+        <>
             <Navigation/>
-            <SearchBar filter={filter}/>
-            {!isLoading ? filter('', '') : <div>Loading ....</div>}
+            <div className={styles.container}>
+
+                <SearchBar filter={filter}/>
+                {!isLoading ? filter('', '') : <div>Loading ....</div>}
+            </div>
             <Footer/>
-        </div>
+        </>
     )
 }
 

@@ -21,12 +21,12 @@ public class UserStats extends BaseEntity {
     @ElementCollection
     private Map<Exam, Double> gradesForExams;
 
-    @Enumerated(EnumType.STRING)
-    private LevelExperience levelExperience;
+//    @Enumerated(EnumType.STRING)
+//    private LevelExperience levelExperience;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+//    @OneToOne
+//    @JoinColumn(name = "user_id")
+//    private User user;
 //    private List<Essay> sentEssays;
 //    private List<Exam> takenExams;
     //TODO schedule task to do once in a week and update stats

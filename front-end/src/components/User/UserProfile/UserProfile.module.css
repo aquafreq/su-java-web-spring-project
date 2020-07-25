@@ -1,0 +1,113 @@
+.profile {
+    background-color: white;
+    float: left;
+    width: 400px;
+    min-height: 630px;
+    display: flow-root;
+    text-align: center;
+    padding: 40px;
+    font-size: 26px;
+    max-height: 40px;
+    /*margin: 3px 3px 0;*/
+    border: 7px solid mediumpurple;
+}
+
+.profile aside fieldset{
+    margin: 5px;
+}
+
+.profile fieldset {
+    text-decoration: mediumpurple;
+    text-decoration: underline;
+    text-decoration-color: lightsteelblue;
+    text-decoration-style: solid;
+    text-emphasis-color: #888888;
+    font-family: "Droid Sans Mono Dotted", fantasy;
+    text-align: left;
+    margin-left: 5px;
+    padding-left: 15px;
+}
+
+.profile-wrapper button.close {
+    /*float: contour;*/
+    padding: 5px;
+    background-color: #888888;
+    color: black;
+    border: 1px black;
+}
+
+.profile-wrapper button.close {
+    opacity: 0.3;
+}
+
+.profile-wrapper button.close:hover {
+    opacity: 1;
+}
+
+.middle {
+    margin: auto;
+    float: contour;
+    width: 465px;
+    min-height: 550px;
+    background-color: white;
+    text-align: center;
+    font-size: 18px;
+    max-height: 40px;
+    /*margin: 3px 3px 0;*/
+    border: 7px solid mediumpurple;
+}
+
+.middle div.show-info {
+    font-size: 14px;
+    position: relative;
+    display: inline-block;
+    padding: 10px;
+}
+
+.middle div.show-info > p > p{
+    background-color: darkorange;
+    font-weight: 500;
+}
+
+.right {
+    float: right;
+    position: relative;
+    background-color: white;
+    width: 465px;
+    min-height: 630px;
+    display: flow-root;
+    text-align: center;
+    padding: 40px;
+    font-size: 26px;
+    max-height: 40px;
+    /*margin: 3px 3px 0;*/
+    border: 7px solid mediumpurple;
+}
+
+.grid {
+    margin: 0;
+    width: 68%;
+    position: center;
+    display: inline-flex;
+}
+
+div.right textarea,
+div.right input,
+div.right select
+{
+    font-size: 16px;
+    padding: 6px;
+    text-align: left;
+}
+
+
+div.right textarea{
+    padding: 30px;
+}
+
+
+@media screen and (max-width: 800px) {
+    .left, .main, .right {
+        width: 100%; /* The width is 100%, when the viewport is 800px or smaller */
+    }
+}

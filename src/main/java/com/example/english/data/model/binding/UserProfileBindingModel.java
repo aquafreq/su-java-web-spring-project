@@ -12,10 +12,11 @@ import java.util.Collection;
 @Data
 @NoArgsConstructor
 public class UserProfileBindingModel {
-    private String activity = UserActivity.AVERAGE.name();
-    private Collection<String> hobbies = new ArrayList<>();
-    private String profilePicture;
-    private WordServiceModel wordsGame = new WordServiceModel();
+    private String username;
+    private String email;
+    private Collection<String> hobbies;
     private LocalDate birthDate;
     private String nationality;
+    private String levelOfLanguage;
+    private String levelExperience;
 }

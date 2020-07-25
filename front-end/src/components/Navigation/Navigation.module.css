@@ -41,9 +41,9 @@
     transition: 1s background-color;
 }
 
-.Nav a:hover {
-    font-style: italic;
+.Nav a:hover:nth-of-type(1) {
     font-weight: bold;
+    color: mediumpurple;
 }
 
 .Nav ul li:hover {
@@ -65,7 +65,7 @@
     display: inline-block;
 }
 
-.Nav span > strong {
+.Nav span  {
     margin: 8px 8px;
     font-size: 33px;
     float: left;

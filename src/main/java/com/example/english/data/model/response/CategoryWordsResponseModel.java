@@ -8,6 +8,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class CategoryWordsResponseModel {
+    private String id;
+    private String name;
     private List<WordResponseModel> words;
-    private String category;
 }

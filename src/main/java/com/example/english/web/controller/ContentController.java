@@ -1,5 +1,6 @@
 package com.example.english.web.controller;
 
+import com.example.english.data.entity.enumerations.LevelOfLanguage;
 import com.example.english.data.model.binding.CommentBindingModel;
 import com.example.english.data.model.binding.ContentBindingModel;
 import com.example.english.data.model.binding.ExerciseBindingModel;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,13 +60,13 @@ public class ContentController {
         return created.body(exerciseResponseModel);
     }
 
-    @GetMapping(value = "/category/all", produces = "application/json")
-    public List<String> getAllGrammarCategories() {
+    @GetMapping(value = "/category/all-categories", produces = "application/json")
+    public List<GrammarNameResponseModel> getAllGrammarCategories() {
         return grammarCategoryService
                 .getAll()
                 .stream()
-                .map(GrammarCategoryServiceModel::getName)
-//                .map(m -> modelMapper.map(m, GrammarNameResponseModel.class))
+//                .map(GrammarCategoryServiceModel::getName)
+                .map(m -> modelMapper.map(m, GrammarNameResponseModel.class))
                 .collect(Collectors.toList());
     }
 
@@ -78,16 +80,22 @@ public class ContentController {
     }
 
     @PreAuthorize(value = "hasAnyRole('ROOT_ADMIN', 'ADMIN', 'MODERATOR')")
-    @PostMapping("/add")
+    @PostMapping("/create")
     public ResponseEntity<ContentResponseModel> createContent(
             @RequestBody ContentBindingModel model) {
-        ContentResponseModel map = modelMapper.map(
-                grammarCategoryService
-                        .uploadContent(modelMapper.map(model, ContentServiceModel.class)),
-                ContentResponseModel.class);
+        ContentServiceModel map = modelMapper.map(model, ContentServiceModel.class);
+        ContentServiceModel contentServiceModel = grammarCategoryService.uploadContent(map);
 
-        String path = String.format("/category/%s/%s", map.getCategoryId(), map.getTitle());
-        return ResponseEntity.created(URI.create(path)).body(map);
+        ContentResponseModel responseModel = modelMapper.map(contentServiceModel, ContentResponseModel.class);
+
+        String path = mapCreatedURI(responseModel);
+        return ResponseEntity.created(URI.create(path)).body(responseModel);
+    }
+
+    private String mapCreatedURI(ContentResponseModel responseModel) {
+        return String.format("/category/%s/%s",
+                responseModel.mapValue(responseModel.getCategoryName()),
+                responseModel.mapValue(responseModel.getTitle()));
     }
 
     @GetMapping(value = "/category/{categoryId}/{contentId}")
@@ -98,10 +106,10 @@ public class ContentController {
         return ResponseEntity.ok(responseModel);
     }
 
-    @PostMapping(value = "/category/{categoryId}/{contentId}")
+    @PostMapping(value = "/category/{category}/{content}")
     public ResponseEntity<CommentResponseModel> addComment(
-            @PathVariable String categoryId,
-            @PathVariable String contentId,
+            @PathVariable String category,
+            @PathVariable String content,
             @RequestBody CommentBindingModel commentBindingModel,
             UriComponentsBuilder uriComponentsBuilder) {
         CommentServiceModel map = modelMapper.map(commentBindingModel, CommentServiceModel.class);
@@ -110,11 +118,17 @@ public class ContentController {
 
         CommentResponseModel responseModel = modelMapper.map(commentServiceModel, CommentResponseModel.class);
 
-        String path = String.format("/category/%s/%s", categoryId, contentId);
+        String path = String.format("/category/%s/%s", category, content);
 
         return ResponseEntity
                 .created(uriComponentsBuilder.path(path).build().toUri())
                 .body(responseModel);
     }
 
+    @GetMapping("/category/levels")
+    public List<String> getLevelOfLanguages() {
+        return Arrays.stream(LevelOfLanguage.values())
+                .map(Enum::name)
+                .collect(Collectors.toList());
+    }
 }

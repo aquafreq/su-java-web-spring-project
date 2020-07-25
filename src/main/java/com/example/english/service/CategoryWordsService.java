@@ -7,13 +7,11 @@ import com.example.english.data.model.service.WordServiceModel;
 import java.util.List;
 
 public interface CategoryWordsService {
-    CategoryWordsServiceModel addCategory(CategoryWordsServiceModel categoryWordsServiceModel);
+    CategoryWordsServiceModel addCategory(String category);
     void removeCategoryById(String categoryId);
     CategoryWordsServiceModel getCategoryWord(String categoryId);
 
     void deleteWordsInCategory(String categoryId, List<String> words);
 
     void removeWordFromCategory(String categoryId, String wordId);
-
-    CategoryWordsServiceModel addWordToCategory(WordServiceModel wordServiceModel);
 }

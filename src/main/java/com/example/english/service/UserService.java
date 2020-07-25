@@ -1,13 +1,18 @@
 package com.example.english.service;
 
 import com.example.english.data.entity.User;
+import com.example.english.data.model.binding.CategoryWordsBindingModel;
+import com.example.english.data.model.binding.UserChangePasswordBindingModel;
+import com.example.english.data.model.service.CategoryWordsServiceModel;
 import com.example.english.data.model.service.UserProfileServiceModel;
 import com.example.english.data.model.service.UserServiceModel;
+import com.example.english.data.model.service.WordServiceModel;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface UserService extends UserDetailsService {
 //    Optional<UserResponseModel> logUser(UserServiceModel user);
@@ -39,7 +44,15 @@ public interface UserService extends UserDetailsService {
     UserProfileServiceModel saveProfile(UserProfileServiceModel userProfileServiceModel);
     void deleteProfile(String id);
 
-    UserProfileServiceModel updateProfile(UserProfileServiceModel userProfileServiceModel);
+    UserProfileServiceModel updateProfile(UserProfileServiceModel userProfileServiceModel,String id);
 
     UserProfileServiceModel getUserProfileById(String id);
+
+    CategoryWordsServiceModel addCategoryForUser(String userId, CategoryWordsBindingModel categoryName);
+
+    Set<CategoryWordsServiceModel> getUserCategoriesById(String userId);
+
+    WordServiceModel addWordToUserCategoryWords(WordServiceModel wordServiceModel, String categoryId, String userId);
+
+    boolean updatePassword(String id, String oldPassword, String newPassword);
 }

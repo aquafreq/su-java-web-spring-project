@@ -1,0 +1,48 @@
+import React, {Fragment, useEffect, useState} from "react"
+
+import UserContext from "../../../auth/UserContext"
+import styles from './PracticeWords.module.css'
+import userService from "../../../services/UserService";
+import {useHistory} from 'react-router-dom'
+import Navigation from "../../Navigation/Navigation";
+
+
+function extractUserId() {
+    const arr = history.location.pathname.split('/')
+    const id = arr[arr.length - 1]
+    debugger
+    return id;
+}
+
+export default function () {
+    const [wordCategories, setWordCategories] = useState([])
+    const history = useHistory()
+
+    useEffect(() => {
+        fetchData()
+    }, [])
+
+    async function fetchData() {
+        const id = extractUserId();
+
+        debugger
+
+        const response = await userService.fetchUserCategories(id)
+        debugger
+        setWordCategories(await response.data)
+    }
+
+    return (
+        <Fragment>
+            <Navigation/>
+            <div className={styles['practice-container']}>
+                <h4>Welcome to dy BG MAN</h4>
+                <p>time to tray nekwi ne6ta</p>
+                dva selekta i nekvi takia nz o6te
+                <p>fe4 me4, zaqwvki nalevo nadesn</p>
+            </div>
+            <Footer/>
+        </Fragment>
+
+    )
+}

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -25,6 +26,7 @@ public class GrammarCategoryServiceImpl implements GrammarCategoryService {
     private final ModelMapper modelMapper;
     private final GrammarCategoryRepository grammarCategoryRepository;
     private final ContentService contentService;
+    private final UserService userService;
 
     @Override
     public void seedCategories(GrammarCategory... grammarCategory) {
@@ -70,14 +72,30 @@ public class GrammarCategoryServiceImpl implements GrammarCategoryService {
 
     @Override
     public ContentServiceModel uploadContent(ContentServiceModel serviceModel) {
-        UserServiceModel author = serviceModel.getAuthor();
-//        userService.getUserByName()
-//        serviceModel.getAuthor()
-        Content map = modelMapper.map(contentService.createContent(serviceModel), Content.class);
+        ContentServiceModel serviceContent = contentService.createContent(serviceModel);
+        Content map1 = modelMapper.map(serviceContent, Content.class);
+        GrammarCategory grammarCategory = grammarCategoryRepository.findById(serviceModel.getCategory().getId())
+                .orElseThrow();
 
-//        map.setCategory();
-//        modelMapper.map();
-        return null;
+        map1.setCategory(grammarCategory);
+        grammarCategory.getContent().add(map1);
+
+        grammarCategoryRepository.save(grammarCategory);
+
+        return modelMapper.map(map1, ContentServiceModel.class);
+    }
+
+    @Override
+    public GrammarCategoryServiceModel getGrammarCategoryById(String id) {
+        return modelMapper.map(grammarCategoryRepository.findById(id),
+                GrammarCategoryServiceModel.class);
+    }
+
+    @Override
+    public String getGrammarCategoryName(String categoryId) {
+        return grammarCategoryRepository.findById(categoryId)
+                .map(GrammarCategory::getName)
+                .orElseThrow();
     }
 
     @Override

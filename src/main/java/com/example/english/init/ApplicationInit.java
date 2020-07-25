@@ -90,12 +90,12 @@ public class ApplicationInit implements CommandLineRunner {
             category.getContent().addAll(List.of(byTitle, byTitle1, byTitle2));
 
             GrammarCategory category1 = repository.findByName("Nouns").get();
-            Content byTitle3 = contentRepository.findByTitle("Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...");
+            Content byTitle3 = contentRepository.findByTitle("Neque porro quisquam est quid");
             byTitle3.setCategory(category1);
             category1.getContent().add(byTitle3);
 
             GrammarCategory category2 = repository.findByName("Conditionals").get();
-            Content byTitle4 = contentRepository.findByTitle("Section 1.10.32 of \"de Finibus Bonorum et Malorum\", written by Cicero in 45 BC");
+            Content byTitle4 = contentRepository.findByTitle("Section 1.10.32 of \"de Finibus ");
             byTitle4.setCategory(category2);
             category2.getContent().add(byTitle4);
 
@@ -110,11 +110,18 @@ public class ApplicationInit implements CommandLineRunner {
 
     private static List<UserServiceModel> users() {
         return List.of(
+                //ADMIN
                 new UserServiceModel("fizz", "fizz", "fizz@fizz.fizz"),
                 new UserServiceModel("fizz2", "fizz", "fizz22@fizz.fizz"),
                 new UserServiceModel("fizz22", "fizz", "fizz222@fizz.fizz"),
+
+                //MODERATOR && ADMIN
                 new UserServiceModel("wow", "wow", "wow@wow.wow"),
+
+                //MODERATOR
                 new UserServiceModel("zxc", "zxc", "zxc@zxc.zxc"),
+
+                //USER
                 new UserServiceModel("Bai ИВАН", "Ваньо666", "BAT_IVAN@ВАНьО.БГ")
         );
     }
@@ -154,7 +161,7 @@ public class ApplicationInit implements CommandLineRunner {
                                 "Libero justo laoreet sit amet cursus sit amet. Elit duis tristique sollicitudin nibh sit. Egestas sed sed risus pretium. Risus quis varius quam quisque id. Purus ut faucibus pulvinar elementum integer. Amet risus nullam eget felis eget nunc lobortis mattis. Metus vulputate eu scelerisque felis. Aliquet eget sit amet tellus cras adipiscing. Adipiscing diam donec adipiscing tristique risus nec. Nisl vel pretium lectus quam. Malesuada fames ac turpis egestas. Diam donec adipiscing tristique risus nec. Dignissim enim sit amet venenatis urna. Et tortor at risus viverra adipiscing at. Diam in arcu cursus euismod quis viverra. In aliquam sem fringilla ut morbi tincidunt augue interdum velit.",
                         userService.getUserByName("fizz")
                 ),
-                new Content("Section 1.10.32 of \"de Finibus Bonorum et Malorum\", written by Cicero in 45 BC",
+                new Content("Section 1.10.32 of \"de Finibus ",
                         randomLevel(),
                         "orem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Proin sagittis nisl rhoncus mattis rhoncus. Quam quisque id diam vel quam elementum pulvinar etiam non. Mauris sit amet massa vitae tortor condimentum lacinia. Tristique et egestas quis ipsum suspendisse ultrices gravida dictum fusce. Sed faucibus turpis in eu mi bibendum neque egestas. Vel quam elementum pulvinar etiam non. Sit amet purus gravida quis blandit turpis. Est ante in nibh mauris cursus mattis molestie. Habitant morbi tristique senectus et netus. Nisi scelerisque eu ultrices vitae auctor eu. In aliquam sem fringilla ut. Ante in nibh mauris cursus mattis molestie a iaculis at.\n" +
                                 "\n" +
@@ -174,7 +181,7 @@ public class ApplicationInit implements CommandLineRunner {
                                 "Nisl purus in mollis nunc sed id semper. Tincidunt lobortis feugiat vivamus at. Eu augue ut lectus arcu bibendum. Id eu nisl nunc mi ipsum faucibus vitae aliquet nec. Turpis egestas maecenas pharetra convallis. Vitae ultricies leo integer malesuada nunc. Odio pellentesque diam volutpat commodo sed egestas egestas. Porttitor massa id neque aliquam vestibulum morbi blandit. Sed odio morbi quis commodo. Velit euismod in pellentesque massa placerat duis ultricies lacus sed. Adipiscing at in tellus integer. In mollis nunc sed id semper risus in hendrerit. Proin fermentum leo vel orci porta non pulvinar neque.",
                         userService.getUserByName("wow")
                 ),
-                new Content("Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+                new Content("Neque porro quisquam est quid",
                         randomLevel(),
                         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ultricies mi quis hendrerit dolor. Consequat mauris nunc congue nisi vitae suscipit tellus mauris. Lorem ipsum dolor sit amet consectetur adipiscing. Posuere ac ut consequat semper viverra nam libero justo laoreet. Gravida cum sociis natoque penatibus et magnis dis. Elit pellentesque habitant morbi tristique senectus. Leo vel orci porta non pulvinar neque laoreet suspendisse. Sit amet consectetur adipiscing elit duis. Adipiscing diam donec adipiscing tristique risus nec. Auctor augue mauris augue neque gravida in fermentum et. Mi bibendum neque egestas congue quisque egestas. Mi bibendum neque egestas congue quisque egestas diam. Nunc eget lorem dolor sed viverra ipsum nunc aliquet bibendum. Tortor pretium viverra suspendisse potenti nullam ac. Imperdiet proin fermentum leo vel orci porta non pulvinar. Quam nulla porttitor massa id. Enim ut sem viverra aliquet eget sit amet. Eu mi bibendum neque egestas congue quisque egestas diam.\n" +
                                 "\n" +

@@ -79,9 +79,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .signWith(Keys.hmacShaKeyFor(SECRET.getBytes()), SignatureAlgorithm.HS256)
                 .compact();
 
-        logger.info(token);
-        logger.info(user);
-
         res.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
     }
 }

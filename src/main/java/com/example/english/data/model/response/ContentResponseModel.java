@@ -18,5 +18,10 @@ public class ContentResponseModel {
     private LocalDateTime created;
     private String categoryId;
     private String categoryName;
+    private String difficulty;
     private List<CommentResponseModel> comments;
+
+    public String mapValue(String value) {
+          return value.toLowerCase().replaceAll(" ","-");
+    }
 }
