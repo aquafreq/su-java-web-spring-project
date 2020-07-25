@@ -7,12 +7,12 @@ import * as serviceWorker from './serviceWorker';
 import './auth/interceptor'
 import './index.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import {BrowserRouter} from "react-router-dom";
+import {BrowserRouter, HashRouter} from "react-router-dom";
 
 ReactDOM.render(
-    <BrowserRouter>
+    <HashRouter>
         <App/>
-    </BrowserRouter>
+    </HashRouter>
     , document.getElementById('root'))
 
 
