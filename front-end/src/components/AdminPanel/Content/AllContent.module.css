@@ -16,7 +16,7 @@
 }
 
 .no-content a {
-    color: mediumblue;
+    /*color: aliceblue;*/
 }
 
 .no-content a > span {
@@ -29,7 +29,9 @@
     font-weight: bold;
     font-family: Sylfaen, fantasy;
 }
+
 .no-content-h a{
+    /*al*/
     margin-top: 15%;
     font-size: 40px;
     font-weight: bold;
@@ -54,7 +56,7 @@
 }
 
 .content h3 {
-    border: 2px dotted violet;
+    border: 2px dashed violet;
     padding: 10px;
     font-size: 34px;
     font-family: "Segoe UI Emoji", serif;
@@ -76,4 +78,20 @@
     padding: 5px;
     text-decoration: midnightblue;
     text-decoration-line: underline;
+}
+
+.content div > h3 > a {
+    color: aliceblue;
+    /*color: #007bff;*/
+    text-decoration: none;
+
+}
+
+.content div > h3 > a:hover {
+    color: #8fd3f4;
+    /*color: #007bff;*/
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
 }

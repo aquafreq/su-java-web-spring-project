@@ -46,9 +46,9 @@
     text-decoration-width: 20px;
 }
 
-.home-container h3, h4 {
-    color: black;
-}
+/*.home-container h3, h4 {*/
+/*    color:  steelblue;*/
+/*}*/
 
 .home-container h4 > div {
     width: 40px;

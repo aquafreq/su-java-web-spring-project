@@ -1,13 +1,32 @@
-.picWrapper{
+.picWrapper {
     background-image: url("https://i.pinimg.com/736x/b7/56/fe/b756fe9a976079410a33df02340463cd.jpg");
     opacity: 0.4;
-    background-size: 12%;
-    background-attachment: fixed;
+    background-size: 14%;
+    background-attachment: inherit;
     background-position: right;
 }
 
+@media (min-width: 300px) and (max-width: 480px) {
+    .footer {
+        position: inherit;
+    }
+
+    .footer span {
+        color: black;
+    }
+
+    .picWrapper {
+        background-size: 100%;
+    }
+}
+
+@media (min-width: 1024px) {
+    .footer{
+        position: fixed;
+    }
+}
+
 .footer {
-    position: fixed;
     left: 0;
     bottom: 0;
     width: 100%;
@@ -18,12 +37,17 @@
     color: snow;
 }
 
-.footer span {
+.footer h6 {
+    padding: 10px 0;
+}
+
+.footer span em{
     cursor: pointer;
     text-decoration: underline;
     font-size: 24px;
-    color: snow;
+    color: aliceblue;
 }
+
 .footer h6 {
     font-size: 25px;
     font-weight: bolder;
@@ -33,5 +57,11 @@
 
 .footer span:hover {
     text-decoration: none;
-    text-shadow: 1px 1px 1px #555;
 }
+
+.footer em:hover {
+    color: #b9f6ca;
+    text-shadow: 1px 1px 1px #555;
+    font-size: 25px;
+}
+

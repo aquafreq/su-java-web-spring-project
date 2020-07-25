@@ -122,7 +122,7 @@ const App = () => {
                             <Route path="/user/profile/:id/edit" render={props => <UserProfileEdit {...props} updateUser={updateUser} />}/>
                             <Route path="/user/profile/:id/change-password"
                                    render={() => isAuthenticated ? <UserChangePassword /> : <Redirect to="/" />}/>
-                            <Route path="/user/:id/details" component={UserDetails}/>
+                            <Route path="/user/details/:id" component={UserDetails}/>
                             <Route path="/category/:category" exact userId={user.id} component={AllContent}/>
                             <Route path="/category/:category/:content" userId={user.id} component={Content}/>
                             <Route path="/administration/manage-users"

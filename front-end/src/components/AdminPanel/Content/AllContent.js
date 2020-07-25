@@ -65,9 +65,9 @@ export default function ({userId}) {
                                 </h3>
                                 &nbsp;{content.difficulty}
                                 <br/>
-                                <em>by author:
+                                <em>by author:&nbsp;
                                     <Link to={{
-                                        pathname: `/user/profile/${content.author.id}`,
+                                        pathname: `/user/details/${content.author.id}`,
                                         contentId: content.id
                                     }}>
                                         {content.author.username}

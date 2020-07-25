@@ -8,7 +8,7 @@ html, body {
     -o-background-size: cover;
     background-size: cover;
     z-index: 1;
-    opacity: 0.78;
+    opacity: 0.9;
     bottom: 0;
     box-shadow: inset 0 0 0 1000px rgba(217, 76, 183,.5);
 }

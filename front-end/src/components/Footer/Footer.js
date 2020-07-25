@@ -6,7 +6,7 @@ const Footer = () => (
         <div className={styles.picWrapper}>
             <footer>
                 <h6>This is Hello-English</h6>
-                Contact me on <span>requiemforadream@abv.bg</span>
+                <span>Contact me on  <em>requiemforadream@abv.bg</em></span>
             </footer>
         </div>
     </div>
