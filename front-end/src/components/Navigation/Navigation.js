@@ -31,7 +31,7 @@ const Navigation = () => {
                             hasRole("ROLE_ADMIN") || hasRole("ROLE_ROOT_ADMIN") ?
                                 <> <
                                     MDBDropdownItem divider/>
-                                    <Link to="/administration/manage-roles">
+                                    <Link to="/administration/manage-users">
                                         <MDBDropdownItem>Manage roles</MDBDropdownItem>
                                     </Link>
                                 </> : null
