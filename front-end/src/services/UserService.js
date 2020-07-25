@@ -33,7 +33,8 @@ const userService = {
     createWordForCategory: (userId, categoryId, word) =>
         axios.post(`/user/profile/${userId}/${categoryId}/create-word`, word),
     fetchUserCategories: (id) => axios.get(`/user/profile/${id}/categories`),
-    savePassword: (url, password) => axios.patch(url, password)
+    savePassword: (url, password) => axios.patch(url, password),
+    userDetails : pathname => axios.get(pathname),
 }
 
 export default userService

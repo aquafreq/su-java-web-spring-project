@@ -11,4 +11,5 @@ public class UserRegisterBindingModel {
     private String username;
     private String password;
     private String email;
+    private boolean isEnabled = true;
 }

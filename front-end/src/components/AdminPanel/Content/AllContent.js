@@ -3,7 +3,6 @@ import React, {useEffect, useState} from "react"
 import {Link, useHistory} from 'react-router-dom'
 
 import contentService from "../../../services/contentService"
-import userService from "../../../services/UserService"
 import styles from './AllContent.module.css'
 import Navigation from "../../Navigation/Navigation";
 import Footer from "../../Footer/Footer";
@@ -82,12 +81,15 @@ export default function ({userId}) {
     }
 
     return (
-        <div className={styles['all-content']}>
+        <>
             <Navigation/>
-            <section>
-                {renderContent()}
-            </section>
+            <div className={styles['all-content']}>
+
+                <section>
+                    {renderContent()}
+                </section>
+            </div>
             <Footer/>
-        </div>
+        </>
     )
 }

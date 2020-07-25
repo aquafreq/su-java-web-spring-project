@@ -264,4 +264,11 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
+    @Override
+    public UserServiceModel getUserDetailsById(String id) {
+        User user = userRepository.findById(id).orElseThrow();
+        UserServiceModel map = modelMapper.map(user, UserServiceModel.class);
+
+        return map;
+    }
 }

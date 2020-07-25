@@ -54,13 +54,6 @@ const App = () => {
             .then(() => history.push('/login'), (err) => err)
     }
 
-    const userRolesIncludes = (...auth) => {
-        const userRoles = localStorage.getItem('auth').split('; ')
-
-
-        return auth.some(role => userRoles.includes(role))
-    }
-
     const logout = () => {
         localStorage.clear()
         setIsAuthenticated(false)
@@ -92,7 +85,12 @@ const App = () => {
         const response = await userService.updateUser(url, user, id)
         const editedUser = await response.data
         setUser(prev => ({...prev, username: editedUser.username}))
-        setTimeout(() => history.push(`/user/profile/${id}`),300)
+        setTimeout(() => history.push(`/user/profile/${id}`), 300)
+    }
+
+    const userRolesIncludes = (...auth) => {
+        const userRoles = localStorage.getItem('auth').split('; ')
+        return auth.some(role => userRoles.includes(role))
     }
 
     // debugger
@@ -119,10 +117,16 @@ const App = () => {
                                     <Profile/> : <Redirect to="/login"/>
                             )}/>
                             <Route path="/user/profile/:id/practice" component={PracticeWords}/>
-                            <Route path="/user/profile/:id/edit" render={props => <UserProfileEdit {...props} updateUser={updateUser} />}/>
+                            <Route path="/user/profile/:id/edit"
+                                   render={props => <UserProfileEdit {...props} updateUser={updateUser}/>}/>
                             <Route path="/user/profile/:id/change-password"
-                                   render={() => isAuthenticated ? <UserChangePassword /> : <Redirect to="/" />}/>
-                            <Route path="/user/details/:id" component={UserDetails}/>
+                                   render={() => isAuthenticated ? <UserChangePassword/> : <Redirect to="/"/>}/>
+                            <Route path="/user/details/:id"
+                                   render={
+                                       (props) =>
+                                           userRolesIncludes('ROLE_ROOT_ADMIN', 'ROOT_ADMIN') ?
+                                               <UserDetails {...props} /> : <Redirect to='/'/>
+                                   }/>
                             <Route path="/category/:category" exact userId={user.id} component={AllContent}/>
                             <Route path="/category/:category/:content" userId={user.id} component={Content}/>
                             <Route path="/administration/manage-users"

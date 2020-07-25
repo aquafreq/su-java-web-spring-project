@@ -2,14 +2,8 @@ package com.example.english.web.controller;
 
 import com.example.english.data.entity.Word;
 import com.example.english.data.model.binding.*;
-import com.example.english.data.model.response.CategoryWordsResponseModel;
-import com.example.english.data.model.response.UserProfileResponseModel;
-import com.example.english.data.model.response.UserResponseModel;
-import com.example.english.data.model.response.WordResponseModel;
-import com.example.english.data.model.service.CategoryWordsServiceModel;
-import com.example.english.data.model.service.UserProfileServiceModel;
-import com.example.english.data.model.service.UserServiceModel;
-import com.example.english.data.model.service.WordServiceModel;
+import com.example.english.data.model.response.*;
+import com.example.english.data.model.service.*;
 import com.example.english.service.UserService;
 import com.example.english.service.CategoryWordsService;
 import lombok.RequiredArgsConstructor;
@@ -105,6 +99,24 @@ public class UserController {
 
         return ResponseEntity.ok(resp);
     }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'ROOT_ADMIN')")
+    @GetMapping("/details/{id}")
+    public ResponseEntity<UserDetailsResponseModel> getUserDetails(@PathVariable String id) {
+        UserServiceModel userServiceModel = userService.getUserDetailsById(id);
+
+        UserDetailsResponseModel map = modelMapper.map(userServiceModel, UserDetailsResponseModel.class);
+
+        map.setAuthorities(userServiceModel
+                .getAuthorities()
+                .stream()
+                .map(RoleServiceModel::getAuthority)
+                .map(x-> x.replace("ROLE_",""))
+                .collect(Collectors.joining(", ")));
+        map.setIsEnabled(userServiceModel.isEnabled());
+        return ResponseEntity.ok(map);
+    }
+
 
     @PreAuthorize("isAuthenticated()")
     @PatchMapping(value = "/profile/{id}/change-password")

@@ -2,25 +2,49 @@ import React, {useContext, useEffect, useRef, useState} from 'react'
 
 import {Link, useHistory} from 'react-router-dom'
 import styles from '../UserDetails/UserDetails.module.css'
-import Navigation from "../../Navigation/Navigation";
-import Footer from "../../Footer/Footer";
-import userService from "../../../services/UserService";
+import Navigation from "../../Navigation/Navigation"
+import Footer from "../../Footer/Footer"
+import userService from "../../../services/UserService"
 
-export default function () {
+export default function (props) {
     const [user, setUser] = useState({})
     const history = useHistory()
 
-    useEffect(async () => {
+    useEffect(() => {
         fetchUser()
     }, [])
 
     const fetchUser = async () => {
-        const { state } = history.location
-        debugger
-        const response = await userService.userProfile(state)
+        const {pathname} = history.location
+        const response = await userService.userDetails(pathname)
         const userData = await response.data
-        debugger
+        userData.registrationDate =
+            userData.registrationDate
+                .replace('T', ' ')
+                .substring(0, userData.registrationDate.indexOf('.'))
+
         setUser(userData)
+    }
+    console.log(props)
+
+    function renderUser() {
+        debugger
+        return (
+            <section>
+                <fieldset>
+                    <p>Username: {user.username}</p>
+                    <p>Email: {user.email}</p>
+                    <p>Is enabled: {user.isEnabled}</p>
+                    <p>Authorities: {user.authorities}</p>
+                    <p>Registered on: {user.registrationDate}</p>
+                    <p>Born: {user.birthDate}</p>
+                    <p>Hobbies: {user.hobbies}</p>
+                    <p>Nationality: {user.nationality}</p>
+                    <p>Level of experience: {user.levelExperience}</p>
+                    <p>Level of language: {user.levelOfLanguage}</p>
+                </fieldset>
+            </section>
+        )
     }
 
     return (
@@ -29,21 +53,10 @@ export default function () {
             <div className={styles.wrapper}>
                 <div className={styles['user-details']}>
                     <h3>User details: </h3>
-                    <section>
-                        <fieldset>Username: {user.username}</fieldset>
-                        <br/>
-                        <fieldset>Activity: {user.activity}</fieldset>
-                        <br/>
-                        <fieldset>Born: {user.birthDate}</fieldset>
-                        <br/>
-                        <fieldset>Nationality: {user.nationality}</fieldset>
-                        <br/>
-                        <fieldset>Hobbies: {user.hobbies}</fieldset>
-                        <br/>
-                    </section>
+                    {renderUser()}
                 </div>
                 <Link to='/administration/manage-users'>
-                    Go back to admin page
+                    Go back to user management page
                 </Link>
             </div>
             <Footer/>

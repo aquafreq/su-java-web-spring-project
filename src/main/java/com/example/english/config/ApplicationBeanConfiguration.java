@@ -89,6 +89,7 @@ public class ApplicationBeanConfiguration {
 //                            (destination, value) -> destination.setNationality(value.toString()));
 //        });
 
+
         modelMapper.addMappings(propertyMap);
         modelMapper.addMappings(contentBindingModelContentServiceModelPropertyMap);
         return modelMapper;

@@ -10,7 +10,7 @@ import Footer from "../../Footer/Footer"
 import UserContext from "../../../auth/UserContext";
 import {Loading} from "../../Loading/Loading";
 
-export default function() {
+export default function () {
     const history = useHistory()
     const [comments, setComments] = useState([])
     const [comment, setComment] = useState('')
@@ -41,6 +41,8 @@ export default function() {
             .then(() => setIsLoading(false))
     }
 
+
+    //renders text into paragraphs
     function renderContent() {
         return (
             <div>
@@ -119,33 +121,36 @@ export default function() {
 
 
     return (
-        <div className={styles['main-container']}>
+        <>
             <Navigation/>
-            {isLoading ? <Loading/> :
-                <>
-                    {renderContent()}
-                    <div className={styles['comment-section']}>
-                        <h5>Comments section</h5>
-                        <div className={styles.comments}>
-                            {renderComments()}
-                        </div>
-                        <section className={styles['my-comment']}>
-                            <label>
-                                <p>Was it helpful ?</p>
-                                <form>
+            <div className={styles['main-container']}>
+                {isLoading ? <Loading/> :
+                    <>
+                        {renderContent()}
+                        <div className={styles['comment-section']}>
+                            <h5>Comments section</h5>
+                            <div className={styles.comments}>
+                                {renderComments()}
+                            </div>
+                            <section className={styles['my-comment']}>
+                                <label>
+                                    <p>Was it helpful ?</p>
+                                    <form>
                                     <textarea
                                         placeholder="Give us your thoughts..."
                                         value={comment}
                                         onChange={e => setComment(e.target.value)}
                                     />
-                                    <input value="Send" type="submit" onClick={handleSubmitComment}/>
-                                </form>
-                            </label>
-                        </section>
-                    </div>
-                </>
-            }
+                                        <input value="Send" type="submit" onClick={handleSubmitComment}/>
+                                    </form>
+                                </label>
+                            </section>
+                        </div>
+                    </>
+                }
+
+            </div>
             <Footer/>
-        </div>
+        </>
     )
 }

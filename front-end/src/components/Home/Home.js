@@ -20,7 +20,7 @@ const Home = ({isAuthenticated}) => {
             setCategories(categories)
         }
 
-            fetchCategories()
+        fetchCategories()
     }, [])
 
     function renderCategories() {
@@ -42,16 +42,18 @@ const Home = ({isAuthenticated}) => {
     }
 
     return (
-        <div className={styles['home-container']}>
+        <>
             <Navigation/>
-            <h1>Welcome to Hello-English</h1>
-            <h3>Get started by choosing a category you'd wish to get better with</h3>
-            <h4>Don't mind the car in the background <div>☺</div></h4>
-            {renderCategories()}
-            <RegisterLoginNav path={history.location.pathname} />
-            <div/>
+            <div className={styles['home-container']}>
+                <h1>Welcome to Hello-English</h1>
+                <h3>Get started by choosing a category you'd wish to get better with</h3>
+                <h4>Don't mind the car in the background <div>☺</div></h4>
+                {renderCategories()}
+                <RegisterLoginNav path={history.location.pathname}/>
+                <div/>
+            </div>
             <Footer/>
-        </div>
+        </>
     )
 }
 

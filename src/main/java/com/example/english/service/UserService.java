@@ -55,4 +55,7 @@ public interface UserService extends UserDetailsService {
     WordServiceModel addWordToUserCategoryWords(WordServiceModel wordServiceModel, String categoryId, String userId);
 
     boolean updatePassword(String id, String oldPassword, String newPassword);
+
+    UserServiceModel getUserDetailsById(String id);
+
 }

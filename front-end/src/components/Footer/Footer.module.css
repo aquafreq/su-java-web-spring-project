@@ -1,18 +1,15 @@
 .picWrapper {
     background-image: url("https://i.pinimg.com/736x/b7/56/fe/b756fe9a976079410a33df02340463cd.jpg");
-    opacity: 0.4;
+    opacity: 0.45;
     background-size: 14%;
-    background-attachment: inherit;
+    /*background-attachment: inherit;*/
     background-position: right;
 }
 
 @media (min-width: 300px) and (max-width: 480px) {
-    .footer {
-        position: inherit;
-    }
-
     .footer span {
         color: black;
+        position: inherit;
     }
 
     .picWrapper {
@@ -20,48 +17,52 @@
     }
 }
 
-@media (min-width: 1024px) {
-    .footer{
-        position: fixed;
+@media (min-width: 460px) {
+    .picWrapper {
+        background-size: 40%;
     }
 }
 
+/*@media (min-width: 1281px) {*/
+/*    .footer {*/
+/*        position: relative;*/
+/*    }*/
+/*}*/
+
+
 .footer {
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    font-size: 26px;
+    flex: 0 0 50px;
+    margin-top: auto;
     text-align: center;
-    font-weight: bold;
-    display: inline-block;
-    color: snow;
+    /*color: #1d2124;*/
+    font-size: 30px;
+    font-weight: 800;
+    color: red;
 }
 
 .footer h6 {
     padding: 10px 0;
 }
 
-.footer span em{
+.footer span em {
+    opacity: 1;
     cursor: pointer;
     text-decoration: underline;
-    font-size: 24px;
-    color: aliceblue;
+    font-size: 26px;
+    color: snow;
+
 }
 
 .footer h6 {
     font-size: 25px;
-    font-weight: bolder;
+    font-weight: 800;
     color: #96147b;
     line-height: 0.6;
 }
 
-.footer span:hover {
-    text-decoration: none;
-}
 
 .footer em:hover {
-    color: #b9f6ca;
     text-shadow: 1px 1px 1px #555;
-    font-size: 25px;
+    font-size: 27px;
 }
 

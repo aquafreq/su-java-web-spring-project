@@ -134,7 +134,7 @@ export default function () {
                                 <button onClick={(() => {
                                     const url = u._links.self.href
                                     history.push(
-                                        `/user/${url.substring(url.lastIndexOf('/') + 1)}/details`,
+                                        `/user/details/${url.substring(url.lastIndexOf('/') + 1)}`,
                                         url)
                                 })}>Link
                                 </button>
@@ -166,7 +166,6 @@ export default function () {
                         u.display = !value.trim() || u[filterCriteria].startsWith(value)
                     }
                 )
-
                 return newState
             })
         }
@@ -178,7 +177,6 @@ export default function () {
         <>
             <Navigation/>
             <div className={styles.container}>
-
                 <SearchBar filter={filter}/>
                 {!isLoading ? filter('', '') : <div>Loading ....</div>}
             </div>
