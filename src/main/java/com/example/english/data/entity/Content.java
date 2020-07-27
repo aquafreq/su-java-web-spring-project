@@ -2,6 +2,7 @@ package com.example.english.data.entity;
 
 import com.example.english.data.entity.enumerations.LevelOfLanguage;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -31,11 +32,13 @@ public class Content extends BaseEntity {
     @NonNull
     @NotBlank(message = "Description required!")
     private String description;
+
     @ManyToOne
     @JoinColumn(name = "author_id")
     @NonNull
     @ToString.Exclude
     private User author;
+
     private LocalDateTime created = LocalDateTime.now();
 
     @ManyToOne()

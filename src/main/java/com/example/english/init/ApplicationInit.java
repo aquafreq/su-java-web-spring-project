@@ -69,8 +69,7 @@ public class ApplicationInit implements CommandLineRunner {
 
 
         if (contentRepository.count() == 0) {
-            Arrays.stream(contents()).
-                    forEach(contentRepository::save);
+            Arrays.stream(contents()).forEach(contentRepository::save);
         }
 
 
