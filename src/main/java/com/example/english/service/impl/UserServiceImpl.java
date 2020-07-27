@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
         userServiceModel.setPassword(passwordEncoder.encode(userServiceModel.getPassword()));
 
         User user = modelMapper.map(userServiceModel, User.class);
-
+        user.setEnabled(true);
         user.getAuthorities().add(roleService.getRoleByName("ROLE_USER"));
 
         if (userRepository.count() == 0) {
