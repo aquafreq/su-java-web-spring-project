@@ -267,8 +267,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserServiceModel getUserDetailsById(String id) {
         User user = userRepository.findById(id).orElseThrow();
-        UserServiceModel map = modelMapper.map(user, UserServiceModel.class);
+        return modelMapper.map(user, UserServiceModel.class);
+    }
 
-        return map;
+    @Override
+    public Collection<CategoryWordsServiceModel> getWordsCategoryById(String id) {
+        return userRepository
+                .findById(id)
+                .orElseThrow()
+                .getUserProfile()
+                .getCategoryWords()
+                .stream()
+                .map(x -> modelMapper.map(x, CategoryWordsServiceModel.class))
+                .collect(Collectors.toList());
     }
 }

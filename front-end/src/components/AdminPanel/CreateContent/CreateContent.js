@@ -11,11 +11,15 @@ export default function CreateContent() {
     const userContext = useContext(UserContext)
     const [sent, setIsSent] = useState(false)
     const [categories, setCategories] = useState([])
+    const [categoryError, setCategoryError] = useState('')
     const [description, setDescription] = useState('')
     const [title, setTitle] = useState('')
     const [category, setCategory] = useState('')
     const [level, setLevel] = useState('')
     const [levels, setLevels] = useState([])
+    const [titleError, setTitleError] = useState('')
+    const [chosenCategoryError, setChosenCategoryError] = useState('')
+    const [contentError, setContentError] = useState('')
     const chosenCategory = useRef('')
 
     useLayoutEffect(() => {
@@ -32,13 +36,20 @@ export default function CreateContent() {
 
     const handleCategorySubmit = (e) => {
         e.preventDefault()
-        contentService
-            .createCategory(category)
-            .then(() => alert('category ' + category + ' creaed successful'))
-            .then(() => {
-                setCategory('')
-                setIsSent(true)
-            })
+
+        if (category.length > 4) {
+            setCategoryError('')
+            contentService
+                .createCategory(category)
+                .then(() => alert('category ' + category + ' creaed successful'))
+                .then(() => {
+                    setCategory('')
+                    setIsSent(true)
+                })
+        } else {
+            setCategoryError('Category name must be at least 5 characters!')
+        }
+
     }
 
     function handleSubmit(e) {
@@ -52,11 +63,33 @@ export default function CreateContent() {
             difficulty: level
         }
 
-        contentService.createContent(content)
-            .then(() => {
-                setTitle('')
-                setDescription('')
-            })
+        debugger
+        if (!chosenCategory.current.value) {
+            setChosenCategoryError('Category must not be empty!')
+        } else {
+            setChosenCategoryError('')
+        }
+
+        if (!title || title.length < 5) {
+            setTitleError('Title should be more than 5 characters!')
+        } else {
+            setTitleError('')
+        }
+
+        if (!description) {
+            setContentError('Fill some correct description !')
+        } else {
+            setContentError('')
+        }
+
+        if (!chosenCategoryError && !titleError && !contentError) {
+            debugger
+            contentService.createContent(content)
+                .then(() => {
+                    setTitle('')
+                    setDescription('')
+                })
+        }
     }
 
     return (
@@ -68,6 +101,7 @@ export default function CreateContent() {
                         <MDBCard>
                             <MDBCardBody>
                                 <form>
+                                    {categoryError && <h2 className={styles['category-error']}>{categoryError}</h2>}
                                     <p className="h4 text-center py-4">Add category</p>
                                     <label
                                         htmlFor="defaultFormCardNameEx"
@@ -88,7 +122,6 @@ export default function CreateContent() {
                                                 onClick={handleCategorySubmit}
                                         >
                                             Add
-                                            <MDBIcon far icon="paper-plane" className="ml-2"/>
                                         </MDBBtn>
                                     </div>
                                 </form>
@@ -100,12 +133,13 @@ export default function CreateContent() {
             <form>
                 <div className={styles.chooseCategory}>
                     <div>
+                        {chosenCategoryError && <h2 className={styles['category-error']}>{chosenCategoryError}</h2>}
                         <h3>Choose category for an exercise or a content</h3>
                         <select className="browser-default custom-select"
                                 ref={chosenCategory}
                                 required
                         >
-                            <option>Choose category</option>
+                            <option value=''/>
                             {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                         </select>
                     </div>
@@ -116,6 +150,7 @@ export default function CreateContent() {
                             <MDBCol md="6">
                                 <MDBCard>
                                     <MDBCardBody>
+                                        {titleError && <h2 className={styles['category-error']}>{titleError}</h2>}
                                         <p className="h4 text-center py-4">Add content to chosen category</p>
                                         <label
                                             htmlFor="title"
@@ -131,6 +166,7 @@ export default function CreateContent() {
                                             onChange={(e) => setTitle(e.target.value)}
                                         />
                                         <br/>
+                                        {contentError && <h2 className={styles['category-error']}>{contentError}</h2>}
                                         <label
                                             htmlFor="description"
                                             className="grey-text font-weight-light"
@@ -154,7 +190,8 @@ export default function CreateContent() {
                                                 onClick={handleSubmit}
                                                 className="btn btn-outline-purple" type="submit">
                                                 Upload lesson
-                                                <MDBIcon far icon="paper-plane" className="ml-2"/>
+                                                <i className="fab fa-react" size='10px'/>
+                                                {/*<MDBIcon icon={<i className="fab fa-react"></i>} size='10px'/>*/}
                                             </MDBBtn>
                                         </div>
                                     </MDBCardBody>

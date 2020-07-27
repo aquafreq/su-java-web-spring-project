@@ -7,6 +7,7 @@ import com.example.english.data.model.service.*;
 import com.example.english.service.UserService;
 import com.example.english.service.CategoryWordsService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -111,12 +113,11 @@ public class UserController {
                 .getAuthorities()
                 .stream()
                 .map(RoleServiceModel::getAuthority)
-                .map(x-> x.replace("ROLE_",""))
+                .map(x -> x.replace("ROLE_", ""))
                 .collect(Collectors.joining(", ")));
         map.setIsEnabled(userServiceModel.isEnabled());
         return ResponseEntity.ok(map);
     }
-
 
     @PreAuthorize("isAuthenticated()")
     @PatchMapping(value = "/profile/{id}/change-password")
@@ -127,5 +128,19 @@ public class UserController {
                 .updatePassword(id, bindingModel.getOldPassword(), bindingModel.getNewPassword());
 
         return ResponseEntity.ok(b);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping(value = "/profile/{id}/practice")
+    public ResponseEntity<Collection<CategoryWordsResponseModel>> getUserCategoryWords(
+            @PathVariable String id) {
+
+        List<CategoryWordsResponseModel> collect = userService
+                .getWordsCategoryById(id)
+                .stream()
+                .map(x -> modelMapper.map(x, CategoryWordsResponseModel.class))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(collect);
     }
 }

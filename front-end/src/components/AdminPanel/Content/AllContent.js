@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React, {useContext, useEffect, useState} from "react"
 
 import {Link, useHistory} from 'react-router-dom'
 
@@ -7,11 +7,13 @@ import styles from './AllContent.module.css'
 import Navigation from "../../Navigation/Navigation";
 import Footer from "../../Footer/Footer";
 import {Loading} from "../../Loading/Loading"
+import UserContext from "../../../auth/UserContext";
 
 export default function () {
     const [category, setCategory] = useState({})
     const [isLoading, setIsLoading] = useState(true)
     const history = useHistory()
+    const userContext = useContext(UserContext)
 
     function linkName(id) {
         return id.toLocaleLowerCase().split(' ').join('-');
@@ -65,12 +67,16 @@ export default function () {
                                 &nbsp;{content.difficulty}
                                 <br/>
                                 <em>by author:&nbsp;
-                                    <Link to={{
-                                        pathname: `/user/details/${content.author.id}`,
-                                        contentId: content.id
-                                    }}>
-                                        {content.author.username}
-                                    </Link>
+                                    {userContext.userRoles.filter(x =>
+                                        x === 'ROLE_ROOT_ADMIN' || x === 'ROLE_ADMIN').length ?
+                                        <Link to={{
+                                            pathname: `/user/details/${content.author.id}`,
+                                            contentId: content.id
+                                        }}>
+                                            {content.author.username}
+                                        </Link>
+                                        : <h6>{content.author.username}</h6>
+                                    }
                                 </em>
                             </div>
                         )

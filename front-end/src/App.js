@@ -39,6 +39,7 @@ const App = () => {
 
     function setUserState() {
         let token = localStorage.getItem("authorization");
+
         if (token) {
             (async () => {
                 try {
@@ -57,6 +58,9 @@ const App = () => {
                     setIsLoading(false)
                 }
             })()
+        } else {
+            setUserProps({id: '', username: '', authorities: []})
+            setIsLoading(false)
         }
     }
 
@@ -90,6 +94,7 @@ const App = () => {
 
     const userRolesIncludes = (...auth) => {
         const userRoles = localStorage.getItem('auth').split('; ')
+        debugger
         return auth.some(role => userRoles.includes(role))
     }
 

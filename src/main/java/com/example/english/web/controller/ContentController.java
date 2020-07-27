@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ContentController {
     private final GrammarCategoryService grammarCategoryService;
-    private final ExerciseService exerciseService;
+//    private final ExerciseService exerciseService;
     private final ContentService contentService;
     private final ModelMapper modelMapper;
 
@@ -47,18 +47,18 @@ public class ContentController {
         return created.body(categoryResponseModel);
     }
 
-    @PreAuthorize(value = "hasAnyRole('ADMIN','MODERATOR')")
-    @PostMapping("/exercise/create")
-    public ResponseEntity<ExerciseResponseModel> createExercise(ExerciseBindingModel exerciseBindingModel, UriComponentsBuilder builder) {
-        ExerciseServiceModel exerciseServiceModel = exerciseService
-                .create(modelMapper.map(exerciseBindingModel, ExerciseServiceModel.class));
-        ExerciseResponseModel exerciseResponseModel = modelMapper
-                .map(exerciseServiceModel, ExerciseResponseModel.class);
-
-        ResponseEntity.BodyBuilder created =
-                ResponseEntity.created(builder.path("categories/" + exerciseServiceModel.getId()).build().toUri());
-        return created.body(exerciseResponseModel);
-    }
+//    @PreAuthorize(value = "hasAnyRole('ADMIN','MODERATOR')")
+//    @PostMapping("/exercise/create")
+//    public ResponseEntity<ExerciseResponseModel> createExercise(ExerciseBindingModel exerciseBindingModel, UriComponentsBuilder builder) {
+//        ExerciseServiceModel exerciseServiceModel = exerciseService
+//                .create(modelMapper.map(exerciseBindingModel, ExerciseServiceModel.class));
+//        ExerciseResponseModel exerciseResponseModel = modelMapper
+//                .map(exerciseServiceModel, ExerciseResponseModel.class);
+//
+//        ResponseEntity.BodyBuilder created =
+//                ResponseEntity.created(builder.path("categories/" + exerciseServiceModel.getId()).build().toUri());
+//        return created.body(exerciseResponseModel);
+//    }
 
     @GetMapping(value = "/category/all-categories", produces = "application/json")
     public List<GrammarNameResponseModel> getAllGrammarCategories() {

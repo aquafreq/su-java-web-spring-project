@@ -1,16 +1,23 @@
 .container {
     text-align: center;
-    font-family: "Font Awesome\ 5 Free", sans-serif;
+    font-family: "JetBrains Mono", serif;
+    font-size: 24px;
+}
+
+.container form h1 {
+    font-weight: 700;
+    font-size: 60px;
 }
 
 .container form {
-    margin-top: 10%;
+    margin:10%  auto;
+    text-align:center;
 }
 
-.container label, input {
-    font-size: 22px;
-    margin: 3px 3px;
+.container form div {
+    margin: 5px 0;
 }
+
 
 .container input {
     background-color: bisque;

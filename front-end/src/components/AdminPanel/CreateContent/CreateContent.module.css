@@ -32,3 +32,11 @@
     font-family: Arial, fantasy;
     color: black;
 }
+
+
+.category-error {
+    color: red;
+    font-weight: 600;
+    text-align: center;
+    font-family: "Roboto", sans-serif;
+}

@@ -4,10 +4,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
-public class WordServiceModel extends CategoryWordsServiceModel {
+public class WordServiceModel  {
     private String id;
     private String name;
     private String definition;

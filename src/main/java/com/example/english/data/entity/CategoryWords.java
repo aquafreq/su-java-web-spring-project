@@ -1,6 +1,7 @@
 package com.example.english.data.entity;
 
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -16,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class CategoryWords extends BaseEntity {
     @NonNull
     @NotBlank(message = "Name for category is required!")
-    //TODO add length validation
+    @Length(min = 2,  message = "The name of the categoy shouldn't be less than 2 symbols")
     private String name;
 
     @OneToMany(cascade = CascadeType.ALL)

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@EqualsAndHashCode(exclude = {"content","exercises"},callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"content"})
 @Data
 @NoArgsConstructor
 @Entity
@@ -28,9 +28,9 @@ public class GrammarCategory extends BaseEntity{
 
     //followd by if conds => if conds explanation etc exercises
     //zada4kite + vuprosite i otgovorite
-    @OneToMany(mappedBy = "category")
-    @ToString.Exclude
-    private List<Exercise> exercises = new ArrayList<>();
+//    @OneToMany(mappedBy = "category")
+//    @ToString.Exclude
+//    private List<Exercise> exercises = new ArrayList<>();
 
 
 }

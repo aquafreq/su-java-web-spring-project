@@ -34,9 +34,9 @@ public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @OneToOne(cascade = {PERSIST,MERGE},fetch = FetchType.EAGER)
-    @ToString.Exclude
-    private UserStats userStats = new UserStats();
+//    @OneToOne(cascade = {PERSIST,MERGE},fetch = FetchType.EAGER)
+//    @ToString.Exclude
+//    private UserStats userStats = new UserStats();
 
     @OneToOne(cascade = {ALL},fetch = FetchType.EAGER)
     @ToString.Exclude

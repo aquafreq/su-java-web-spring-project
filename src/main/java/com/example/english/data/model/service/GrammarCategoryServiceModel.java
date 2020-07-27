@@ -1,6 +1,5 @@
 package com.example.english.data.model.service;
 
-import com.example.english.data.entity.Exercise;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

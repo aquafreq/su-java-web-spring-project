@@ -14,11 +14,13 @@ const Register = ({register}) => {
     const [error, setError] = useState('')
     const history = useHistory()
 
+
+    //validatii TODO
     return (
         <>
         <Navigation/>
-        <div>
-            <div className={styles.container}>
+        <div  className={styles.container}>
+            <div>
                 <form>
                     <h1>Register</h1>
                     {error && <MDBAlert color="danger"> {error}</MDBAlert>}

@@ -38,12 +38,16 @@ export default function () {
         setCategory(e.target.value)
     }
 
+    function setInputCSS(inputField, border = '', background = '') {
+        inputField.style.border = border
+        inputField.style.backgroundColor = background
+    }
+
     function renderWords() {
         function showHideWord(definition, field, action) {
             setWords(prev => {
                 prev.forEach(w => {
                     if (w.definition === definition) {
-                        w.isShown = action
                         w.inputName = action ? w.name : ''
                         field.value = w.inputName
                         w.isGuessed = false
@@ -66,8 +70,7 @@ export default function () {
 
         function helpWithWord(e) {
             const {definition, inputField} = getWordBoxData(e)
-            inputField.style.border = ''
-            inputField.style.backgroundColor = ''
+            setInputCSS(inputField)
 
             setWords(prev => {
                 prev.forEach(w => {
@@ -96,11 +99,9 @@ export default function () {
             const isGuessed = word.name === word.inputName
 
             if (isGuessed) {
-                inputField.style.border = ''
-                inputField.style.backgroundColor = ''
+                setInputCSS(inputField)
             } else {
-                inputField.style.border = '4px solid red'
-                inputField.style.backgroundColor = '#fc7b7b'
+                setInputCSS(inputField, '4px solid red', '#fc7b7b')
             }
 
             setWords(prev => {
@@ -170,7 +171,6 @@ export default function () {
                 .words
                 .map(x => {
                         x.isGuessed = false
-                        x.isShown = false
                         x.inputName = ''
                         return x
                     }
@@ -214,8 +214,31 @@ export default function () {
         })
     }
 
-    function refreshWords() {
+    //https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
 
+    function refreshWords(e) {
+        e.target
+            .offsetParent
+            .querySelectorAll('input[type=text]')
+            .forEach(x => setInputCSS(x))
+
+        setWords(prevState => {
+            let arr = prevState.map(w => {
+                w.inputName = ''
+                return w
+            })
+
+            arr.forEach(v => v.isGuessed = false)
+
+            return [...shuffleArray(arr)]
+        })
     }
 
     function showCategoryWithWords() {
@@ -236,7 +259,7 @@ export default function () {
                         {renderCategories()}
                     </select>
                     <input type="submit" value="Begin" onClick={beginPractice}/>
-                    <input type="submit" value="Refresh" onClick={refreshWords}/>
+                    <input type="submit" value="Shuffle" onClick={refreshWords}/>
                     <input type="submit"
                            value="Display all categories and words within them"
                            onClick={showCategoryWithWords}
