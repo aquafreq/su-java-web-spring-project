@@ -12,7 +12,7 @@
     border: 7px solid mediumpurple;
 }
 
-.profile aside fieldset{
+.profile aside fieldset {
     margin: 5px;
 }
 
@@ -68,7 +68,7 @@
     padding: 10px;
 }
 
-.middle div.show-info > p > p{
+.middle div.show-info > p > p {
     background-color: darkorange;
     font-weight: 500;
 }
@@ -97,18 +97,16 @@
 
 div.right textarea,
 div.right input,
-div.right select
-{
+div.right select {
     font-size: 16px;
     padding: 6px;
     text-align: left;
 }
 
 
-div.right textarea{
+div.right textarea {
     padding: 30px;
 }
-
 
 @media screen and (max-width: 800px) {
     .left, .main, .right {
@@ -116,3 +114,17 @@ div.right textarea{
     }
 }
 
+@media (min-width: 300px) and (max-width: 480px) {
+    .profile-container {
+        display: block;
+    }
+
+    .grid{
+        display: grid;
+    }
+
+    .middle, .right {
+        display: block;
+        background-size: 40%;
+    }
+}

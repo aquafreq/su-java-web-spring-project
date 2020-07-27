@@ -73,99 +73,103 @@ export default function () {
     return (
         <div>
             <Navigation/>
-            <div className={styles['profile-wrapper']}>
-                <button onClick={hideProfile} className={styles.close}>{text}
-                </button>
-                <div ref={profile} className={styles.profile}>
-                    <h3>Profile details: </h3>
-                    <aside>
-                        <fieldset>Username: {user.username}</fieldset>
-                        <fieldset>Email: {user.email}</fieldset>
-                        <fieldset>Birth date: {user.birthDate}</fieldset>
-                        <fieldset>Nationality: {user.nationality}</fieldset>
-                        <fieldset>Hobbies: {Array.isArray(user.hobbies) ? user.hobbies.join(', ') : user.hobbies}</fieldset>
-                        <fieldset>Language level: {user.levelOfLanguage}</fieldset>
-                        <fieldset>Experience: {user.levelExperience}</fieldset>
-                        <br/>
-                        <Link to={`/user/profile/${userContext.id}/edit`}>
-                            Edit profile
-                        </Link>
-                        <br/>
-                        <Link to={`/user/profile/${userContext.id}/change-password`}>
-                            Change password
-                        </Link>
-                    </aside>
-                </div>
-            </div>
-            <div className={styles.grid}>
-                <div className={styles.middle}>
-                    <h3>Create categories and add new unknown words and the definitions you wanna learn for them!</h3>
-                    <form>
-                        <label>
-                            Add a category and get started with learning!
+            <div className={styles['profile-container']}>
+                <div className={styles['profile-wrapper']}>
+                    <button onClick={hideProfile} className={styles.close}>{text}
+                    </button>
+                    <div ref={profile} className={styles.profile}>
+                        <h3>Profile details: </h3>
+                        <aside>
+                            <fieldset>Username: {user.username}</fieldset>
+                            <fieldset>Email: {user.email}</fieldset>
+                            <fieldset>Birth date: {user.birthDate}</fieldset>
+                            <fieldset>Nationality: {user.nationality}</fieldset>
+                            <fieldset>Hobbies: {Array.isArray(user.hobbies) ? user.hobbies.join(', ') : user.hobbies}</fieldset>
+                            <fieldset>Language level: {user.levelOfLanguage}</fieldset>
+                            <fieldset>Experience: {user.levelExperience}</fieldset>
                             <br/>
-                            <input type="text" value={category} onChange={e => setCategory(e.target.value)}/>
-                        </label>
-                        <input value="Add" type="submit" onClick={handleSubmitCategory}/>
-                    </form>
-                    <div className={styles['show-info']}>
-                        <p
-                            onMouseEnter={() => info.current.style.display = 'block'}
-                            onMouseLeave={() => info.current.style.display = 'none'}
-                        >Show info</p>
-                        <p id="text" ref={info}>
-                            <em>
-                                For example if you wanna learn the words from the ninth module of some learning book
-                                or you wanna learn the animals. Add category animals and add the word you wanna
-                                learn and their meaning.
-                                <br/>
-                                <br/>
-                                In the end it's gonna look like this.
-                                We have Unit 1 with words and their definitions.
-                                And the whole practice and learning about these words can go here.
-                                In this way you can choose which module or category to learn and when,
-                                without having to look and search for words in notebook.
-                            </em>
-                        </p>
+                            <Link to={`/user/profile/${userContext.id}/edit`}>
+                                Edit profile
+                            </Link>
+                            <br/>
+                            <Link to={`/user/profile/${userContext.id}/change-password`}>
+                                Change password
+                            </Link>
+                        </aside>
                     </div>
                 </div>
-                <div className={styles.right}>
-                    <form onSubmit={handleSubmitWord}>
-                        <label>Select a category and add a word to it with its definition:
+                <div className={styles.grid}>
+                    <div className={styles.middle}>
+                        <h3>Create categories and add new unknown words and the definitions you wanna learn for
+                            them!</h3>
+                        <form>
+                            <label>
+                                Add a category and get started with learning!
+                                <br/>
+                                <input type="text" value={category} onChange={e => setCategory(e.target.value)}/>
+                            </label>
+                            <input value="Add" type="submit" onClick={handleSubmitCategory}/>
+                        </form>
+                        <div className={styles['show-info']}>
+                            <p
+                                onMouseEnter={() => info.current.style.display = 'block'}
+                                onMouseLeave={() => info.current.style.display = 'none'}
+                            >Show info</p>
+                            <p id="text" ref={info}>
+                                <em>
+                                    For example if you wanna learn the words from the ninth module of some learning book
+                                    or you wanna learn the animals. Add category animals and add the word you wanna
+                                    learn and their meaning. You'll get the definition you chose for the word
+                                    and now you have to guess what the word was.
+                                    <br/>
+                                    <br/>
+                                    In the end it's gonna look like this.
+                                    We have Unit 1 with words and their definitions.
+                                    And the whole practice and learning about these words can go here.
+                                    In this way you can choose which module or category to learn and when,
+                                    without having to look and search for words in notebook.
+                                </em>
+                            </p>
+                        </div>
+                    </div>
+                    <div className={styles.right}>
+                        <form onSubmit={handleSubmitWord}>
+                            <label>Select a category and add a word to it with its definition:
+                                <br/>
+                                {renderCategories()}
+                            </label>
                             <br/>
-                            {renderCategories()}
-                        </label>
-                        <br/>
-                        <label>
-                            Word:
+                            <label>
+                                Word:
+                                <br/>
+                                <input type='text' value={word.name} onChange={e => {
+                                    const name = e.target.value
+                                    setWord(prevState => ({
+                                        ...prevState,
+                                        name
+                                    }))
+                                }
+                                }/>
+                            </label>
+                            <label>
+                                Definition:
+                                <br/>
+                                <textarea value={word.definition} onChange={e => {
+                                    const definition = e.target.value
+                                    setWord(prevState => ({
+                                        ...prevState,
+                                        definition
+                                    }))
+                                }}
+                                />
+                            </label>
                             <br/>
-                            <input type='text' value={word.name} onChange={e => {
-                                const name = e.target.value
-                                setWord(prevState => ({
-                                    ...prevState,
-                                    name
-                                }))
-                            }
-                            }/>
-                        </label>
-                        <label>
-                            Definition:
-                            <br/>
-                            <textarea value={word.definition} onChange={e => {
-                                const definition = e.target.value
-                                setWord(prevState => ({
-                                    ...prevState,
-                                    definition
-                                }))
-                            }}
-                            />
-                        </label>
-                        <br/>
-                        <input value="Add word" type='submit'/>
-                    </form>
-                    <Link to={`/user/profile/${userContext.id}/practice`}>
-                        Go to practice learning words
-                    </Link>
+                            <input value="Add word" type='submit'/>
+                        </form>
+                        <Link to={`/user/profile/${userContext.id}/practice`}>
+                            Go to practice learning words
+                        </Link>
+                    </div>
                 </div>
             </div>
             <Footer/>

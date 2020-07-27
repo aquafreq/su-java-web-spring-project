@@ -26,8 +26,8 @@ export default function () {
         setWordCategories(await response.data)
     }
 
-    function getWord(words, name) {
-        return words.filter(x => x.name === name)[0]
+    function getWord(words, definition) {
+        return words.filter(x => x.definition === definition)[0]
     }
 
     function renderCategories() {
@@ -35,20 +35,18 @@ export default function () {
     }
 
     function handleChange(e) {
-        
         setCategory(e.target.value)
     }
 
     function renderWords() {
-        function showHideWord(name, field, action) {
+        function showHideWord(definition, field, action) {
             setWords(prev => {
                 prev.forEach(w => {
-                    if (w.name === name) {
+                    if (w.definition === definition) {
                         w.isShown = action
-                        w.inputDefinition = action ? w.definition : ''
-                        field.value = w.inputDefinition
+                        w.inputName = action ? w.name : ''
+                        field.value = w.inputName
                         w.isGuessed = false
-                        debugger
                     }
                 })
 
@@ -56,31 +54,31 @@ export default function () {
             })
         }
 
-        function showDefinition(e) {
-            const {name, inputField} = getWordBoxData(e)
-            showHideWord(name, inputField, true);
+        function showWord(e) {
+            const {definition, inputField} = getWordBoxData(e)
+            showHideWord(definition, inputField, true);
         }
 
-        function clearDefinition(e) {
-            const {name, inputField} = getWordBoxData(e)
-            showHideWord(name, inputField, false)
+        function clearWord(e) {
+            const {definition, inputField} = getWordBoxData(e)
+            showHideWord(definition, inputField, false)
         }
 
         function helpWithWord(e) {
-            const {name, inputField} = getWordBoxData(e)
+            const {definition, inputField} = getWordBoxData(e)
             inputField.style.border = ''
             inputField.style.backgroundColor = ''
 
             setWords(prev => {
                 prev.forEach(w => {
-                    if (w.name === name) {
-                        if (w.inputDefinition && !w.definition.startsWith(w.inputDefinition)) {
-                            w.inputDefinition = ''
+                    if (w.definition === definition) {
+                        if (w.inputName && !w.name.startsWith(w.inputName)) {
+                            w.inputName = ''
                         }
 
-                        const index = Math.max(1, w.inputDefinition.length + 1)
-                        w.inputDefinition = w.definition.slice(0, index)
-                        inputField.value = w.inputDefinition
+                        const index = Math.max(1, w.inputName.length + 1)
+                        w.inputName = w.name.slice(0, index)
+                        inputField.value = w.inputName
                     }
                 })
 
@@ -93,9 +91,9 @@ export default function () {
         // }
 
         function guessWord(e) {
-            const {name, inputField} = getWordBoxData(e)
-            const word = getWord(words, name)
-            const isGuessed = word.definition === word.inputDefinition
+            const {definition, inputField} = getWordBoxData(e)
+            const word = getWord(words, definition)
+            const isGuessed = word.name === word.inputName
 
             if (isGuessed) {
                 inputField.style.border = ''
@@ -107,7 +105,7 @@ export default function () {
 
             setWords(prev => {
                 prev.forEach(w => {
-                    if (w.name === word.name) {
+                    if (w.name === word.inputName) {
                         word.isGuessed = isGuessed
                     }
                 })
@@ -122,11 +120,11 @@ export default function () {
             <h3>No words for this category yet!</h3> : words.map(w => {
                 return (
                     <section key={w.id} className={styles['word-section']}>
-                        <label><span>{w.name}</span>:
+                        <label><span>{w.definition}</span>:
                             <input
                                 type="text"
-                                onChange={handleDefinitionChange}
-                                value={words.inputDefinition}
+                                onChange={handleWordNameChange}
+                                value={w.inputName}
                                 placeholder="definition..."
                             />
                             {w.isGuessed && <FontAwesomeIcon className={styles.icon} icon={faCheck}/>}
@@ -134,8 +132,8 @@ export default function () {
                         <div className={styles['word-buttons']}>
                             <input type='submit' value='guess' onClick={guessWord}/>
                             <input type='submit' value='help' onClick={helpWithWord}/>
-                            <input type='submit' value='show' onClick={showDefinition}/>
-                            <input type='submit' value='clear' onClick={clearDefinition}/>
+                            <input type='submit' value='show' onClick={showWord}/>
+                            <input type='submit' value='clear' onClick={clearWord}/>
                         </div>
                     </section>
                 )
@@ -173,7 +171,7 @@ export default function () {
                 .map(x => {
                         x.isGuessed = false
                         x.isShown = false
-                        x.inputDefinition = ''
+                        x.inputName = ''
                         return x
                     }
                 )
@@ -182,14 +180,14 @@ export default function () {
 
     function getWordBoxData(e) {
         const rootElement = e.target.parentNode.parentNode.firstChild
-        const name = rootElement.firstChild.textContent
-        const inputDefinition = rootElement.lastChild.value
+        const definition = rootElement.firstChild.textContent
+        const inputName = rootElement.lastChild.value
         const inputField = rootElement.querySelector('input[type=text]')
         const [guess, help, show, clear] = e.target.parentNode.parentNode.querySelectorAll('input[type=submit]')
 
         return {
-            name,
-            inputDefinition,
+            definition,
+            inputName,
             inputField,
             guess,
             help,
@@ -198,18 +196,20 @@ export default function () {
         }
     }
 
-    function handleDefinitionChange(e) {
-        const {name} = getWordBoxData(e)
-        const inputDefinition = e.target.value
-
+    function handleWordNameChange(e) {
         const {inputField} = getWordBoxData(e)
         inputField.style.border = ''
         inputField.style.backgroundColor = ''
 
+        const {definition} = getWordBoxData(e)
+
+        const inputName = e.target.value
+
         setWords(prev => {
             const newState = [...prev]
-            let newDef = getWord(newState, name)
-            newDef.inputDefinition = inputDefinition
+            let newDef = getWord(newState, definition)
+            newDef.inputName = inputName
+            debugger
             return newState
         })
     }
