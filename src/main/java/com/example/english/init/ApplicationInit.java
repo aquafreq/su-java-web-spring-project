@@ -68,13 +68,14 @@ public class ApplicationInit implements CommandLineRunner {
         }
 
 
-        if (contentRepository.count() == 0) {
-            Arrays.stream(contents()).forEach(contentRepository::save);
-        }
+//        if (contentRepository.count() == 0) {
+//            Arrays.stream(contents()).forEach(contentRepository::save)he;
+//        }
 
 
         if (grammarCategoryService.getCount() == 0) {
             grammarCategoryService.seedCategories(grammarCategories());
+
 
             GrammarCategory category = repository.findByName("Present tense").get();
 
