@@ -1,9 +1,8 @@
-import React, {useContext, useEffect, useLayoutEffect, useRef, useState} from "react"
+import React, {useContext, useLayoutEffect, useRef, useState} from "react"
 
 import contentService from "../../../services/contentService"
-import {MDBBtn, MDBCard, MDBCardBody, MDBCol, MDBContainer, MDBIcon, MDBInput, MDBRow} from "mdbreact"
+import {MDBBtn, MDBCard, MDBCardBody, MDBCol, MDBContainer, MDBIcon, MDBRow} from "mdbreact"
 import styles from './CreateContent.module.css'
-import {loremIpsum, LoremIpsum, name, username} from "react-lorem-ipsum"
 import Navigation from "../../Navigation/Navigation"
 import Footer from "../../Footer/Footer"
 import UserContext from "../../../auth/UserContext"

@@ -37,7 +37,6 @@ export default function ({updateUser}) {
 
     function fetchData() {
         const userProfileUrl = url.substring(0, url.lastIndexOf('/'))
-        debugger
         userService
             .userProfile(userProfileUrl)
             .then(user => {

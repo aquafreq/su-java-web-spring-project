@@ -32,7 +32,6 @@ export default function () {
             userService.userProfile(url),
             userService.fetchUserCategories(userId)
         ]).then(([user, categories]) => {
-                debugger
             setUser(user.data)
             setWordsCategory(categories.data)
         })
@@ -43,12 +42,11 @@ export default function () {
         profile.current.style.visibility ? setText('Show profile') : setText('Hide profile')
     }
 
-    async function handleSubmitWord(e) {
-        debugger
+    function handleSubmitWord(e) {
         e.preventDefault()
         userService.createWordForCategory(userContext.id, chosenCategoryId, word)
-        debugger
-        setWord({name: '', definition: ''})
+            .then(() => setWord({name: '', definition: ''}))
+
     }
 
     async function handleSubmitCategory(e) {

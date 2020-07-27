@@ -1,0 +1,121 @@
+.practice-container {
+    text-align: center;
+    font-family: "Nirmala UI Semilight", serif;
+}
+
+.practice-container div:first-of-type input {
+    border-radius: 10px;
+}
+
+.practice-container div:first-of-type input {
+    padding: 3px;
+}
+
+.practice-container div:first-of-type select {
+    padding: 2px;
+}
+
+.practice-container div:first-of-type input:hover,
+.practice-container div:first-of-type select:hover {
+    background-color: lightcyan;
+}
+
+.practice-container select {
+    font-size: 26px;
+}
+
+.practice-container select:focus {
+    background-color: whitesmoke;
+}
+
+.practice-container select option {
+    font-size: 20px;
+}
+
+.words label {
+    color: blanchedalmond;
+}
+
+.words {
+    left: 50%;
+}
+
+.word-section {
+    margin: 10px;
+    display: inline-grid;
+    padding: 10px;
+    border: solid 3px #ff3d00;
+}
+
+.word-section > label > span {
+    font-size: 24px;
+    font-weight: 500;
+    color: white;
+    font-family: Arial, fantasy;
+}
+
+.word-section input[type=text]:focus {
+    background-color: #05ffa3;
+    border: 2px solid #b9f6ca;
+}
+
+.practice-container span.error > h5 {
+    font-size: 30px;
+    font-weight: 600;
+    color: red;
+    text-decoration-line: underline;
+    text-decoration: #ff3d00;
+}
+
+/*.word-section > input {*/
+/*    display: flex;*/
+/*    width: 50px;*/
+/*}*/
+
+.word-section div.word-buttons > input {
+    padding: 0 10px;
+}
+
+.word-section div.word-buttons > input:hover {
+    border: 1px solid #96147b;
+    background-color: mediumpurple;
+}
+
+.icon {
+    color: #00e25b;
+    font-size: 30px;
+    position: absolute;
+    margin-top: 1%;
+    margin-left: -2.8%;
+}
+
+.word-section {
+    /*width: 500px;*/
+    /*object-fit: fill;*/
+    /*height: auto;*/
+    /*position: inherit;*/
+    /*background-image: url('https://image.shutterstock.com/image-photo/best-practice-concept-on-blackboard-600w-233225104.jpg');*/
+    /*background-size: 450px 160px;*/
+
+    background: rgb(3,0,47);
+    background: linear-gradient(90deg, rgba(3,0,47,1) 4%, rgba(103,18,122,1) 14%,
+    rgba(73,111,198,1) 21%, rgba(63,86,164,1) 25%, rgba(107,1,94,1) 43%,
+    rgba(105,0,184,1) 68%, rgba(117,90,121,1) 79%, rgba(62,131,198,1) 84%, rgba(62,131,198,1) 84%,
+    rgba(109,71,155,1) 88%, rgba(54,141,205,1) 93%, rgba(9,26,66,1) 98%);
+    overflow: hidden;
+}
+
+
+@media (min-width: 300px) and (max-width: 480px) {
+    .icon {
+        margin-top: 5%;
+        margin-left: -14.0%;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .icon {
+        margin-top: 1.5%;
+        margin-left: -4%;
+    }
+}

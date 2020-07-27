@@ -5,7 +5,7 @@ axios.defaults.withCredentials = true
 const BASE_URL_PATH = '/auth'
 const LOGIN = '/login'
 const REGISTER = '/register'
-const LOGOUT = '/logout'
+// const LOGOUT = '/logout'
 
 const userService = {
     login: (username, password) => {
@@ -35,6 +35,7 @@ const userService = {
     fetchUserCategories: (id) => axios.get(`/user/profile/${id}/categories`),
     savePassword: (url, password) => axios.patch(url, password),
     userDetails : pathname => axios.get(pathname),
+    fetchUserCategoryWords: url => axios.get(url),
 }
 
 export default userService

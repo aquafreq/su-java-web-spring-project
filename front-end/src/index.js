@@ -6,14 +6,14 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import './auth/interceptor'
 import './index.css';
-import '@fortawesome/fontawesome-free/css/all.min.css';
-import {BrowserRouter, HashRouter} from "react-router-dom";
+import '../node_modules/font-awesome/css/font-awesome.min.css';
+import {HashRouter} from "react-router-dom";
 
 ReactDOM.render(
     <HashRouter>
         <App/>
-    </HashRouter>
-    , document.getElementById('root'))
+    </HashRouter>,
+    document.getElementById('root'))
 
 
 // If you want your app to work offline and load faster, you can change

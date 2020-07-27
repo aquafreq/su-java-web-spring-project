@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useEffect, useMemo, useState} from "react"
+import React, {useContext, useEffect, useState} from "react"
 import userService from "../../services/UserService"
 import styles from './ManageRole.module.css'
 import UserContext from "../../auth/UserContext"
@@ -15,7 +15,7 @@ export default function () {
     const [users, setUsers] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const [roles, setRoles] = useState({})
-    const {id, userRoles} = useContext(UserContext)
+    const {id} = useContext(UserContext)
     const history = useHistory()
 
     const Button = (style, handler, action, index) =>

@@ -8,7 +8,7 @@ import Navigation from "../../Navigation/Navigation";
 import Footer from "../../Footer/Footer";
 import {Loading} from "../../Loading/Loading"
 
-export default function ({userId}) {
+export default function () {
     const [category, setCategory] = useState({})
     const [isLoading, setIsLoading] = useState(true)
     const history = useHistory()

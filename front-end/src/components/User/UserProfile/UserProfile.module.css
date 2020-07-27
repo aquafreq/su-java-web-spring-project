@@ -44,6 +44,10 @@
     opacity: 1;
 }
 
+.middle h3 {
+    color: black;
+}
+
 .middle {
     margin: auto;
     float: contour;
@@ -111,3 +115,4 @@ div.right textarea{
         width: 100%; /* The width is 100%, when the viewport is 800px or smaller */
     }
 }
+
