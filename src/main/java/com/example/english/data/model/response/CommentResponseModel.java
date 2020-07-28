@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 public class CommentResponseModel {
     private String id;
     private String message;
+    private String userUsername;
     private UserResponseModel user;
-    private boolean isDeleted;
 }

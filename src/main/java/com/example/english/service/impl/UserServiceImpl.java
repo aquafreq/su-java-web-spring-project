@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -53,12 +54,12 @@ public class UserServiceImpl implements UserService {
         User user = modelMapper.map(userServiceModel, User.class);
         user.setEnabled(true);
         user.getAuthorities().add(roleService.getRoleByName("ROLE_USER"));
-
+        user.setRegistrationDate(LocalDateTime.now());
         if (userRepository.count() == 0) {
             Arrays.asList(
                     roleService.getRoleByName("ROLE_ADMIN"),
                     roleService.getRoleByName("ROLE_ROOT_ADMIN"),
-                    roleService.getRoleByName("ROLEMODERATOR")
+                    roleService.getRoleByName("ROLE_MODERATOR")
             ).forEach(r -> {
                 user.getAuthorities().add(r);
             });
@@ -112,8 +113,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByName(String username) {
-        return userRepository.findByUsername(username).orElseThrow();
+    public UserServiceModel getUserByName(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow();
+        return modelMapper.map(user, UserServiceModel.class);
     }
 
     @Override

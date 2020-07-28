@@ -2,7 +2,6 @@ package com.example.english.service;
 
 import com.example.english.data.entity.User;
 import com.example.english.data.model.binding.CategoryWordsBindingModel;
-import com.example.english.data.model.binding.UserChangePasswordBindingModel;
 import com.example.english.data.model.service.CategoryWordsServiceModel;
 import com.example.english.data.model.service.UserProfileServiceModel;
 import com.example.english.data.model.service.UserServiceModel;
@@ -29,7 +28,7 @@ public interface UserService extends UserDetailsService {
 
     UserServiceModel permitUser(String id);
 
-    User getUserByName(String username);
+    UserServiceModel getUserByName(String username);
 
     void updateUser(User user);
 

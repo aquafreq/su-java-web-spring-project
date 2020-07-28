@@ -23,6 +23,9 @@ import UserDetails from "./components/User/UserDetails/UserDetails";
 import UserChangePassword from "./components/User/UserChange/UserChangePassword";
 import Practice from "./components/User/Practice/Practice";
 
+const ADMIN = 'ROLE_ADMIN';
+const ROOT_ADMIN = 'ROLE_ROOT_ADMIN';
+const MODERATOR = 'ROLE_MODERATOR';
 const App = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("authorization"))
     const [isLoading, setIsLoading] = useState(true)
@@ -30,8 +33,8 @@ const App = () => {
     const history = useHistory()
 
     useLayoutEffect(() =>
-            setUserState()
-        , [isAuthenticated])
+            setUserState(),
+        [isAuthenticated])
 
     const setUserProps = (user) => {
         setUser({...user})
@@ -39,7 +42,6 @@ const App = () => {
 
     function setUserState() {
         let token = localStorage.getItem("authorization");
-
         if (token) {
             (async () => {
                 try {
@@ -50,7 +52,6 @@ const App = () => {
                             .data
                             .authorities
                             .map(x => x.authority).join('; '))
-
                     setUserProps(axiosResponse.data)
                     setIsLoading(false)
                 } catch (e) {
@@ -94,15 +95,14 @@ const App = () => {
 
     const userRolesIncludes = (...auth) => {
         const userRoles = localStorage.getItem('auth').split('; ')
-        debugger
         return auth.some(role => userRoles.includes(role))
     }
 
-    // debugger
+    //
     return (
         <Fragment>
-            {isLoading ? <Loading/> : (
-                <div className={styles.app}>
+            <div className={styles.app}>
+                {isLoading ? <Loading/> : (
                     <UserContext.Provider
                         value={{
                             username: user.username,
@@ -129,18 +129,18 @@ const App = () => {
                             <Route path="/user/details/:id"
                                    render={
                                        (props) =>
-                                           userRolesIncludes('ROLE_ROOT_ADMIN', 'ROOT_ADMIN') ?
+                                           userRolesIncludes(ROOT_ADMIN, ADMIN) ?
                                                <UserDetails {...props} /> : <Redirect to='/'/>
                                    }/>
                             <Route path="/category/:category" exact component={AllContent}/>
                             <Route path="/category/:category/:content" userId={user.id} component={Content}/>
                             <Route path="/administration/manage-users"
-                                   render={() => (userRolesIncludes('ROLE_ADMIN', 'ROLE_ROOT_ADMIN') ?
+                                   render={() => (userRolesIncludes(ADMIN, ROOT_ADMIN) ?
                                            <ManageUsers/> : <Redirect to="/"/>
                                    )}/>
                             <Route path="/administration/create-content"
                                    render={() =>
-                                       userRolesIncludes('ROLE_MODERATOR', 'ROLE_ADMIN', 'ROLE_ROOT_ADMIN') ?
+                                       userRolesIncludes(MODERATOR, ADMIN, ROOT_ADMIN) ?
                                            <CreateContent/> : <Redirect to="/"/>
                                    }/>
                             <Route path="/administration/user-logs"/>
@@ -148,9 +148,9 @@ const App = () => {
                             <Route path="*" component={NotFound}/>
                         </Switch>
                     </UserContext.Provider>
-                </div>
-            )
-            }
+                )
+                }
+            </div>
         </Fragment>
     )
 }

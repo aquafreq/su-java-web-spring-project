@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ContentController {
     private final GrammarCategoryService grammarCategoryService;
-//    private final ExerciseService exerciseService;
+    //    private final ExerciseService exerciseService;
     private final ContentService contentService;
     private final ModelMapper modelMapper;
 
@@ -100,9 +100,11 @@ public class ContentController {
 
     @GetMapping(value = "/category/{categoryId}/{contentId}")
     public ResponseEntity<ContentResponseModel> getContent(@PathVariable String categoryId, @PathVariable String contentId) {
+        ContentServiceModel contentByCategoryAndId = contentService.getContentByCategoryAndId(categoryId, contentId);
+
         ContentResponseModel responseModel =
-                modelMapper.map(contentService.getContentByCategoryAndId(categoryId, contentId),
-                        ContentResponseModel.class);
+                modelMapper.map(contentByCategoryAndId, ContentResponseModel.class);
+
         return ResponseEntity.ok(responseModel);
     }
 

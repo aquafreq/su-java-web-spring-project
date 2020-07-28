@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +39,10 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
-        setFilterProcessesUrl("/auth/login");
+        setFilterProcessesUrl("/user/login");
     }
 
+    @SneakyThrows
     @Override
     public Authentication attemptAuthentication(HttpServletRequest req,
                                                 HttpServletResponse res)
@@ -57,8 +59,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         } catch (IOException ignored) {
             return null;
         } catch (DisabledException ex) {
-            res.setStatus(401);
-            res.setHeader("error", ex.getMessage());
+            res.sendError(403, ex.getMessage());
             return null;
         }
     }

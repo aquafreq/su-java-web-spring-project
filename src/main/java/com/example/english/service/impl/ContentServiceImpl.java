@@ -71,7 +71,15 @@ public class ContentServiceImpl implements ContentService {
         Content content = repository.findById(commentServiceModel.getContentServiceModel().getId()).orElseThrow();
         content.getComments().add(map);
         repository.save(content);
-        return commentServiceModel1;
+
+        return modelMapper.map(
+                content
+                        .getComments()
+                        .stream()
+                        .filter(x -> x.getId().equals(map.getId()))
+                        .findAny()
+                        .orElseThrow(),
+                CommentServiceModel.class);
     }
 
     @Override

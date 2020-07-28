@@ -1,45 +1,42 @@
 package com.example.english.init;
 
-import com.example.english.data.entity.*;
-import com.example.english.data.entity.enumerations.LevelOfLanguage;
+import com.example.english.data.entity.Content;
+import com.example.english.data.entity.GrammarCategory;
+import com.example.english.data.entity.Role;
+import com.example.english.data.entity.User;
 import com.example.english.data.entity.enumerations.RoleEnum;
-import com.example.english.data.model.binding.UserRegisterBindingModel;
-import com.example.english.data.model.service.GrammarCategoryServiceModel;
 import com.example.english.data.model.service.UserServiceModel;
 import com.example.english.data.repository.ContentRepository;
 import com.example.english.data.repository.GrammarCategoryRepository;
-import com.example.english.data.repository.RoleRepository;
-import com.example.english.data.repository.UserRepository;
 import com.example.english.service.GrammarCategoryService;
 import com.example.english.service.RoleService;
 import com.example.english.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.cfg.beanvalidation.GroupsPerOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.example.english.data.entity.enumerations.LevelOfLanguage.randomLevel;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class ApplicationInit implements CommandLineRunner {
     private final RoleService roleService;
     private final UserService userService;
+    private final ModelMapper mapper;
     private final GrammarCategoryService grammarCategoryService;
     private final GrammarCategoryRepository repository;
     private final ContentRepository contentRepository;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         if (roleService.getRoleCount() == 0) {
             roleService.seedRoles(
                     Arrays.stream(RoleEnum.values())
@@ -50,8 +47,8 @@ public class ApplicationInit implements CommandLineRunner {
         if (userService.getCount() == 0) {
             users().forEach(userService::register);
 
-            User zxc = userService.getUserByName("zxc");
-            User wow = userService.getUserByName("wow");
+            User zxc = mapper.map(userService.getUserByName("zxc"), User.class);
+            User wow = mapper.map(userService.getUserByName("wow"), User.class);
             Role role_moderator = roleService.getRoleByName("ROLE_MODERATOR");
             Role role_admin = roleService.getRoleByName("ROLE_ADMIN");
 
@@ -68,14 +65,15 @@ public class ApplicationInit implements CommandLineRunner {
         }
 
 
-//        if (contentRepository.count() == 0) {
-//            Arrays.stream(contents()).forEach(contentRepository::save)he;
-//        }
+        if (contentRepository.count() == 0) {
+            Content[] contents = contents();
+
+            Arrays.stream(contents).forEach(contentRepository::save);
+        }
 
 
         if (grammarCategoryService.getCount() == 0) {
             grammarCategoryService.seedCategories(grammarCategories());
-
 
             GrammarCategory category = repository.findByName("Present tense").get();
 
@@ -106,6 +104,7 @@ public class ApplicationInit implements CommandLineRunner {
                             category2)
             );
         }
+        log.info("omg ??? ", users());
     }
 
     private static List<UserServiceModel> users() {
@@ -146,7 +145,7 @@ public class ApplicationInit implements CommandLineRunner {
                 new Content("What is Lorem Ipsum?",
                         randomLevel(),
                         "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-                        userService.getUserByName("fizz")
+                        mapper.map(userService.getUserByName("fizz"), User.class)
                 ),
                 new Content("Where can I get some?",
                         randomLevel(),
@@ -159,7 +158,7 @@ public class ApplicationInit implements CommandLineRunner {
                                 "Iaculis urna id volutpat lacus laoreet non curabitur gravida. Suscipit tellus mauris a diam maecenas. Varius sit amet mattis vulputate enim nulla aliquet porttitor lacus. Sed libero enim sed faucibus turpis in eu. Volutpat commodo sed egestas egestas fringilla phasellus faucibus scelerisque eleifend. Non enim praesent elementum facilisis leo vel fringilla est ullamcorper. Vestibulum lorem sed risus ultricies tristique nulla aliquet. Nunc lobortis mattis aliquam faucibus purus in massa. Turpis massa tincidunt dui ut ornare lectus sit amet. Orci phasellus egestas tellus rutrum. Eget felis eget nunc lobortis mattis aliquam faucibus purus. Quis ipsum suspendisse ultrices gravida. Aliquam sem fringilla ut morbi tincidunt. Id velit ut tortor pretium viverra suspendisse potenti nullam.\n" +
                                 "\n" +
                                 "Libero justo laoreet sit amet cursus sit amet. Elit duis tristique sollicitudin nibh sit. Egestas sed sed risus pretium. Risus quis varius quam quisque id. Purus ut faucibus pulvinar elementum integer. Amet risus nullam eget felis eget nunc lobortis mattis. Metus vulputate eu scelerisque felis. Aliquet eget sit amet tellus cras adipiscing. Adipiscing diam donec adipiscing tristique risus nec. Nisl vel pretium lectus quam. Malesuada fames ac turpis egestas. Diam donec adipiscing tristique risus nec. Dignissim enim sit amet venenatis urna. Et tortor at risus viverra adipiscing at. Diam in arcu cursus euismod quis viverra. In aliquam sem fringilla ut morbi tincidunt augue interdum velit.",
-                        userService.getUserByName("fizz")
+                        mapper.map(userService.getUserByName("fizz"), User.class)
                 ),
                 new Content("Section 1.10.32 of \"de Finibus ",
                         randomLevel(),
@@ -170,7 +169,7 @@ public class ApplicationInit implements CommandLineRunner {
                                 "Lacinia at quis risus sed vulputate odio ut enim. Aliquam sem et tortor consequat. Nullam vehicula ipsum a arcu cursus vitae congue mauris. Malesuada fames ac turpis egestas maecenas. Scelerisque felis imperdiet proin fermentum leo vel. Sit amet tellus cras adipiscing enim eu turpis egestas. Sapien pellentesque habitant morbi tristique senectus. Et egestas quis ipsum suspendisse ultrices. Eu augue ut lectus arcu bibendum at varius. Habitant morbi tristique senectus et netus et malesuada fames. Lobortis feugiat vivamus at augue eget arcu dictum. Sit amet justo donec enim diam. Volutpat consequat mauris nunc congue nisi vitae suscipit tellus. Aliquam nulla facilisi cras fermentum odio eu feugiat pretium. Pretium aenean pharetra magna ac placerat vestibulum. Eget lorem dolor sed viverra. Ultrices gravida dictum fusce ut placerat orci. Fermentum iaculis eu non diam phasellus.\n" +
                                 "\n" +
                                 "Vitae ultricies leo integer malesuada nunc vel risus commodo viverra. Integer quis auctor elit sed. Fames ac turpis egestas maecenas. Iaculis at erat pellentesque adipiscing commodo elit at imperdiet. Tincidunt vitae semper quis lectus nulla at volutpat diam. Porttitor lacus luctus accumsan tortor posuere. Non sodales neque sodales ut etiam. Orci dapibus ultrices in iaculis nunc. Amet mauris commodo quis imperdiet massa tincidunt nunc pulvinar sapien. Duis ut diam quam nulla porttitor massa. Lacinia quis vel eros donec ac. Euismod in pellentesque massa placerat duis ultricies lacus sed turpis. Neque sodales ut etiam sit amet. Augue neque gravida in fermentum et sollicitudin ac orci phasellus. Tortor vitae purus faucibus ornare.",
-                        userService.getUserByName("Bai ИВАН")
+                        mapper.map(userService.getUserByName("Bai ИВАН"), User.class)
                 ),
                 new Content("Why do we use it?",
                         randomLevel(),
@@ -179,7 +178,7 @@ public class ApplicationInit implements CommandLineRunner {
                                 "Ut pharetra sit amet aliquam id diam. Quam nulla porttitor massa id neque aliquam vestibulum morbi. Et ligula ullamcorper malesuada proin. Est ultricies integer quis auctor. Sit amet purus gravida quis blandit turpis. Donec adipiscing tristique risus nec feugiat in fermentum posuere urna. Enim diam vulputate ut pharetra sit. Aliquam etiam erat velit scelerisque in dictum. Aliquet porttitor lacus luctus accumsan tortor posuere ac ut. Nibh tellus molestie nunc non blandit. Scelerisque varius morbi enim nunc faucibus a pellentesque. Enim ut sem viverra aliquet eget sit. Sit amet luctus venenatis lectus magna fringilla. Posuere ac ut consequat semper viverra nam libero justo laoreet. Ultricies leo integer malesuada nunc vel risus. Amet mattis vulputate enim nulla. Ac tincidunt vitae semper quis lectus nulla at volutpat. Varius quam quisque id diam vel quam elementum pulvinar. Eu mi bibendum neque egestas. Purus gravida quis blandit turpis cursus.\n" +
                                 "\n" +
                                 "Nisl purus in mollis nunc sed id semper. Tincidunt lobortis feugiat vivamus at. Eu augue ut lectus arcu bibendum. Id eu nisl nunc mi ipsum faucibus vitae aliquet nec. Turpis egestas maecenas pharetra convallis. Vitae ultricies leo integer malesuada nunc. Odio pellentesque diam volutpat commodo sed egestas egestas. Porttitor massa id neque aliquam vestibulum morbi blandit. Sed odio morbi quis commodo. Velit euismod in pellentesque massa placerat duis ultricies lacus sed. Adipiscing at in tellus integer. In mollis nunc sed id semper risus in hendrerit. Proin fermentum leo vel orci porta non pulvinar neque.",
-                        userService.getUserByName("wow")
+                        mapper.map(userService.getUserByName("wow"), User.class)
                 ),
                 new Content("Neque porro quisquam est quid",
                         randomLevel(),
@@ -190,7 +189,7 @@ public class ApplicationInit implements CommandLineRunner {
                                 "Sociis natoque penatibus et magnis. Vulputate ut pharetra sit amet. Urna et pharetra pharetra massa massa ultricies mi quis. Nunc vel risus commodo viverra. Mattis rhoncus urna neque viverra justo nec ultrices. Nunc sed blandit libero volutpat sed cras. Ultricies leo integer malesuada nunc vel risus commodo. Id ornare arcu odio ut sem nulla pharetra diam. Mauris pharetra et ultrices neque. Adipiscing elit pellentesque habitant morbi tristique senectus. Aliquam faucibus purus in massa tempor. Sed viverra tellus in hac. Proin sed libero enim sed. Adipiscing elit ut aliquam purus sit. Viverra justo nec ultrices dui sapien. At varius vel pharetra vel. In iaculis nunc sed augue lacus viverra.\n" +
                                 "\n" +
                                 "Urna condimentum mattis pellentesque id nibh tortor id. Pellentesque habitant morbi tristique senectus et netus et malesuada. Augue eget arcu dictum varius duis. A scelerisque purus semper eget duis at tellus at. Neque volutpat ac tincidunt vitae semper. Bibendum est ultricies integer quis auctor elit sed vulputate mi. Phasellus egestas tellus rutrum tellus pellentesque. Sollicitudin nibh sit amet commodo nulla facilisi nullam. Arcu dui vivamus arcu felis bibendum ut tristique et egestas. In iaculis nunc sed augue lacus viverra. Vel risus commodo viverra maecenas accumsan lacus vel. Pharetra pharetra massa massa ultricies mi quis. Purus sit amet luctus venenatis lectus magna fringilla.",
-                        userService.getUserByName("zxc")
+                        mapper.map(userService.getUserByName("zxc"), User.class)
                 ),
         };
     }

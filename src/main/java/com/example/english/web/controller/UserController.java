@@ -1,5 +1,6 @@
 package com.example.english.web.controller;
 
+import com.example.english.data.entity.User;
 import com.example.english.data.entity.Word;
 import com.example.english.data.model.binding.*;
 import com.example.english.data.model.response.*;
@@ -17,8 +18,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -102,23 +105,6 @@ public class UserController {
         return ResponseEntity.ok(resp);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'ROOT_ADMIN')")
-    @GetMapping("/details/{id}")
-    public ResponseEntity<UserDetailsResponseModel> getUserDetails(@PathVariable String id) {
-        UserServiceModel userServiceModel = userService.getUserDetailsById(id);
-
-        UserDetailsResponseModel map = modelMapper.map(userServiceModel, UserDetailsResponseModel.class);
-
-        map.setAuthorities(userServiceModel
-                .getAuthorities()
-                .stream()
-                .map(RoleServiceModel::getAuthority)
-                .map(x -> x.replace("ROLE_", ""))
-                .collect(Collectors.joining(", ")));
-        map.setIsEnabled(userServiceModel.isEnabled());
-        return ResponseEntity.ok(map);
-    }
-
     @PreAuthorize("isAuthenticated()")
     @PatchMapping(value = "/profile/{id}/change-password")
     public ResponseEntity<Boolean> getUserPassword(
@@ -142,5 +128,27 @@ public class UserController {
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(collect);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<UserResponseModel> createWordCategory(
+            @RequestBody UserRegisterBindingModel bindingModel) {
+        User user = userService.register(
+                modelMapper.map(bindingModel, UserServiceModel.class)).orElseThrow();
+
+        UserResponseModel responseModel = modelMapper.map(user, UserResponseModel.class);
+
+        return ResponseEntity
+                .created(UriComponentsBuilder.fromPath("/register").build().toUri())
+                .body(responseModel);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping
+    public ResponseEntity<UserResponseModel> getUser(Principal principal) {
+//        principal.getName()
+        UserServiceModel userByName = userService.getUserByName(principal.getName());
+        UserResponseModel responseModel = modelMapper.map(userByName, UserResponseModel.class);
+        return ResponseEntity.ok(responseModel);
     }
 }

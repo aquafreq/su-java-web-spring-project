@@ -2,21 +2,16 @@ import axios from 'axios'
 
 axios.defaults.withCredentials = true
 
-const BASE_URL_PATH = '/auth'
-const LOGIN = '/login'
-const REGISTER = '/register'
-// const LOGOUT = '/logout'
-
 const userService = {
     login: (username, password) => {
-        return axios.post(BASE_URL_PATH + LOGIN, {username, password})
+        return axios.post('/user/login', {username, password})
     },
     register: (username, password, email) => {
-        return axios.post(BASE_URL_PATH + REGISTER, {username, password, email})
+        return axios.post('/user/register', {username, password, email})
     },
     getCurrentUser: (token) => {
         if (token)
-            return axios.get(BASE_URL_PATH + "/user",
+            return axios.get( "/user/",
                 {
                     headers: {
                         "Authorization": token
@@ -34,7 +29,7 @@ const userService = {
         axios.post(`/user/profile/${userId}/${categoryId}/create-word`, word),
     fetchUserCategories: (id) => axios.get(`/user/profile/${id}/categories`),
     savePassword: (url, password) => axios.patch(url, password),
-    userDetails : pathname => axios.get(pathname),
+    userDetails : pathname => axios.get('admin/'+ pathname),
     fetchUserCategoryWords: url => axios.get(url),
 }
 

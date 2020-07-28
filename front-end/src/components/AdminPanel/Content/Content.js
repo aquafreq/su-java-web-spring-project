@@ -24,11 +24,13 @@ export default function () {
 
     function fetchData() {
         const urlString = history.location.pathname
+
         debugger
 
         contentService
             .getContent(urlString)
             .then(r => {
+                debugger
                 setComments(r.data.comments)
                 setContent(
                     {
@@ -36,7 +38,8 @@ export default function () {
                         author: r.data.author.username, authorId: r.data.author.id,
                         authorEmail: r.data.author.email,
                         category: r.data.categoryName, categoryId: r.data.categoryId
-                    })
+                    }
+                )
             })
             .then(() => setIsLoading(false))
     }
@@ -76,12 +79,8 @@ export default function () {
             <div>{
                 comments
                     .map(c => {
-                        let name = 'Anonymous'
-
-                        if (c.user) {
-                            name = c.user.username || name
-                        }
-                        const message = name + ' : ' + c.message
+                        const user = c.userUsername || 'Anonymous'
+                        const message = user + ' : ' + c.message
                         return <textarea disabled defaultValue={message} key={c.id}/>
                     })}
             </div>

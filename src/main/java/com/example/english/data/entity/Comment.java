@@ -19,6 +19,5 @@ public class Comment extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    private boolean isDeleted;
 }
 

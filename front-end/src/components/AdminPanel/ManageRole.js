@@ -6,6 +6,7 @@ import SearchBar from "./SearchBar/SearchBar"
 import Navigation from "../Navigation/Navigation"
 import Footer from "../Footer/Footer"
 import {useHistory} from 'react-router-dom'
+import {Loading} from "../Loading/Loading";
 
 const ROLE_PREFIX = 'ROLE_'
 const EMPTY_STRING = ''
@@ -155,7 +156,7 @@ export default function () {
                 }
                 </tbody>
             </table>
-        ) : <div>Loading ...</div>
+        ) : <Loading />
     }
 
     const filter = (value, filterCriteria) => {
@@ -178,7 +179,7 @@ export default function () {
             <Navigation/>
             <div className={styles.container}>
                 <SearchBar filter={filter}/>
-                {!isLoading ? filter('', '') : <div>Loading ....</div>}
+                {!isLoading ? filter('', '') : <Loading />}
             </div>
             <Footer/>
         </>
@@ -186,6 +187,3 @@ export default function () {
 }
 
 const getUserIndex = (users, id) => users.findIndex(u => u.id === id)
-
-//todo searcr bar
-//split logic User table component

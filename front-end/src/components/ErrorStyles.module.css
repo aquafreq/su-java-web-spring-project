@@ -1,0 +1,13 @@
+.error {
+    font-weight: 600;
+    color: red;
+    font-size: 24px;
+    font-family: Bahnschrift, serif;
+    border: solid 2px black;
+    background-color: #e65100;
+    padding: 6px;
+}
+
+.mdb-alert {
+    display: inline-block;
+}

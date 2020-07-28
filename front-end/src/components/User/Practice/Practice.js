@@ -121,7 +121,7 @@ export default function () {
             <h3>No words for this category yet!</h3> : words.map(w => {
                 return (
                     <section key={w.id} className={styles['word-section']}>
-                        <label><span>{w.definition}</span>:
+                        <label><span>{w.definition}</span>:&nbsp;
                             <input
                                 type="text"
                                 onChange={handleWordNameChange}

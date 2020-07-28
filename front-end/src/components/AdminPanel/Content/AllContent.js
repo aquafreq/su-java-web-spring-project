@@ -34,8 +34,6 @@ export default function () {
 
     const renderContent = () => {
 
-        if (isLoading) return <Loading/>
-
         if (!Object.keys(category).length || !category.content.length) return <div className={styles['no-content']}><h3>
             <Link to="/">Sorry...<br/> No content found for this topic!
                 <br/>
@@ -89,12 +87,13 @@ export default function () {
     return (
         <>
             <Navigation/>
-            <div className={styles['all-content']}>
-
-                <section>
-                    {renderContent()}
-                </section>
-            </div>
+            {isLoading ? <Loading/> :
+                <div className={styles['all-content']}>
+                    <section>
+                        {renderContent()}
+                    </section>
+                </div>
+            }
             <Footer/>
         </>
     )

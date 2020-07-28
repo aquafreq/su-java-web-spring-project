@@ -98,6 +98,7 @@
 div.right textarea,
 div.right input,
 div.right select {
+    resize: both;
     font-size: 16px;
     padding: 6px;
     text-align: left;

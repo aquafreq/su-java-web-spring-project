@@ -16,7 +16,6 @@ import java.util.*;
 @Entity
 @NoArgsConstructor
 public class UserProfile extends BaseEntity {
-
     private LevelOfLanguage levelOfLanguage;
 
     @ElementCollection(fetch = FetchType.EAGER)

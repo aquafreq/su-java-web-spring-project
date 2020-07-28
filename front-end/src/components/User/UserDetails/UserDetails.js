@@ -56,7 +56,7 @@ export default function (props) {
                     {renderUser()}
                 </div>
                 <Link to='/administration/manage-users'>
-                    Go back to user management page
+                    Go to user management
                 </Link>
             </div>
             <Footer/>
