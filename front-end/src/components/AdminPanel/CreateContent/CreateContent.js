@@ -75,6 +75,7 @@ export default function CreateContent() {
             .then(() => {
                 setTitle('')
                 setDescription('')
+                setAreTriggered(false)
             })
     }
 
