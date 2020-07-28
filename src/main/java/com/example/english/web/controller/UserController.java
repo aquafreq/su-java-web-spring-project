@@ -129,26 +129,4 @@ public class UserController {
 
         return ResponseEntity.ok(collect);
     }
-
-    @PostMapping("/register")
-    public ResponseEntity<UserResponseModel> createWordCategory(
-            @RequestBody UserRegisterBindingModel bindingModel) {
-        User user = userService.register(
-                modelMapper.map(bindingModel, UserServiceModel.class)).orElseThrow();
-
-        UserResponseModel responseModel = modelMapper.map(user, UserResponseModel.class);
-
-        return ResponseEntity
-                .created(UriComponentsBuilder.fromPath("/register").build().toUri())
-                .body(responseModel);
-    }
-
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping
-    public ResponseEntity<UserResponseModel> getUser(Principal principal) {
-//        principal.getName()
-        UserServiceModel userByName = userService.getUserByName(principal.getName());
-        UserResponseModel responseModel = modelMapper.map(userByName, UserResponseModel.class);
-        return ResponseEntity.ok(responseModel);
-    }
 }

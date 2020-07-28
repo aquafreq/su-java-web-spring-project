@@ -4,14 +4,14 @@ axios.defaults.withCredentials = true
 
 const userService = {
     login: (username, password) => {
-        return axios.post('/user/login', {username, password})
+        return axios.post('/auth/login', {username, password})
     },
     register: (username, password, email) => {
-        return axios.post('/user/register', {username, password, email})
+        return axios.post('/auth/register', {username, password, email})
     },
     getCurrentUser: (token) => {
         if (token)
-            return axios.get( "/user/",
+            return axios.get( "/auth",
                 {
                     headers: {
                         "Authorization": token

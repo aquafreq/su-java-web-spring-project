@@ -1,5 +1,6 @@
 package com.example.english.web.controller;
 
+import com.example.english.data.entity.User;
 import com.example.english.data.model.binding.UserRegisterBindingModel;
 import com.example.english.data.model.response.UserResponseModel;
 import com.example.english.data.model.service.UserServiceModel;
@@ -26,28 +27,25 @@ public class AuthController {
     private final ModelMapper modelMapper;
     private final UserService userService;
 
-    @PreAuthorize("isAnonymous()")
-    @PostMapping(value = "/register")
-    public ResponseEntity<?> register(@RequestBody UserRegisterBindingModel user, UriComponentsBuilder builder) {
-        try {
-            userService
-                    .register(modelMapper.map(user, UserServiceModel.class))
-                    .orElseThrow();
-        } catch (IllegalArgumentException ex) {
-            return ResponseEntity.badRequest().body(ex.getMessage());
-        }
+    @PostMapping("/register")
+    public ResponseEntity<UserResponseModel> registerUser(
+            @RequestBody UserRegisterBindingModel bindingModel) {
+        User user = userService.register(
+                modelMapper.map(bindingModel, UserServiceModel.class)).orElseThrow();
 
-//        return ResponseEntity.
-//                created(builder.path("/register")
-//                        .buildAndExpand(register.getId()).toUri()).build();
-        return ResponseEntity.created(builder.path("/register").build().toUri()).build();
+        UserResponseModel responseModel = modelMapper.map(user, UserResponseModel.class);
+
+        return ResponseEntity
+                .created(UriComponentsBuilder.fromPath("/register").build().toUri())
+                .body(responseModel);
     }
 
-    @GetMapping("/user")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<UserResponseModel> currentUser(Principal user, HttpServletRequest request, HttpServletResponse response) {
-        log.info(String.valueOf(user));
-        UserDetails userDetails = userService.loadUserByUsername(user.getName());
-        return ResponseEntity.ok(modelMapper.map(userDetails, UserResponseModel.class));
+    @GetMapping
+    public ResponseEntity<UserResponseModel> getUser(Principal principal) {
+//        principal.getName()
+        UserServiceModel userByName = userService.getUserByName(principal.getName());
+        UserResponseModel responseModel = modelMapper.map(userByName, UserResponseModel.class);
+        return ResponseEntity.ok(responseModel);
     }
 }

@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Entity
 @Table(name = "category_words")
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class CategoryWords extends BaseEntity {
     @NonNull
     @NotBlank(message = "Name for category is required!")

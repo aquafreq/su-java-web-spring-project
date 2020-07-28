@@ -23,6 +23,7 @@ export default function () {
     async function fetchData() {
         const url = history.location.pathname
         const response = await userService.fetchUserCategoryWords(url)
+        debugger
         setWordCategories(await response.data)
     }
 

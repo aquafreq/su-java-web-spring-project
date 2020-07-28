@@ -63,7 +63,7 @@ const Login = ({login}) => {
                             if (!errors.passwordError && !errors.usernameError) {
                                 const error = await login(username, password)
                                 if (error) {
-                                    setError(error.response.data.message || 'Incorrect username or password!')
+                                    setError(error)
                                     setUsername('')
                                     setPassword('')
                                 }

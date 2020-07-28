@@ -55,6 +55,7 @@ public class UserServiceImpl implements UserService {
         user.setEnabled(true);
         user.getAuthorities().add(roleService.getRoleByName("ROLE_USER"));
         user.setRegistrationDate(LocalDateTime.now());
+
         if (userRepository.count() == 0) {
             Arrays.asList(
                     roleService.getRoleByName("ROLE_ADMIN"),

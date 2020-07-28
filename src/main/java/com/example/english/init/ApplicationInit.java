@@ -1,9 +1,6 @@
 package com.example.english.init;
 
-import com.example.english.data.entity.Content;
-import com.example.english.data.entity.GrammarCategory;
-import com.example.english.data.entity.Role;
-import com.example.english.data.entity.User;
+import com.example.english.data.entity.*;
 import com.example.english.data.entity.enumerations.RoleEnum;
 import com.example.english.data.model.service.UserServiceModel;
 import com.example.english.data.repository.ContentRepository;
@@ -17,9 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.example.english.data.entity.enumerations.LevelOfLanguage.randomLevel;
@@ -45,12 +40,18 @@ public class ApplicationInit implements CommandLineRunner {
         }
 
         if (userService.getCount() == 0) {
+
             users().forEach(userService::register);
+
+            User fizz = mapper.map(userService.getUserByName("fizz"), User.class);
+
+            fizz.getUserProfile().getCategoryWords().addAll(categoryWordsSet());
 
             User zxc = mapper.map(userService.getUserByName("zxc"), User.class);
             User wow = mapper.map(userService.getUserByName("wow"), User.class);
             Role role_moderator = roleService.getRoleByName("ROLE_MODERATOR");
             Role role_admin = roleService.getRoleByName("ROLE_ADMIN");
+
 
             wow.getAuthorities().addAll(
                     new ArrayList<>() {{
@@ -62,8 +63,8 @@ public class ApplicationInit implements CommandLineRunner {
             zxc.getAuthorities().add(role_moderator);
             userService.updateUser(zxc);
             userService.updateUser(wow);
+            userService.updateUser(fizz);
         }
-
 
         if (contentRepository.count() == 0) {
             Content[] contents = contents();
@@ -104,7 +105,6 @@ public class ApplicationInit implements CommandLineRunner {
                             category2)
             );
         }
-        log.info("omg ??? ", users());
     }
 
     private static List<UserServiceModel> users() {
@@ -193,4 +193,40 @@ public class ApplicationInit implements CommandLineRunner {
                 ),
         };
     }
+
+    private Set<CategoryWords> categoryWordsSet() {
+        return new HashSet<>() {{
+            addAll(
+                    Set.of(
+                            new CategoryWords("Unit 10 from C1 Advanced Face2Face book",
+                                    new ArrayList<>() {{
+                                        addAll(
+                                                List.of(new Word("intrusive", "affecting someone in a way that annoys them and makes them feel uncomfortable,\n" +
+                                                                "\tbeing involved in a situation where you are not wanted or do not belong"),
+                                                        new Word("maritime", "connected with the sea in relation to navigation, shipping, etc"),
+                                                        new Word("ubiquitous", "existing or being everywhere, especially at the same time; omnipresent"),
+                                                        new Word("disperse", "to spread across or move away over a large area, or to make something do this"),
+                                                        new Word("hassle", "a situation causing difficulty or trouble"),
+                                                        new Word("fledgling", "new and without experience"))
+                                        );
+                                    }}
+                            ),
+                            new CategoryWords("IT terminology",
+                                    new ArrayList<>() {{
+                                        addAll(
+                                                List.of(
+                                                        new Word("Hoisting", "mechanism where variables and function declarations are moved to the top of their scope before code execution."),
+                                                        new Word("Multiplexing", "A way of sending multiple signals or streams of information over a communications link at the same time in the form of a single, complex signal"),
+                                                        new Word("Socket", "An endpoint of a two-way communication link between two programs running on the network."),
+                                                        new Word("Server", "A piece of computer hardware or software that provides functionality for other programs or devices, called \"clients\"."),
+                                                        new Word("Proxy", "Server application or appliance that acts as an intermediary for requests from clients seeking resources from servers that provide those resources.")
+                                                )
+                                        );
+                                    }}
+                            )
+                    )
+            );
+        }};
+    }
+
 }

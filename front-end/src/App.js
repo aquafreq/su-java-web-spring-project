@@ -72,7 +72,10 @@ const App = () => {
                 localStorage.setItem("authorization", r.headers.authorization)
                 setIsAuthenticated(true)
                 history.push('/')
-            }, e => e)
+            }, e => {
+                debugger
+                return e.response.status === 401 ? 'Invalid credentials!' : e.response.data.message
+            })
     }
 
     const register = async (username, password, email) => {

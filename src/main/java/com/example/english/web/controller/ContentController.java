@@ -3,15 +3,12 @@ package com.example.english.web.controller;
 import com.example.english.data.entity.enumerations.LevelOfLanguage;
 import com.example.english.data.model.binding.CommentBindingModel;
 import com.example.english.data.model.binding.ContentBindingModel;
-import com.example.english.data.model.binding.ExerciseBindingModel;
 import com.example.english.data.model.binding.GrammarCategoryBindingModel;
 import com.example.english.data.model.response.*;
 import com.example.english.data.model.service.CommentServiceModel;
 import com.example.english.data.model.service.ContentServiceModel;
-import com.example.english.data.model.service.ExerciseServiceModel;
 import com.example.english.data.model.service.GrammarCategoryServiceModel;
 import com.example.english.service.ContentService;
-import com.example.english.service.ExerciseService;
 import com.example.english.service.GrammarCategoryService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -31,7 +28,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ContentController {
     private final GrammarCategoryService grammarCategoryService;
-    //    private final ExerciseService exerciseService;
     private final ContentService contentService;
     private final ModelMapper modelMapper;
 
@@ -46,19 +42,6 @@ public class ContentController {
         ResponseEntity.BodyBuilder created = ResponseEntity.created(builder.path("content/create/category/" + categoryResponseModel.getId()).build().toUri());
         return created.body(categoryResponseModel);
     }
-
-//    @PreAuthorize(value = "hasAnyRole('ADMIN','MODERATOR')")
-//    @PostMapping("/exercise/create")
-//    public ResponseEntity<ExerciseResponseModel> createExercise(ExerciseBindingModel exerciseBindingModel, UriComponentsBuilder builder) {
-//        ExerciseServiceModel exerciseServiceModel = exerciseService
-//                .create(modelMapper.map(exerciseBindingModel, ExerciseServiceModel.class));
-//        ExerciseResponseModel exerciseResponseModel = modelMapper
-//                .map(exerciseServiceModel, ExerciseResponseModel.class);
-//
-//        ResponseEntity.BodyBuilder created =
-//                ResponseEntity.created(builder.path("categories/" + exerciseServiceModel.getId()).build().toUri());
-//        return created.body(exerciseResponseModel);
-//    }
 
     @GetMapping(value = "/category/all-categories", produces = "application/json")
     public List<GrammarNameResponseModel> getAllGrammarCategories() {
