@@ -90,11 +90,11 @@
 }
 
 .word-section {
-    background: rgba(3,0,47, 0.78);
-    background: linear-gradient(90deg, rgba(3,0,47,0.78) 4%, rgba(103,18,122,0.78) 14%,
-    rgba(73,111,198,0.78) 21%, rgba(63,86,164,0.78) 25%, rgba(107,1,94,0.78) 43%,
-    rgba(105,0,184,0.78) 68%, rgba(117,90,121,0.78) 79%, rgba(62,131,198,0.78) 84%, rgba(62,131,198,0.78) 84%,
-    rgba(109,71,155,0.78) 88%, rgba(54,141,205,0.78) 93%, rgba(9,26,66,0.78) 98%);
+    background: rgba(3, 0, 47, 0.78);
+    background: linear-gradient(90deg, rgba(3, 0, 47, 0.78) 4%, rgba(103, 18, 122, 0.78) 14%,
+    rgba(73, 111, 198, 0.78) 21%, rgba(63, 86, 164, 0.78) 25%, rgba(107, 1, 94, 0.78) 43%,
+    rgba(105, 0, 184, 0.78) 68%, rgba(117, 90, 121, 0.78) 79%, rgba(62, 131, 198, 0.78) 84%, rgba(62, 131, 198, 0.78) 84%,
+    rgba(109, 71, 155, 0.78) 88%, rgba(54, 141, 205, 0.78) 93%, rgba(9, 26, 66, 0.78) 98%);
     overflow: hidden;
 }
 
@@ -111,4 +111,54 @@
         margin-top: 1.5%;
         margin-left: -4%;
     }
+}
+
+.category h3 {
+    color: blanchedalmond;
+    margin : 10px 0;
+    font-size: 28px;
+    text-decoration-line: underline;
+    text-emphasis-color: white;
+    font-weight: 800;
+}
+
+.category {
+    font-size: 22px;
+    font-family: Verdana, sans-serif;
+    /*width: 400px;*/
+    display: table;
+    text-align: center;
+    width: 90%;
+}
+
+.cats {
+    margin: 2%;
+    background-color: lightgreen;
+    border: #2bbbad 3px solid;
+    border-radius: 5px;
+}
+
+.category-word {
+    margin: 14px;
+    padding: 4px;
+    border: 3px solid #c51162;
+}
+
+.category-word > p > span {
+    float: left;
+    font-weight: 600;
+    color: indigo;
+    display: table-cell;
+    font-size: 26px;
+}
+
+div.category-word input[type=submit] {
+    background-color: #c51162;
+    padding: 0 20px;
+    color: white;
+}
+
+div.category-word input[type=submit]:hover {
+    background-color: red;
+    color: black;
 }

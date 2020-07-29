@@ -1,16 +1,11 @@
 package com.example.english.web.controller;
 
-import com.example.english.data.entity.User;
-import com.example.english.data.entity.Word;
 import com.example.english.data.model.binding.*;
 import com.example.english.data.model.response.*;
 import com.example.english.data.model.service.*;
 import com.example.english.service.UserService;
-import com.example.english.service.CategoryWordsService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,10 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -128,5 +121,37 @@ public class UserController {
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(collect);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping(value = "/profile/{id}/practice/delete-word")
+    public ResponseEntity<CategoryWordsResponseModel> deleteWordInWordCategory(
+            @PathVariable String id,
+            @RequestBody WordCategoryDelete bindingModel) {
+        CategoryWordsServiceModel map = modelMapper.map(bindingModel, CategoryWordsServiceModel.class);
+
+        CategoryWordsResponseModel responseModel =
+                modelMapper.map(
+                        userService.deleteWordFromCategoryByUserId(id, map),
+                        CategoryWordsResponseModel.class);
+
+        return ResponseEntity.ok(responseModel);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping(value = "/profile/{id}/practice/delete-category")
+    public ResponseEntity<CategoryWordsResponseModel> deleteCategory(
+            @RequestBody CategoryWordDeleteBindingModel bindingModel,
+            @PathVariable String id) {
+
+//        CategoryWordsResponseModel responseModel =
+//                modelMapper.map(
+                userService.deleteCategoryByUserIdAndCategoryName(id, bindingModel.getId());
+//                        CategoryWordsResponseModel.class);
+
+        return ResponseEntity
+                .noContent()
+                .location(URI.create("/user/profile/" + id + "/practice"))
+                .build();
     }
 }

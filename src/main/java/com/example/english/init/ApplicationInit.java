@@ -45,7 +45,7 @@ public class ApplicationInit implements CommandLineRunner {
 
             User fizz = mapper.map(userService.getUserByName("fizz"), User.class);
 
-            fizz.getUserProfile().getCategoryWords().addAll(categoryWordsSet());
+            fizz.getUserProfile().getWords().addAll(categoryWordsSet());
 
             User zxc = mapper.map(userService.getUserByName("zxc"), User.class);
             User wow = mapper.map(userService.getUserByName("wow"), User.class);
@@ -86,7 +86,7 @@ public class ApplicationInit implements CommandLineRunner {
             byTitle1.setCategory(category);
             byTitle2.setCategory(category);
 
-            category.getContent().addAll(List.of(byTitle, byTitle1, byTitle2));
+            category.getContent().addAll(Arrays.asList(byTitle, byTitle1, byTitle2));
 
             GrammarCategory category1 = repository.findByName("Nouns").get();
             Content byTitle3 = contentRepository.findByTitle("Neque porro quisquam est quid");
@@ -98,18 +98,13 @@ public class ApplicationInit implements CommandLineRunner {
             byTitle4.setCategory(category2);
             category2.getContent().add(byTitle4);
 
-            repository.saveAll(
-                    List.of(
-                            category,
-                            category1,
-                            category2)
-            );
+            repository.saveAll(Arrays.asList(category, category1, category2));
         }
     }
 
     private static List<UserServiceModel> users() {
-        return List.of(
-                //ADMIN
+        return Arrays.asList(
+                //ADMIN && ROOT_ADMIN
                 new UserServiceModel("fizz", "fizz", "fizz@fizz.fizz"),
                 new UserServiceModel("fizz2", "fizz", "fizz22@fizz.fizz"),
                 new UserServiceModel("fizz22", "fizz", "fizz222@fizz.fizz"),
@@ -196,37 +191,32 @@ public class ApplicationInit implements CommandLineRunner {
 
     private Set<CategoryWords> categoryWordsSet() {
         return new HashSet<>() {{
-            addAll(
-                    Set.of(
-                            new CategoryWords("Unit 10 from C1 Advanced Face2Face book",
-                                    new ArrayList<>() {{
-                                        addAll(
-                                                List.of(new Word("intrusive", "affecting someone in a way that annoys them and makes them feel uncomfortable,\n" +
-                                                                "\tbeing involved in a situation where you are not wanted or do not belong"),
-                                                        new Word("maritime", "connected with the sea in relation to navigation, shipping, etc"),
-                                                        new Word("ubiquitous", "existing or being everywhere, especially at the same time; omnipresent"),
-                                                        new Word("disperse", "to spread across or move away over a large area, or to make something do this"),
-                                                        new Word("hassle", "a situation causing difficulty or trouble"),
-                                                        new Word("fledgling", "new and without experience"))
-                                        );
-                                    }}
-                            ),
-                            new CategoryWords("IT terminology",
-                                    new ArrayList<>() {{
-                                        addAll(
-                                                List.of(
-                                                        new Word("Hoisting", "mechanism where variables and function declarations are moved to the top of their scope before code execution."),
-                                                        new Word("Multiplexing", "A way of sending multiple signals or streams of information over a communications link at the same time in the form of a single, complex signal"),
-                                                        new Word("Socket", "An endpoint of a two-way communication link between two programs running on the network."),
-                                                        new Word("Server", "A piece of computer hardware or software that provides functionality for other programs or devices, called \"clients\"."),
-                                                        new Word("Proxy", "Server application or appliance that acts as an intermediary for requests from clients seeking resources from servers that provide those resources.")
-                                                )
-                                        );
-                                    }}
-                            )
-                    )
-            );
+            add(new CategoryWords("Unit 10 from C1 Advanced Face2Face book",
+                    new ArrayList<>() {{
+                        addAll(
+                                Arrays.asList(new Word("intrusive", "affecting someone in a way that annoys them and makes them feel uncomfortable,\n" +
+                                                "\tbeing involved in a situation where you are not wanted or do not belong"),
+                                        new Word("maritime", "connected with the sea in relation to navigation, shipping, etc"),
+                                        new Word("ubiquitous", "existing or being everywhere, especially at the same time; omnipresent"),
+                                        new Word("disperse", "to spread across or move away over a large area, or to make something do this"),
+                                        new Word("hassle", "a situation causing difficulty or trouble"),
+                                        new Word("fledgling", "new and without experience"))
+                        );
+                    }}
+            ));
+            add(new CategoryWords("IT terminology",
+                    new ArrayList<>() {{
+                        addAll(
+                                Arrays.asList(
+                                        new Word("Hoisting", "mechanism where variables and function declarations are moved to the top of their scope before code execution."),
+                                        new Word("Multiplexing", "A way of sending multiple signals or streams of information over a communications link at the same time in the form of a single, complex signal"),
+                                        new Word("Socket", "An endpoint of a two-way communication link between two programs running on the network."),
+                                        new Word("Server", "A piece of computer hardware or software that provides functionality for other programs or devices, called \"clients\"."),
+                                        new Word("Proxy", "Server application or appliance that acts as an intermediary for requests from clients seeking resources from servers that provide those resources.")
+                                )
+                        );
+                    }}
+            ));
         }};
     }
-
 }

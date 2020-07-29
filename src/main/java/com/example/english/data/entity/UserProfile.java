@@ -26,6 +26,6 @@ public class UserProfile extends BaseEntity {
     private LevelExperience levelExperience;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "category_words_id")
-    private Set<CategoryWords> categoryWords = new HashSet<>();
+    @JoinColumn(name = "words_id")
+    private Set<CategoryWords> words = new HashSet<>();
 }

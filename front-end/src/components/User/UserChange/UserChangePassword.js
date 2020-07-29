@@ -37,9 +37,9 @@ export default function () {
 
     return (
         <Fragment>
-            <Navigation/>
+            <Navigation />
             <div className={styles.container}>
-                <h2>Change passwords</h2>
+                <h2>Change password</h2>
                 <h5>Make sure it's secure enough!</h5>
                 <form onSubmit={handleSubmit}>
                     <Input

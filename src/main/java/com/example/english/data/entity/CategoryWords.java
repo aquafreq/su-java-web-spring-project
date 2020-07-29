@@ -21,7 +21,7 @@ public class CategoryWords extends BaseEntity {
     @Length(min = 2,  message = "The name of the categoy shouldn't be less than 2 symbols")
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = {CascadeType.MERGE,CascadeType.REMOVE,CascadeType.REFRESH})
     @JoinColumn(name = "words_id")
     private List<Word> words = new ArrayList<>();
 }

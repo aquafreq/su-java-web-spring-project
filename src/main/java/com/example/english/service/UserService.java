@@ -58,4 +58,8 @@ public interface UserService extends UserDetailsService {
     UserServiceModel getUserDetailsById(String id);
 
     Collection<CategoryWordsServiceModel> getWordsCategoryById(String id);
+
+    CategoryWordsServiceModel deleteWordFromCategoryByUserId(String id,CategoryWordsServiceModel categoryWordsServiceModel);
+
+    CategoryWordsServiceModel deleteCategoryByUserIdAndCategoryName(String id, String name);
 }

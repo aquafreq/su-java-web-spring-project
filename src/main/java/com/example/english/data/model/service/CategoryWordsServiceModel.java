@@ -10,5 +10,6 @@ import java.util.List;
 public class CategoryWordsServiceModel {
     private String id;
     private String name;
+    private String wordName;
     private List<WordServiceModel> words;
 }

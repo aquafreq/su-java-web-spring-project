@@ -53,9 +53,8 @@ public class WordServiceImpl implements WordService {
     }
 
     @Override
-    public WordServiceModel getWordById(String wordId) {
-        return modelMapper.map(repository.findById(wordId)
-                , WordServiceModel.class);
+    public WordServiceModel getWordByIdOrName(String wordId) {
+        return modelMapper.map(repository.getByIdOrName(wordId, wordId), WordServiceModel.class);
     }
 
     @Override

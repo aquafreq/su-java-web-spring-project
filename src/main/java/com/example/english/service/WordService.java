@@ -13,7 +13,7 @@ public interface WordService {
 
     WordServiceModel getWordByNameAndDefinition(String name, String definition);
 
-    WordServiceModel getWordById(String wordId);
+    WordServiceModel getWordByIdOrName(String wordId);
 
     Collection<WordServiceModel> getWordsById(List<String> words);
 }

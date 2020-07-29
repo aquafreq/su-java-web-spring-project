@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WordRepository extends JpaRepository<Word, String> {
     Word getByNameAndDefinition(String name, String definition);
+    Word getByIdOrName(String id, String name);
 }

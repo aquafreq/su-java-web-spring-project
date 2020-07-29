@@ -3,10 +3,8 @@ package com.example.english.service.impl;
 import com.example.english.data.entity.Word;
 import com.example.english.data.entity.CategoryWords;
 import com.example.english.data.model.service.CategoryWordsServiceModel;
-import com.example.english.data.model.service.WordServiceModel;
 import com.example.english.data.repository.CategoryWordsRepository;
 import com.example.english.service.CategoryWordsService;
-import com.example.english.service.UserService;
 import com.example.english.service.WordService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -58,17 +56,13 @@ public class CategoryWordsServiceImpl implements CategoryWordsService {
 
     @Override
     public void removeWordFromCategory(String categoryId, String wordId) {
-        Word map = modelMapper.map(wordService.getWordById(wordId),
-                Word.class);
+        Word map = modelMapper.map(wordService.getWordByIdOrName(wordId), Word.class);
 
-        CategoryWords categoryWords = repository.findById(categoryId)
-                .orElseThrow();
+        CategoryWords categoryWords = repository.findById(categoryId).orElseThrow();
 
-        //da sa vidid
-        categoryWords
-                .getWords()
-                .remove(map);
+        categoryWords.getWords().remove(map);
 
+        wordService.deleteWordById(map.getId());
         repository.save(categoryWords);
     }
 }

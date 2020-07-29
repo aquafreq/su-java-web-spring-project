@@ -8,11 +8,14 @@ import Footer from "../../Footer/Footer"
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faCheck} from '@fortawesome/free-solid-svg-icons'
 
+
 export default function () {
     const [wordCategories, setWordCategories] = useState([])
     const [category, setCategory] = useState('')
     const [words, setWords] = useState([])
     const [error, setError] = useState({hasError: false, message: ''})
+    const [isDeleted, setIsDeleted] = useState(false)
+    const [showCategories, setShowCategories] = useState(false)
 
     const history = useHistory()
 
@@ -23,7 +26,6 @@ export default function () {
     async function fetchData() {
         const url = history.location.pathname
         const response = await userService.fetchUserCategoryWords(url)
-        debugger
         setWordCategories(await response.data)
     }
 
@@ -90,10 +92,6 @@ export default function () {
             })
         }
 
-        // function manageBoxButtons(action, ...rest) {
-        //     rest.forEach(i => i.disabled = action)
-        // }
-
         function guessWord(e) {
             const {definition, inputField} = getWordBoxData(e)
             const word = getWord(words, definition)
@@ -127,7 +125,7 @@ export default function () {
                                 type="text"
                                 onChange={handleWordNameChange}
                                 value={w.inputName}
-                                placeholder="definition..."
+                                placeholder="word..."
                             />
                             {w.isGuessed && <FontAwesomeIcon className={styles.icon} icon={faCheck}/>}
                         </label>
@@ -143,17 +141,22 @@ export default function () {
     }
 
     function renderUI(error, renderFunc, e) {
+        debugger
+        debugger
         if (!error.hasError) {
             setError({hasError: false, message: ''})
-            e.style.border = ''
+            e
+                .target
+                .parentNode
+                .querySelectorAll('input[type=submit]')
+                .forEach(i => i.style.border = '')
 
             renderFunc()
         } else {
-            e.style.border = '4px solid red'
+            e.target.style.border = '4px solid red'
             setError(error)
         }
     }
-
 
     function beginPractice(e) {
         const error = {
@@ -161,7 +164,9 @@ export default function () {
             message: 'Please select a category or create one!'
         }
 
-        renderUI(error, mapWords, e.target)
+        setIsDeleted(false)
+
+        renderUI(error, mapWords, e)
     }
 
     function mapWords() {
@@ -210,7 +215,6 @@ export default function () {
             const newState = [...prev]
             let newDef = getWord(newState, definition)
             newDef.inputName = inputName
-            debugger
             return newState
         })
     }
@@ -242,8 +246,84 @@ export default function () {
         })
     }
 
-    function showCategoryWithWords() {
+    function showCategoryWithWords(e) {
+        e.preventDefault()
+        setShowCategories(!showCategories)
+    }
 
+    function removeWord(e) {
+        e.preventDefault()
+        const wordName = e.target.parentNode.firstElementChild.firstElementChild.textContent
+        const parentCategory = e.target.parentNode.parentNode.parentNode.firstChild.textContent
+        const url = history.location.pathname
+
+        userService.deleteWordFromCategory(url, parentCategory, wordName)
+
+        setWordCategories(prevState => {
+            prevState.forEach(c => {
+                if (c.name === parentCategory) {
+                    c.words = c.words.filter(w => w.name !== wordName)
+                }
+            })
+            return [...prevState]
+        })
+    }
+
+    function renderCategoriesWithWords() {
+        return wordCategories.map(c => {
+            return (
+                <div key={c.id}>
+                    <h3>{c.name}</h3>
+                    <div className={styles.cats}>
+                        {c.words.map(w => (
+                            <div key={w.id} className={styles['category-word']}>
+                                <p><span>{w.name}</span><br/> {w.definition}</p>
+                                <input type='submit' value='Remove' onClick={removeWord}/>
+                            </div>
+                        ))
+                        }
+                    </div>
+                </div>
+            )
+        })
+    }
+
+    function renderContent() {
+        if (showCategories) {
+            return <div className={styles.category}>
+                {renderCategoriesWithWords()}
+            </div>
+        }
+
+        if (isDeleted || !category) {
+            return null
+        }
+
+        if (!showCategories) {
+            return (
+                <div className={styles.words}>
+                    {renderWords()}
+                </div>
+            )
+        }
+
+        return <h2>No words in this category!</h2>
+    }
+
+    function deleteCategory(e) {
+        e.preventDefault()
+        const error = {
+            hasError: !category,
+            message: 'Please select a category!'
+        }
+
+        renderUI(error,
+            () => {
+                setWordCategories(prev => [...prev.filter(c => c.id !== category)])
+                setCategory('')
+                setIsDeleted(true)
+                userService.deleteCategory(history.location.pathname, category)
+            }, e)
     }
 
     return (
@@ -252,8 +332,8 @@ export default function () {
             <div className={styles['practice-container']}>
                 <h1>Pick a category and start practicing the words in it!</h1>
                 <span className={styles.error}>
-                {error.hasError && <h5>{error.message}</h5>}
-                </span>
+                            {error.hasError && <h5>{error.message}</h5>}
+                            </span>
                 <div>
                     <select onChange={handleChange}>
                         <option value=''/>
@@ -262,14 +342,13 @@ export default function () {
                     <input type="submit" value="Begin" onClick={beginPractice}/>
                     <input type="submit" value="Shuffle" onClick={refreshWords}/>
                     <input type="submit"
-                           value="Display all categories and words within them"
+                           value={`${!showCategories ? 'Display' : 'Hide'} all categories`}
                            onClick={showCategoryWithWords}
                     />
+                    <input type="submit" value="Delete category" onClick={deleteCategory}/>
                 </div>
                 <div>
-                    <div className={styles.words}>
-                        {words && renderWords()}
-                    </div>
+                    {renderContent()}
                 </div>
             </div>
             <Footer/>
