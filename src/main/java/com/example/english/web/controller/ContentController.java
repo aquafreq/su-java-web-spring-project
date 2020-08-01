@@ -31,7 +31,7 @@ public class ContentController {
     private final ContentService contentService;
     private final ModelMapper modelMapper;
 
-    @PreAuthorize(value = "hasAnyRole('ADMIN', 'MODERATOR')")
+    @PreAuthorize(value = "hasAnyRole('ADMIN', 'MODERATOR', 'ROOT_ADMIN')")
     @PostMapping("/category/create")
     public ResponseEntity<GrammarCategoryResponseModel> createCategory(@RequestBody GrammarCategoryBindingModel grammarCategoryBindingModel, UriComponentsBuilder builder) {
         GrammarCategoryResponseModel categoryResponseModel =

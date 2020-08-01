@@ -53,8 +53,10 @@ public class ContentServiceImpl implements ContentService {
                         .findAll()
                         .stream()
                         .filter(c ->
-                                mapName(c.getCategory().getName()).equals(category)
-                                        && mapName(c.getTitle()).replaceAll("\\?", "").equals(contentId))
+                                mapName(c.getCategory().getName()).equalsIgnoreCase(mapName(category)) &&
+                                        (mapName(c.getTitle())
+                                                .replaceAll("\\?", "")
+                                                .equals(mapName(contentId))))
                         .findAny()
                         .orElseThrow(() -> new NoContentFound(String.format(NO_CONTENT_FOUND_FOR_CATEGORY, contentId, category)))
                 );

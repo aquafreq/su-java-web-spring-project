@@ -15,10 +15,4 @@ public class Role extends BaseEntity implements GrantedAuthority {
     @Column
     @NonNull
     private String authority;
-
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    @JoinTable(name = "users_authorities",
-//            joinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"),
-//            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
-//    private Set<User> users;
 }

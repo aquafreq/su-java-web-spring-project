@@ -19,10 +19,6 @@ export default function (props) {
         const {pathname} = history.location
         const response = await userService.userDetails(pathname)
         const userData = await response.data
-        userData.registrationDate =
-            userData.registrationDate
-                .replace('T', ' ')
-                .substring(0, userData.registrationDate.indexOf('.'))
         debugger
         setUser(userData)
     }

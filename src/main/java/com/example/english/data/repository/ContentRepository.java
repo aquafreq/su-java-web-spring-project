@@ -14,6 +14,4 @@ public interface ContentRepository extends JpaRepository<Content,String> {
 
     @Query("select c from Content c where c.category.id = ?1 and c.id = ?2")
     Optional<Content> findByIdAndCategoryId(String categoryId, String contentId);
-
-
 }

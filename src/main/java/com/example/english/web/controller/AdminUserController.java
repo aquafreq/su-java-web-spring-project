@@ -115,7 +115,10 @@ public class AdminUserController {
                 .map(RoleServiceModel::getAuthority)
                 .map(x -> x.replace("ROLE_", ""))
                 .collect(Collectors.joining(", ")));
+
         map.setIsEnabled(userServiceModel.isEnabled());
+        map.setRegistrationDate(userServiceModel.getRegistrationDate().toString()
+        .replace("T"," "));
         return ResponseEntity.ok(map);
     }
 

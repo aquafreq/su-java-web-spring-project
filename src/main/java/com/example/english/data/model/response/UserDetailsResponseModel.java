@@ -17,8 +17,8 @@ public class UserDetailsResponseModel {
     private String email;
     private String isEnabled;
     private String authorities;
-    @DateTimeFormat(pattern = "dd-MMM-yyyy HH:mm:ss")
-    private LocalDateTime registrationDate;
+//    @DateTimeFormat(pattern = "dd-MMM-yyyy HH:mm:ss")
+    private String registrationDate;
     private LocalDate birthDate;
     private String nationality;
     private LevelExperience levelExperience;

@@ -45,13 +45,14 @@ public class ApplicationInit implements CommandLineRunner {
 
             User fizz = mapper.map(userService.getUserByName("fizz"), User.class);
 
+            //when running only the integration tests this will fail,
+            //if the application is not running
             fizz.getUserProfile().getCategoriesWithWords().addAll(categoryWordsSet());
 
             User zxc = mapper.map(userService.getUserByName("zxc"), User.class);
             User wow = mapper.map(userService.getUserByName("wow"), User.class);
             Role role_moderator = roleService.getRoleByName("ROLE_MODERATOR");
             Role role_admin = roleService.getRoleByName("ROLE_ADMIN");
-
 
             wow.getAuthorities().addAll(
                     new ArrayList<>() {{

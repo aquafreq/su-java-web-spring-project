@@ -1,38 +1,14 @@
 .body {
-    background-color: black;
-    justify-content: center;
-}
-
-.chooseCategory {
-    color: white;
     text-align: center;
-    width: 41%;
-    margin: 14px 20% 5% 30%;
 }
 
-.addContent {
-    display: flex;
-    margin: 0 0 0 20%;
-    padding: 0 23px 0 23px;
-    text-align: center;
-    /*resize: none;*/
+.form-containers{
+margin: 15px;
 }
 
-.addContent p {
-    text-decoration-line: underline;
-}
-
-.block:last-child {
-    margin-top: 3%;
-    margin-bottom: 3%;
-}
-
-.block label {
-    font-size: 24px;
-    font-family: Arial, fantasy;
+.chosenCategory h3{
     color: black;
 }
-
 
 .category-error {
     color: red;

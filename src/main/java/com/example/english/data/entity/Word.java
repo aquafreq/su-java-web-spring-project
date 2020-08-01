@@ -5,6 +5,9 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
+import static com.example.english.constants.WordConstants.WORD_DEFINITION_IS_REQUIRED;
+import static com.example.english.constants.WordConstants.WORD_NAME_IS_REQUIRED;
+
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @NoArgsConstructor
@@ -13,8 +16,8 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @Builder
 public class Word extends BaseEntity {
-    @NotBlank(message = "Name is required!")
+    @NotBlank(message = WORD_NAME_IS_REQUIRED)
     private String name;
-    @NotBlank(message = "Definition is required!")
+    @NotBlank(message = WORD_DEFINITION_IS_REQUIRED)
     private String definition;
 }

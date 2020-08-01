@@ -18,7 +18,7 @@ export default function CreateContent() {
     const [levels, setLevels] = useState([])
     const [categoryError, setCategoryError] = useState('')
     const [areTriggered, setAreTriggered] = useState(false)
-    const [chosenCategory,setChosenCategory] = useState('')
+    const [chosenCategory, setChosenCategory] = useState('')
 
     useLayoutEffect(() => {
         Promise.all(
@@ -83,7 +83,7 @@ export default function CreateContent() {
         <>
             <Navigation/>
             <div className={styles.body}>
-                <MDBContainer>
+                <MDBContainer className={styles['form-containers']}>
                     <MDBRow>
                         <MDBCol md="12">
                             <MDBCard>
@@ -118,27 +118,28 @@ export default function CreateContent() {
                         </MDBCol>
                     </MDBRow>
                 </MDBContainer>
-                <form>
-                    <div className={styles.chooseCategory}>
-                        <div>
-                            {errors.areTriggered && errors.chosenCategoryError &&
-                            <h2 className={styles['category-error']}>{errors.chosenCategoryError}</h2>}
-                            <h3>Choose category for an exercise or a content</h3>
-                            <select className="browser-default custom-select"
-                                    onChange={e => setChosenCategory(e.target.value)}
-                                    required
-                            >
-                                <option value=''/>
-                                {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                            </select>
-                        </div>
-                    </div>
-                    <div className={styles.addContent}>
-                        <MDBContainer>
-                            <MDBRow className={styles.block}>
-                                <MDBCol md="6">
-                                    <MDBCard>
-                                        <MDBCardBody>
+                <MDBContainer>
+                    <MDBRow>
+                        <MDBCol md="12">
+                            <MDBCard>
+                                <MDBCardBody>
+                                    <form>
+                                        <div className={styles.chosenCategory}>
+                                            <div>
+                                                {errors.areTriggered && errors.chosenCategoryError &&
+                                                <h2 className={styles['category-error']}>{errors.chosenCategoryError}</h2>}
+                                                <h3>Choose category for an exercise or a content</h3>
+                                                <select className="browser-default custom-select"
+                                                        onChange={e => setChosenCategory(e.target.value)}
+                                                        required
+                                                >
+                                                    <option value=''/>
+                                                    {categories.map(c => <option key={c.id}
+                                                                                 value={c.id}>{c.name}</option>)}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div className={styles.addContent}>
                                             {errors.areTriggered && errors.titleError &&
                                             <h2 className={styles['category-error']}>{errors.titleError}</h2>}
                                             <p className="h4 text-center py-4">Add content to chosen category</p>
@@ -185,13 +186,13 @@ export default function CreateContent() {
                                                     {/*<MDBIcon icon={<i className="fab fa-react"></i>} size='10px'/>*/}
                                                 </MDBBtn>
                                             </div>
-                                        </MDBCardBody>
-                                    </MDBCard>
-                                </MDBCol>
-                            </MDBRow>
-                        </MDBContainer>
-                    </div>
-                </form>
+                                        </div>
+                                    </form>
+                                </MDBCardBody>
+                            </MDBCard>
+                        </MDBCol>
+                    </MDBRow>
+                </MDBContainer>
             </div>
             <Footer/>
         </>

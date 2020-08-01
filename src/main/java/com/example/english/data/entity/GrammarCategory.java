@@ -25,12 +25,4 @@ public class GrammarCategory extends BaseEntity{
             cascade = {CascadeType.ALL})
     @ToString.Exclude
     private Collection<Content> content = new ArrayList<>();
-
-    //followd by if conds => if conds explanation etc exercises
-    //zada4kite + vuprosite i otgovorite
-//    @OneToMany(mappedBy = "category")
-//    @ToString.Exclude
-//    private List<Exercise> exercises = new ArrayList<>();
-
-
 }

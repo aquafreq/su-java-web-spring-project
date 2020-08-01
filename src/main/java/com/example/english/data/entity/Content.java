@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.english.constants.ContentConstants.*;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
@@ -19,9 +21,10 @@ import java.util.List;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class Content extends BaseEntity {
+
     @NonNull
     @Column(unique = true, nullable = false)
-    @NotBlank(message = "Title of content cannot be empty")
+    @NotBlank(message = CONTENT_CANNOT_BE_EMPTY)
     private String title;
 
     @NonNull
@@ -30,7 +33,7 @@ public class Content extends BaseEntity {
 //    @Lob
     @Column(columnDefinition = "LONGTEXT")
     @NonNull
-    @NotBlank(message = "Description required!")
+    @NotBlank(message = CONTENT_DESCRIPTION_REQUIRED)
     private String description;
 
     @ManyToOne
@@ -46,8 +49,6 @@ public class Content extends BaseEntity {
     @ToString.Exclude
     private GrammarCategory category;
 
-
-    //dobavq li se komentara  ?
     @OneToMany
     @ToString.Exclude
     private List<Comment> comments = new ArrayList<>();
