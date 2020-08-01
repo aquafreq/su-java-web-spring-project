@@ -7,6 +7,7 @@ import com.example.english.data.model.service.UserServiceModel;
 import com.example.english.data.repository.CommentRepository;
 import com.example.english.service.CommentService;
 import com.example.english.service.UserService;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,9 @@ public class CommentServiceImpl implements CommentService {
         User map1 = null;
 
         if (!anonymous) {
-            map1 = modelMapper.map(userService.getUserById(userId), User.class);
+            UserServiceModel userById = userService.getUserById(userId);
+
+            map1 = modelMapper.map(userById, User.class);
         }
 
         map.setUser(map1);

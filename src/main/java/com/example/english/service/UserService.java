@@ -1,7 +1,6 @@
 package com.example.english.service;
 
 import com.example.english.data.entity.User;
-import com.example.english.data.model.binding.CategoryWordsBindingModel;
 import com.example.english.data.model.service.CategoryWordsServiceModel;
 import com.example.english.data.model.service.UserProfileServiceModel;
 import com.example.english.data.model.service.UserServiceModel;
@@ -45,9 +44,9 @@ public interface UserService extends UserDetailsService {
 
     UserProfileServiceModel updateProfile(UserProfileServiceModel userProfileServiceModel,String id);
 
-    UserProfileServiceModel getUserProfileById(String id);
+    UserProfileServiceModel getUserProfileByUserId(String id);
 
-    CategoryWordsServiceModel addCategoryForUser(String userId, CategoryWordsBindingModel categoryName);
+    CategoryWordsServiceModel addCategoryForUser(String userId, String categoryName);
 
     Set<CategoryWordsServiceModel> getUserCategoriesById(String userId);
 
@@ -57,9 +56,9 @@ public interface UserService extends UserDetailsService {
 
     UserServiceModel getUserDetailsById(String id);
 
-    Collection<CategoryWordsServiceModel> getWordsCategoryById(String id);
+    Collection<CategoryWordsServiceModel> getWordsCategoryByUserId(String id);
 
     CategoryWordsServiceModel deleteWordFromCategoryByUserId(String id,CategoryWordsServiceModel categoryWordsServiceModel);
 
-    CategoryWordsServiceModel deleteCategoryByUserIdAndCategoryName(String id, String name);
+    void deleteCategoryByUserIdAndCategoryId(String id, String name);
 }

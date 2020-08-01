@@ -45,7 +45,7 @@ public class ApplicationInit implements CommandLineRunner {
 
             User fizz = mapper.map(userService.getUserByName("fizz"), User.class);
 
-            fizz.getUserProfile().getWords().addAll(categoryWordsSet());
+            fizz.getUserProfile().getCategoriesWithWords().addAll(categoryWordsSet());
 
             User zxc = mapper.map(userService.getUserByName("zxc"), User.class);
             User wow = mapper.map(userService.getUserByName("wow"), User.class);

@@ -34,7 +34,9 @@ public class ContentServiceImpl implements ContentService {
 
     @Override
     public ContentServiceModel createContent(ContentServiceModel contentServiceModel) {
-        User map = modelMapper.map(userService.getUserById(contentServiceModel.getAuthor().getId()), User.class);
+        UserServiceModel userById = userService.getUserById(contentServiceModel.getAuthor().getId());
+
+        User map = modelMapper.map(userById, User.class);
         Content c = new Content()
                 .setAuthor(map)
                 .setTitle(contentServiceModel.getTitle())
@@ -57,23 +59,27 @@ public class ContentServiceImpl implements ContentService {
                         .orElseThrow(() -> new NoContentFound(String.format(NO_CONTENT_FOUND_FOR_CATEGORY, contentId, category)))
                 );
 
-        return modelMapper
-                .map(content,
-                        ContentServiceModel.class);
+        return modelMapper.map(content, ContentServiceModel.class);
     }
 
     @Override
     public CommentServiceModel addCommentToContent(CommentServiceModel commentServiceModel) {
-        CommentServiceModel commentServiceModel1 = commentService.addComment(commentServiceModel);
+        CommentServiceModel commentServiceModel1 =
+                commentService.addComment(commentServiceModel);
 
         Comment map = modelMapper.map(commentServiceModel1, Comment.class);
 
-        Content content = repository.findById(commentServiceModel.getContentServiceModel().getId()).orElseThrow();
+        Content content = repository
+                .findById(commentServiceModel
+                        .getContentServiceModel()
+                        .getId()).orElseThrow();
+
         content.getComments().add(map);
-        repository.save(content);
+
+        Content save = repository.save(content);
 
         return modelMapper.map(
-                content
+                save
                         .getComments()
                         .stream()
                         .filter(x -> x.getId().equals(map.getId()))

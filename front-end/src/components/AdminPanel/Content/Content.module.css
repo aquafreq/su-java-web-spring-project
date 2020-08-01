@@ -57,6 +57,7 @@
 
 .comment-section label form textarea {
     width: 400px;
+    resize: both;
     line-height: 24px;
     min-height: 22px;
     overflow-y: hidden; /* fixes scrollbar flash - kudos to @brettjonesdev */

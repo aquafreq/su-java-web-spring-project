@@ -1,7 +1,6 @@
 package com.example.english.service.impl;
 
 import com.example.english.data.entity.*;
-import com.example.english.data.model.binding.CategoryWordsBindingModel;
 import com.example.english.data.model.service.CategoryWordsServiceModel;
 import com.example.english.data.model.service.UserProfileServiceModel;
 import com.example.english.data.model.service.UserServiceModel;
@@ -23,6 +22,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.example.english.constants.UserConstants.*;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -37,7 +38,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
+                .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND, username)));
     }
 
     @Override
@@ -68,8 +69,6 @@ public class UserServiceImpl implements UserService {
             });
         }
 
-        log.info(user.toString());
-        log.info(user.getAuthorities().toString());
         return Optional.of(userRepository.save(user));
     }
 
@@ -92,6 +91,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserServiceModel removeUserRole(String userId, String roleId) {
         User user = userRepository.findById(userId).orElseThrow();
+
         user.setAuthorities(user.getAuthorities()
                 .stream()
                 .filter(a -> !a.getId().equals(roleId))
@@ -110,8 +110,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserServiceModel permitUser(String id) {
-        User user = userRepository.findById(id)
-                .orElseThrow();
+        User user = userRepository.findById(id).orElseThrow();
 
         user.setEnabled(true);
         return modelMapper.map(userRepository.save(user), UserServiceModel.class);
@@ -149,9 +148,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserServiceModel getUserById(String id) {
-        return modelMapper.map(
-                userRepository.findById(id).orElseThrow(),
-                UserServiceModel.class);
+        User user = userRepository.findById(id).orElseThrow();
+
+        return modelMapper.map(user, UserServiceModel.class);
     }
 
     @Override
@@ -164,18 +163,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserProfileServiceModel saveProfile(UserProfileServiceModel userProfileServiceModel) {
-        User user = userRepository.findByUsername(userProfileServiceModel.getUsername()).orElseThrow();
+        User user = userRepository
+                .findByUsername(userProfileServiceModel.getUsername())
+                .orElseThrow();
+
         UserProfile map = modelMapper.map(userProfileServiceModel, UserProfile.class);
         user.setUserProfile(map);
-        return modelMapper.map(userRepository.save(user).getUserProfile(),
-                UserProfileServiceModel.class);
+        UserProfile userProfile = userRepository.save(user).getUserProfile();
+
+        return modelMapper.map(userProfile, UserProfileServiceModel.class)
+                .setUsername(user.getUsername())
+                .setEmail(user.getEmail());
     }
 
     @Override
     public void deleteProfile(String id) {
         User user = userRepository.findById(id).orElseThrow();
         user.setUserProfile(null);
-        //da sa vidi
+        userRepository.save(user);
     }
 
     @Override
@@ -193,9 +198,9 @@ public class UserServiceImpl implements UserService {
             user.setEmail(editEmail);
         }
 
-        Set<CategoryWords> oldCategoryWords = user.getUserProfile().getWords();
+        Set<CategoryWords> oldCategoryWords = user.getUserProfile().getCategoriesWithWords();
         user.setUserProfile(modelMapper.map(userProfileServiceModel, UserProfile.class));
-        user.getUserProfile().setWords(oldCategoryWords);
+        user.getUserProfile().setCategoriesWithWords(oldCategoryWords);
         User save = userRepository.save(user);
 
         return modelMapper.map(save.getUserProfile(), UserProfileServiceModel.class)
@@ -204,7 +209,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserProfileServiceModel getUserProfileById(String id) {
+    public UserProfileServiceModel getUserProfileByUserId(String id) {
         User user = userRepository.findById(id)
                 .orElseThrow();
 
@@ -213,13 +218,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public CategoryWordsServiceModel addCategoryForUser(String userId, CategoryWordsBindingModel categoryName) {
-        CategoryWordsServiceModel serviceModel = categoryWordsService.addCategory(categoryName.getName());
-        CategoryWords map = modelMapper.map(serviceModel, CategoryWords.class);
+    public CategoryWordsServiceModel addCategoryForUser(String userId, String categoryName) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("No such user"));
 
-        Set<CategoryWords> categoryWords = user.getUserProfile().getWords();
+        CategoryWordsServiceModel serviceModel =
+                categoryWordsService.addCategory(categoryName);
+
+        CategoryWords map = modelMapper.map(serviceModel, CategoryWords.class);
+
+        Set<CategoryWords> categoryWords = user.getUserProfile().getCategoriesWithWords();
         categoryWords.add(map);
         userRepository.saveAndFlush(user);
 
@@ -231,7 +239,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(userId)
                 .orElseThrow()
                 .getUserProfile()
-                .getWords()
+                .getCategoriesWithWords()
                 .stream()
                 .map(x -> modelMapper.map(x, CategoryWordsServiceModel.class))
                 .collect(Collectors.toSet());
@@ -243,7 +251,7 @@ public class UserServiceImpl implements UserService {
         Word map1 = modelMapper.map(wordService.createWord(wordServiceModel), Word.class);
 
         CategoryWords categoryWords = user.getUserProfile()
-                .getWords()
+                .getCategoriesWithWords()
                 .stream()
                 .filter(c -> c.getId().equals(categoryId))
                 .findAny()
@@ -278,12 +286,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Collection<CategoryWordsServiceModel> getWordsCategoryById(String id) {
+    public Collection<CategoryWordsServiceModel> getWordsCategoryByUserId(String id) {
         return userRepository
                 .findById(id)
                 .orElseThrow()
                 .getUserProfile()
-                .getWords()
+                .getCategoriesWithWords()
                 .stream()
                 .map(x -> modelMapper.map(x, CategoryWordsServiceModel.class))
                 .collect(Collectors.toList());
@@ -295,7 +303,7 @@ public class UserServiceImpl implements UserService {
 
         Set<CategoryWords> categoryWords = user
                 .getUserProfile()
-                .getWords()
+                .getCategoriesWithWords()
                 .stream()
                 .peek(c -> {
                     if (c.getName().equals(serviceModel.getName())) {
@@ -304,24 +312,24 @@ public class UserServiceImpl implements UserService {
                 })
                 .collect(Collectors.toSet());
 
-        user.getUserProfile().setWords(categoryWords);
+        user.getUserProfile().setCategoriesWithWords(categoryWords);
 
-        User save = userRepository.save(user);
+        CategoryWords category = getCategoryFromSavedUser(serviceModel.getName(), user);
 
-        return modelMapper.map(save, CategoryWordsServiceModel.class);
+        return modelMapper.map(category, CategoryWordsServiceModel.class);
     }
 
     @Override
-    public CategoryWordsServiceModel deleteCategoryByUserIdAndCategoryName(String id, String categoryId) {
+    public void deleteCategoryByUserIdAndCategoryId(String id, String categoryId) {
         User user = userRepository.findById(id).orElseThrow();
 
         Set<CategoryWords> collect = user
                 .getUserProfile()
-                .getWords()
+                .getCategoriesWithWords()
                 .stream()
                 .filter(c -> {
 
-                    if (!c.getId().equals(categoryId)){
+                    if (c.getId().equals(categoryId)) {
                         categoryWordsService.removeCategoryById(categoryId);
                         return false;
                     }
@@ -330,8 +338,17 @@ public class UserServiceImpl implements UserService {
                 })
                 .collect(Collectors.toSet());
 
-        user.getUserProfile().setWords(collect);
+        user.getUserProfile().setCategoriesWithWords(collect);
+    }
 
-        return modelMapper.map(userRepository.save(user), CategoryWordsServiceModel.class);
+    private CategoryWords getCategoryFromSavedUser(String categoryName, User user) {
+        return userRepository.save(user)
+                .getUserProfile()
+                .getCategoriesWithWords()
+                .stream()
+                .filter(x -> x.getName().equals(categoryName))
+                .findAny()
+                .orElseThrow();
     }
 }
+

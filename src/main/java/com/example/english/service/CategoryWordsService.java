@@ -9,7 +9,6 @@ import java.util.List;
 public interface CategoryWordsService {
     CategoryWordsServiceModel addCategory(String category);
     void removeCategoryById(String categoryId);
-    CategoryWordsServiceModel getCategoryWord(String categoryId);
 
     void deleteWordsInCategory(String categoryId, List<String> words);
 

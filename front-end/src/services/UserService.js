@@ -29,7 +29,7 @@ const userService = {
         axios.post(`/user/profile/${userId}/${categoryId}/create-word`, word),
     fetchUserCategories: (id) => axios.get(`/user/profile/${id}/categories`),
     savePassword: (url, password) => axios.patch(url, password),
-    userDetails: pathname => axios.get('admin/' + pathname),
+    userDetails: pathname => axios.get('admin' + pathname),
     fetchUserCategoryWords: url => axios.get(url),
     deleteWordFromCategory: (url, name, wordName) => axios.delete(url+'/delete-word', {data: {name, wordName}}),
     deleteCategory: (url, id) => axios.delete(url+ '/delete-category', {data: {id}}),

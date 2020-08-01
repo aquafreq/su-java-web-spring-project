@@ -7,13 +7,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CommentServiceModel {
     private String id;
-
     private ContentServiceModel contentServiceModel;
     private GrammarCategoryServiceModel grammarCategoryServiceModel;
     private String message;
-
     private UserServiceModel userServiceModel;
-
     private String userUsername;
 
     public void setUserId(String userId) {
@@ -21,7 +18,7 @@ public class CommentServiceModel {
     }
 
     public void setCategoryId(String categoryId) {
-    setGrammarCategoryServiceModel(new GrammarCategoryServiceModel().setId(categoryId));
+        setGrammarCategoryServiceModel(new GrammarCategoryServiceModel().setId(categoryId));
     }
 
     public void setContendId(String contendId) {

@@ -50,7 +50,7 @@ public class UserController {
     public ResponseEntity<CategoryWordsResponseModel> createWordCategory(
             @RequestBody CategoryWordsBindingModel CategoryWordsBindingModel,
             @PathVariable String userId) {
-        CategoryWordsServiceModel categoryWordsServiceModel = userService.addCategoryForUser(userId, CategoryWordsBindingModel);
+        CategoryWordsServiceModel categoryWordsServiceModel = userService.addCategoryForUser(userId, CategoryWordsBindingModel.getName());
 
         CategoryWordsResponseModel responseModel =
                 modelMapper.map(categoryWordsServiceModel, CategoryWordsResponseModel.class);
@@ -78,7 +78,7 @@ public class UserController {
     @GetMapping("/profile/{id}")
     public ResponseEntity<UserProfileResponseModel> getUserProfile(@PathVariable String id) {
         UserProfileResponseModel responseModel = modelMapper.map(
-                userService.getUserProfileById(id), UserProfileResponseModel.class);
+                userService.getUserProfileByUserId(id), UserProfileResponseModel.class);
 
         return ResponseEntity.ok(responseModel);
     }
@@ -115,7 +115,7 @@ public class UserController {
             @PathVariable String id) {
 
         List<CategoryWordsResponseModel> collect = userService
-                .getWordsCategoryById(id)
+                .getWordsCategoryByUserId(id)
                 .stream()
                 .map(x -> modelMapper.map(x, CategoryWordsResponseModel.class))
                 .collect(Collectors.toList());
@@ -130,12 +130,9 @@ public class UserController {
             @RequestBody WordCategoryDelete bindingModel) {
         CategoryWordsServiceModel map = modelMapper.map(bindingModel, CategoryWordsServiceModel.class);
 
-        CategoryWordsResponseModel responseModel =
-                modelMapper.map(
-                        userService.deleteWordFromCategoryByUserId(id, map),
-                        CategoryWordsResponseModel.class);
+        userService.deleteWordFromCategoryByUserId(id, map);
 
-        return ResponseEntity.ok(responseModel);
+        return ResponseEntity.notFound().build();
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -146,7 +143,7 @@ public class UserController {
 
 //        CategoryWordsResponseModel responseModel =
 //                modelMapper.map(
-                userService.deleteCategoryByUserIdAndCategoryName(id, bindingModel.getId());
+        userService.deleteCategoryByUserIdAndCategoryId(id, bindingModel.getId());
 //                        CategoryWordsResponseModel.class);
 
         return ResponseEntity

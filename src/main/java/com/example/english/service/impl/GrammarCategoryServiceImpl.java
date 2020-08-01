@@ -26,7 +26,6 @@ public class GrammarCategoryServiceImpl implements GrammarCategoryService {
     private final ModelMapper modelMapper;
     private final GrammarCategoryRepository grammarCategoryRepository;
     private final ContentService contentService;
-    private final UserService userService;
 
     @Override
     public void seedCategories(GrammarCategory... grammarCategory) {
@@ -74,7 +73,9 @@ public class GrammarCategoryServiceImpl implements GrammarCategoryService {
     public ContentServiceModel uploadContent(ContentServiceModel serviceModel) {
         ContentServiceModel serviceContent = contentService.createContent(serviceModel);
         Content map1 = modelMapper.map(serviceContent, Content.class);
-        GrammarCategory grammarCategory = grammarCategoryRepository.findById(serviceModel.getCategory().getId())
+
+        GrammarCategory grammarCategory = grammarCategoryRepository
+                .findById(serviceModel.getCategory().getId())
                 .orElseThrow();
 
         map1.setCategory(grammarCategory);
@@ -87,8 +88,8 @@ public class GrammarCategoryServiceImpl implements GrammarCategoryService {
 
     @Override
     public GrammarCategoryServiceModel getGrammarCategoryById(String id) {
-        return modelMapper.map(grammarCategoryRepository.findById(id),
-                GrammarCategoryServiceModel.class);
+        GrammarCategory category = grammarCategoryRepository.findById(id).orElseThrow();
+        return modelMapper.map(category, GrammarCategoryServiceModel.class);
     }
 
     @Override

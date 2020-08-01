@@ -8,9 +8,12 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.example.english.constants.WordConstants.*;
 
 @Service
 @RequiredArgsConstructor
@@ -20,15 +23,16 @@ public class WordServiceImpl implements WordService {
 
     @Override
     public WordServiceModel createWord(WordServiceModel wordServiceModel) {
-        Word map = modelMapper.map(wordServiceModel,
-                Word.class);
-        return modelMapper
-                .map(repository.save(map), WordServiceModel.class);
+        Word map = modelMapper.map(wordServiceModel, Word.class);
+        return modelMapper.map(repository.save(map), WordServiceModel.class);
     }
 
     @Override
     public WordServiceModel deleteWordById(String id) {
-        Word word = repository.findById(id).orElseThrow();
+        Word word = repository
+                .findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(NO_SUCH_WORD));
+
         repository.deleteById(id);
         return modelMapper.map(word, WordServiceModel.class);
     }
@@ -48,13 +52,22 @@ public class WordServiceImpl implements WordService {
 
     @Override
     public WordServiceModel getWordByNameAndDefinition(String name, String definition) {
-        return modelMapper.map(repository.getByNameAndDefinition(name, definition),
-                WordServiceModel.class);
+
+        Word word = repository.getByNameAndDefinition(name, definition)
+                .orElseThrow(() ->
+                        new EntityNotFoundException(String.format(
+                                NO_SUCH_WORD_WITH_NAME_AND_DEFINITION,
+                                name, definition)));
+
+        return modelMapper.map(word, WordServiceModel.class);
     }
 
     @Override
     public WordServiceModel getWordByIdOrName(String wordId) {
-        return modelMapper.map(repository.getByIdOrName(wordId, wordId), WordServiceModel.class);
+        Word word = repository.getByIdOrName(wordId, wordId)
+                .orElseThrow(() -> new EntityNotFoundException(NO_SUCH_WORD));
+
+        return modelMapper.map(word, WordServiceModel.class);
     }
 
     @Override

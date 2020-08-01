@@ -15,6 +15,7 @@ export default function (props) {
     }, [])
 
     const fetchUser = async () => {
+        debugger
         const {pathname} = history.location
         const response = await userService.userDetails(pathname)
         const userData = await response.data
@@ -22,10 +23,9 @@ export default function (props) {
             userData.registrationDate
                 .replace('T', ' ')
                 .substring(0, userData.registrationDate.indexOf('.'))
-
+        debugger
         setUser(userData)
     }
-    console.log(props)
 
     function renderUser() {
         debugger

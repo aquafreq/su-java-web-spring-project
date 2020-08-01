@@ -25,5 +25,6 @@ public interface GrammarCategoryService {
     GrammarCategoryServiceModel getGrammarCategoryById(String id);
 
     String getGrammarCategoryName(String categoryId);
+
 }
 

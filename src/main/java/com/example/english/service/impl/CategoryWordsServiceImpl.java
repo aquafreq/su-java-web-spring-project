@@ -25,8 +25,7 @@ public class CategoryWordsServiceImpl implements CategoryWordsService {
     public CategoryWordsServiceModel addCategory(String category) {
         CategoryWords categoryWords = new CategoryWords(category);
 
-        return modelMapper.map(repository.save(categoryWords),
-                CategoryWordsServiceModel.class);
+        return modelMapper.map(repository.save(categoryWords), CategoryWordsServiceModel.class);
     }
 
     @Override
@@ -35,16 +34,11 @@ public class CategoryWordsServiceImpl implements CategoryWordsService {
     }
 
     @Override
-    public CategoryWordsServiceModel getCategoryWord(String categoryId) {
-//        repository.findById(categoryId)
-        return null;
-    }
-
-    @Override
     public void deleteWordsInCategory(String categoryId, List<String> words) {
         repository.findById(categoryId)
                 .ifPresent(c -> {
-                    c.getWords().removeAll(
+                    c.getWords()
+                            .removeAll(
                             wordService
                                     .getWordsById(words)
                                     .stream()
@@ -63,6 +57,6 @@ public class CategoryWordsServiceImpl implements CategoryWordsService {
         categoryWords.getWords().remove(map);
 
         wordService.deleteWordById(map.getId());
-        repository.save(categoryWords);
+        repository.saveAndFlush(categoryWords);
     }
 }

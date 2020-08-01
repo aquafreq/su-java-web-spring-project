@@ -11,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @Table(name = "words")
 @AllArgsConstructor
+@Builder
 public class Word extends BaseEntity {
     @NotBlank(message = "Name is required!")
     private String name;
