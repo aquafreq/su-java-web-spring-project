@@ -36,7 +36,7 @@ public class User extends BaseEntity implements UserDetails {
     @DateTimeFormat(pattern = "dd-MMM-yyyy HH:mm:ss")
     private LocalDateTime registrationDate = LocalDateTime.now();
     @ToString.Exclude
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = REFRESH)
     private Set<Role> authorities = new HashSet<>();
     private boolean isEnabled = true;
     //то фикс

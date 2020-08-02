@@ -41,6 +41,7 @@ public class ApplicationInit implements CommandLineRunner {
 
         if (userService.getCount() == 0) {
 
+
             users().forEach(userService::register);
 
             User fizz = mapper.map(userService.getUserByName("fizz"), User.class);

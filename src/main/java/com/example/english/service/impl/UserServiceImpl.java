@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
             });
         }
 
-        return Optional.of(userRepository.save(user));
+        return Optional.of(userRepository.saveAndFlush(user));
     }
 
     @Override
