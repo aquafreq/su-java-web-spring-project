@@ -55,12 +55,12 @@ public class ApplicationInit implements CommandLineRunner {
             Role role_moderator = roleService.getRoleByName("ROLE_MODERATOR");
             Role role_admin = roleService.getRoleByName("ROLE_ADMIN");
 
-            wow.getAuthorities().addAll(
-                    new ArrayList<>() {{
-                        add(role_moderator);
-                        add(role_admin);
-                    }}
-            );
+//             wow.getAuthorities().addAll(
+//                     new ArrayList<>() {{
+//                         add(role_moderator);
+//                         add(role_admin);
+//                     }}
+//             );
 
             zxc.getAuthorities().add(role_moderator);
             userService.updateUser(zxc);
