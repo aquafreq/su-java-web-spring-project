@@ -1,31 +1,18 @@
 package com.example.english.controller;
 
-import antlr.build.ANTLR;
-import com.example.english.EnglishApplication;
+import com.example.english.BaseControllerTest;
 import com.example.english.data.entity.Content;
-import com.example.english.data.entity.GrammarCategory;
 import com.example.english.data.entity.enumerations.LevelOfLanguage;
 import com.example.english.data.model.binding.GrammarCategoryBindingModel;
 import com.example.english.data.repository.ContentRepository;
 import com.example.english.data.repository.GrammarCategoryRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.repository.init.ResourceReaderRepositoryPopulator;
-import org.springframework.data.repository.support.Repositories;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
 import java.util.List;
@@ -37,11 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class ContentControllerTests {
+public class ContentControllerTests extends BaseControllerTest {
     private final String URL_PREFIX = "/content";
 
     @Autowired
@@ -64,20 +47,25 @@ public class ContentControllerTests {
                 .andExpect(jsonPath("*", is(collect)));
     }
 
-    @Test
-    @WithMockUser(roles = {"ADMIN", "MODERATOR", "ROOT_ADMIN"})
-    public void createCategory_whenValid_shouldReturnCreated() throws Exception {
-        GrammarCategoryBindingModel category = GrammarCategoryBindingModel.builder().name("category").build();
-        mockMvc
-                .perform(post(URL_PREFIX + "/category/create")
-                        .content(new ObjectMapper().writeValueAsString(category))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value("category"))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
-    }
+        @Test
+        @WithMockUser(roles = {"ADMIN", "MODERATOR", "ROOT_ADMIN"})
+        public void createCategory_whenValid_shouldReturnCreated() throws Exception {
+            GrammarCategoryBindingModel category = GrammarCategoryBindingModel
+                    .builder()
+                    .name("category")
+                    .build();
+            String json = new ObjectMapper().writeValueAsString(category);
+
+            mockMvc
+                    .perform(post(URL_PREFIX + "/category/create")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(json)
+                            .characterEncoding("utf-8"))
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.name").value("category"))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andReturn();
+        }
 
     @Test
     public void createCategory_whenNotAuthorized_shouldReturn401() throws Exception {

@@ -9,7 +9,6 @@ import Register from './components/User/Register/Register'
 import Logout from './components/User/Logout/Logout'
 import userService from "../src/services/UserService"
 import NotFound from "./components/NotFound/NotFound"
-import CreateWord from "./components/User/Profile/CreateWord"
 import {Loading} from "./components/Loading/Loading"
 import CreateContent from "./components/AdminPanel/CreateContent/CreateContent"
 import ManageUsers from "./components/AdminPanel/ManageRole"
@@ -22,6 +21,8 @@ import UserProfileEdit from "./components/User/UserProfile/UserProfileEdit";
 import UserDetails from "./components/User/UserDetails/UserDetails";
 import UserChangePassword from "./components/User/UserChange/UserChangePassword";
 import Practice from "./components/User/Practice/Practice";
+import AllLogs from "./components/User/Logs/AllLogs";
+import UserLogs from "./components/User/Logs/UserLogs";
 
 const ADMIN = 'ROLE_ADMIN';
 const ROOT_ADMIN = 'ROLE_ROOT_ADMIN';
@@ -32,36 +33,43 @@ const App = () => {
     const [user, setUser] = useState({username: '', id: '', authorities: []})
     const history = useHistory()
 
-    useLayoutEffect(() =>
-            setUserState(),
-        [isAuthenticated])
+    useLayoutEffect(() => {
+        setUserState()
+    }, [isAuthenticated])
 
     const setUserProps = (user) => {
         setUser({...user})
+        setIsLoading(false)
     }
 
     function setUserState() {
         let token = localStorage.getItem("authorization");
+
+        debugger
         if (token) {
             (async () => {
                 try {
                     let axiosResponse = await userService.getCurrentUser(token)
-                    localStorage.setItem('userId', axiosResponse.data.id)
+                    const userData = await axiosResponse.data
+
+                    setUserProps(userData)
+                    localStorage.setItem('userId', userData.id)
                     localStorage.setItem('auth',
-                        axiosResponse
-                            .data
+                        userData
                             .authorities
                             .map(x => x.authority).join('; '))
-                    setUserProps(axiosResponse.data)
+                    debugger
                     setIsLoading(false)
                 } catch (e) {
+                    localStorage.clear()
+                    setIsAuthenticated(false)
                     setUserProps({id: '', username: '', authorities: []})
-                    setIsLoading(false)
                 }
             })()
         } else {
+            localStorage.clear()
+            setIsAuthenticated(false)
             setUserProps({id: '', username: '', authorities: []})
-            setIsLoading(false)
         }
     }
 
@@ -73,35 +81,43 @@ const App = () => {
                 setIsAuthenticated(true)
                 history.push('/')
             }, e => {
-                debugger
                 return e.response.status === 401 ? 'Invalid credentials!' : e.response.data.message
             })
     }
 
     const register = async (username, password, email) => {
-        return await userService.register(username, password, email)
-            .then(() => history.push('/login'), (err) => err)
+        return await userService
+            .register(username, password, email)
     }
 
     const logout = () => {
         localStorage.clear()
+        document.cookie = ''
         setIsAuthenticated(false)
-        history.push('/')
+        // history.push('/')
     }
 
-    async function updateUser(url, user, id) {
-        const response = await userService.updateUser(url, user, id)
-        const editedUser = await response.data
-        setUser(prev => ({...prev, username: editedUser.username}))
-        setTimeout(() => history.push(`/user/profile/${id}`), 300)
+    function updateUser(url, user) {
+        userService.updateUser(url, user)
+            .then((u) => {
+                debugger
+                debugger
+                userService.getCurrentUser(localStorage.getItem('authorization'))
+                    .then(u => setUser(u.data))
+                    .then(() =>
+                        setTimeout(() => history.push(url.substring(0, url.lastIndexOf('/'))), 500))
+            })
     }
 
     const userRolesIncludes = (...auth) => {
-        const userRoles = localStorage.getItem('auth').split('; ')
-        return auth.some(role => userRoles.includes(role))
+        if (localStorage.getItem('auth')) {
+            const userRoles = localStorage.getItem('auth').split('; ')
+            return auth.some(role => userRoles.includes(role))
+        }
+
+        return false
     }
 
-    //
     return (
         <Fragment>
             <div className={styles.app}>
@@ -110,6 +126,7 @@ const App = () => {
                         value={{
                             username: user.username,
                             id: user.id,
+                            // userRoles:[]
                             userRoles: user.authorities.map(r => r.authority)
                         }}>
                         <Switch>
@@ -118,7 +135,7 @@ const App = () => {
                                 <Login login={login}/> : <Redirect to="/"/>)}/>
                             <Route path="/register" render={() => (!isAuthenticated ?
                                 <Register register={register}/> : <Redirect to="/"/>)}/>
-                            <Route path="/logout" render={() => (isAuthenticated ?
+                            <Route path="/logout" render={() => (!!localStorage.getItem("auth") ?
                                     <Logout logout={logout}/> : <Redirect to="/register"/>
                             )}/>
                             <Route path="/user/profile/:id/practice" component={Practice}/>
@@ -146,9 +163,17 @@ const App = () => {
                                        userRolesIncludes(MODERATOR, ADMIN, ROOT_ADMIN) ?
                                            <CreateContent/> : <Redirect to="/"/>
                                    }/>
-                            <Route path="/administration/user-logs"/>
-                            <Route path="/create-word" component={CreateWord}/>
-                            <Route path="*" component={NotFound}/>
+                            <Route exact path="/administration/logs"
+                                   render={() =>
+                                       userRolesIncludes(ADMIN, ROOT_ADMIN) ?
+                                           <AllLogs/> : <Redirect to="/"/>}
+                            />
+                            <Route path="/administration/logs/:username"
+                                   render={() =>
+                                       userRolesIncludes(ADMIN, ROOT_ADMIN) ?
+                                           <UserLogs/> : <Redirect to="/"/>}
+                            />
+                            <Route component={NotFound}/>
                         </Switch>
                     </UserContext.Provider>
                 )

@@ -6,10 +6,8 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.example.english.constants.CategoryWordsConstants.CATEGOY_SHOULDN_T_BE_LESS_THAN_2_SYMBOLS;
-import static com.example.english.constants.CategoryWordsConstants.NAME_FOR_CATEGORY_IS_REQUIRED;
+import static com.example.english.constants.CategoryConstants.*;
 
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
@@ -22,7 +20,7 @@ public class CategoryWords extends BaseEntity {
 
     @NonNull
     @NotBlank(message = NAME_FOR_CATEGORY_IS_REQUIRED)
-    @Length(min = 2,  message = CATEGOY_SHOULDN_T_BE_LESS_THAN_2_SYMBOLS)
+    @Length(min = 2,  message = CATEGORY_NAME_MUST_BE_MORE_THAN_2_CHARACTERS)
     private String name;
 
     @OneToMany(cascade = {CascadeType.MERGE,CascadeType.REMOVE,CascadeType.REFRESH})

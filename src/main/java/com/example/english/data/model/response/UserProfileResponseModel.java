@@ -1,5 +1,6 @@
 package com.example.english.data.model.response;
 
+import com.example.english.data.entity.enumerations.UserActivity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ public class UserProfileResponseModel {
     private String nationality;
     private String levelOfLanguage;
     private String levelExperience;
+    private UserActivity activity;
     private String username;
     private String email;
 }

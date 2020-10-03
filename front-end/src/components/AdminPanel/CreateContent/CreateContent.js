@@ -19,6 +19,8 @@ export default function CreateContent() {
     const [categoryError, setCategoryError] = useState('')
     const [areTriggered, setAreTriggered] = useState(false)
     const [chosenCategory, setChosenCategory] = useState('')
+    const [categoryExists, setCategoryExists] = useState('')
+    const [contentExistsInCategory, setContentExistsInCategory] = useState('')
 
     useLayoutEffect(() => {
         Promise.all(
@@ -39,10 +41,15 @@ export default function CreateContent() {
             setCategoryError('')
             contentService
                 .createCategory(category)
-                .then(() => alert('category ' + category + ' creaed successful'))
-                .then(() => {
-                    setCategory('')
-                    setIsSent(true)
+                .then((e) => {
+                    setCategoryExists('')
+                    if (e.data.message) {
+                        setCategoryExists(e.data.message)
+                    } else {
+                        setCategory('')
+                        setIsSent(true)
+                        alert('category ' + category + ' created successful')
+                    }
                 })
         } else {
             setCategoryError('Category name must be at least 5 characters!')
@@ -72,7 +79,13 @@ export default function CreateContent() {
         }
 
         contentService.createContent(content)
-            .then(() => {
+            .then((e) => {
+                if (e.data.message) {
+                    setContentExistsInCategory(e.data.message)
+                    return
+                }
+
+                setContentExistsInCategory('')
                 setTitle('')
                 setDescription('')
                 setAreTriggered(false)
@@ -90,6 +103,8 @@ export default function CreateContent() {
                                 <MDBCardBody>
                                     <form>
                                         {categoryError && <h2 className={styles['category-error']}>{categoryError}</h2>}
+                                        {categoryExists &&
+                                        <h2 className={styles['category-error']}>{categoryExists}</h2>}
                                         <p className="h4 text-center py-4">Add category</p>
                                         <label
                                             htmlFor="defaultFormCardNameEx"
@@ -142,6 +157,8 @@ export default function CreateContent() {
                                         <div className={styles.addContent}>
                                             {errors.areTriggered && errors.titleError &&
                                             <h2 className={styles['category-error']}>{errors.titleError}</h2>}
+                                            {contentExistsInCategory ?
+                                                <h2 className={styles['category-error']}>{contentExistsInCategory}</h2> : null}
                                             <p className="h4 text-center py-4">Add content to chosen category</p>
                                             <label
                                                 htmlFor="title"

@@ -10,8 +10,7 @@ const Navigation = () => {
 
     function username() {
         return userContext.username ?
-            <span> <Link
-                to={`/user/profile/${userContext.id}`}><strong>Hello, {userContext.username}</strong></Link></span> : null
+            <span> <Link to={`/user/profile/${userContext.id}`}><strong>Hello, {userContext.username}</strong></Link></span> : null
     }
 
     function administrationBar() {
@@ -31,6 +30,9 @@ const Navigation = () => {
                             hasRole("ROLE_ADMIN") || hasRole("ROLE_ROOT_ADMIN") ?
                                 <> <
                                     MDBDropdownItem divider/>
+                                    <Link to="/administration/logs">
+                                        <MDBDropdownItem>Logs</MDBDropdownItem>
+                                    </Link>
                                     <Link to="/administration/manage-users">
                                         <MDBDropdownItem>Manage roles</MDBDropdownItem>
                                     </Link>

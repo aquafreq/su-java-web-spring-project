@@ -18,6 +18,7 @@ import static com.example.english.constants.WordConstants.WORD_NAME_IS_REQUIRED;
 public class Word extends BaseEntity {
     @NotBlank(message = WORD_NAME_IS_REQUIRED)
     private String name;
+
     @NotBlank(message = WORD_DEFINITION_IS_REQUIRED)
     private String definition;
 }

@@ -2,6 +2,7 @@ package com.example.english.data.model.response;
 
 import com.example.english.data.entity.enumerations.LevelExperience;
 import com.example.english.data.entity.enumerations.LevelOfLanguage;
+import com.example.english.data.entity.enumerations.UserActivity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,6 +23,7 @@ public class UserDetailsResponseModel {
     private LocalDate birthDate;
     private String nationality;
     private LevelExperience levelExperience;
+    private UserActivity userProfileActivity;
     private LevelOfLanguage levelOfLanguage;
     private Set<String> hobbies;
 

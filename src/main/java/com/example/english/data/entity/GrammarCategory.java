@@ -1,14 +1,14 @@
 package com.example.english.data.entity;
 
 import lombok.*;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+
+import static com.example.english.constants.CategoryConstants.*;
 
 @EqualsAndHashCode(callSuper = true, exclude = {"content"})
 @Data
@@ -17,8 +17,11 @@ import java.util.List;
 @Table
 @RequiredArgsConstructor
 public class GrammarCategory extends BaseEntity{
+
     @NonNull
     @Column(unique = true)
+    @NotBlank(message = NAME_FOR_CATEGORY_IS_REQUIRED)
+    @Length(min = 3, message = CATEGORY_NAME_MUST_BE_MORE_THAN_2_CHARACTERS)
     private String name;
 
     @OneToMany(mappedBy = "category",fetch = FetchType.EAGER,

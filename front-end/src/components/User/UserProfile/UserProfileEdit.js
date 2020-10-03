@@ -23,6 +23,7 @@ export default function ({updateUser}) {
         levelExperience: '',
     })
 
+
     const [errors, setErrors] = useState({
         username: false,
         email: false,
@@ -47,12 +48,10 @@ export default function ({updateUser}) {
     function handleSubmit(e) {
         e.preventDefault()
         if (!(errors.email || errors.username)) {
-
             const editUser = {...user}
-            if (editUser.hobbies && editUser.hobbies.includes(',')) {
-                editUser.hobbies = editUser.hobbies.split(', ')
-            }
-
+            // editUser.hobbies = editUser.hobbies.includes(', ') ? editUser.hobbies.split(', ') : editUser.hobbies
+            editUser.hobbies = Array.isArray(editUser.hobbies) ? editUser.hobbies.join(", ") : editUser.hobbies
+            debugger
             updateUser(url, editUser, userContext.id)
         }
     }
@@ -108,6 +107,7 @@ export default function ({updateUser}) {
                                     onChange={handleChange}
                                     name='username'
                                     required
+                                    autoComplete="off"
                                     min='3'
                                     onBlur={onBlur}
                         />
@@ -119,6 +119,7 @@ export default function ({updateUser}) {
                                     name='email'
                                     type="email"
                                     required
+                                    autoComplete="off"
                                     onBlur={onBlur}
                         />
                         <InputLabel labelName={'Birth date'}
@@ -135,12 +136,14 @@ export default function ({updateUser}) {
                         <InputLabel labelName={'Nationality'}
                                     onChange={handleChange}
                                     name='nationality'
+                                    autoComplete="off"
                                     value={user.nationality || ''}
                         />
                         <InputLabel labelName={'Hobbies'}
                                     onChange={handleChange}
                                     value={user.hobbies || ''}
                                     name='hobbies'
+                                    autoComplete="off"
                                     placeholder="Books, games, sport..."
                         />
                         <div>

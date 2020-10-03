@@ -7,7 +7,6 @@ const UserContext = React.createContext(
         id: '',
         username: '',
         userRoles: [],
-        profilePicture: '',
         birthDate: '',
         nationality: '',
         hobbies: []

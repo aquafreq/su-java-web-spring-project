@@ -37,7 +37,7 @@ public interface UserService extends UserDetailsService {
 
     UserServiceModel getUserById(String id);
 
-    String getUserByUsername(String id);
+    String getUserByUsername(String username);
 
     UserProfileServiceModel saveProfile(UserProfileServiceModel userProfileServiceModel);
     void deleteProfile(String id);
@@ -61,4 +61,8 @@ public interface UserService extends UserDetailsService {
     CategoryWordsServiceModel deleteWordFromCategoryByUserId(String id,CategoryWordsServiceModel categoryWordsServiceModel);
 
     void deleteCategoryByUserIdAndCategoryId(String id, String name);
+
+    void updateUserActivity();
+
+    String getUserIdByUsername(String name);
 }

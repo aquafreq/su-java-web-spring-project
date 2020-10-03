@@ -35,6 +35,7 @@ const Login = ({login}) => {
                         <label
                             htmlFor="username">
                             <input type="text"
+                                   autoComplete="off"
                                    style={(errorTrigger && errors.usernameError) ? {border: '4px solid red'} : null}
                                    id="username"
                                    aria-describedby="my-helper-text"
@@ -49,6 +50,7 @@ const Login = ({login}) => {
                         <label
                             htmlFor="password">
                             <input type="password"
+                                   autoComplete="off"
                                    style={(errorTrigger && errors.usernameError) ? {border: '4px solid red'} : null}
                                    id="username"
                                    aria-describedby="my-helper-text"
@@ -64,6 +66,7 @@ const Login = ({login}) => {
                                 const error = await login(username, password)
                                 if (error) {
                                     setError(error)
+                                    setErrorTrigger(false)
                                     setUsername('')
                                     setPassword('')
                                 }

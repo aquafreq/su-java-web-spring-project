@@ -8,6 +8,8 @@ import {Link, useHistory} from 'react-router-dom'
 
 import styles from './UserProfile.module.css'
 
+const errorStyles = {color: 'red', fontSize: '26px', fontWeight: 700}
+
 export default function () {
     const userContext = useContext(UserContext)
 
@@ -17,6 +19,10 @@ export default function () {
     const [chosenCategoryId, setChosenCategoryId] = useState('')
     const [text, setText] = useState('Hide profile')
     const [word, setWord] = useState({name: '', definition: ''})
+    const [categoryExists, setCategoryExists] = useState('')
+    const [wordExists, setWordExists] = useState('')
+    const [categoryError, setCategoryError] = useState([])
+    const [wordError, setWordError] = useState({name:'',definition:''})
 
     const profile = useRef('')
     const info = useRef()
@@ -44,18 +50,42 @@ export default function () {
 
     function handleSubmitWord(e) {
         e.preventDefault()
-        userService.createWordForCategory(userContext.id, chosenCategoryId, word)
-            .then(() => setWord({name: '', definition: ''}))
-
+        userService
+            .createWordForCategory(userContext.id, chosenCategoryId, word)
+            .then(e => {
+                if (e.data.message) {
+                    setWordExists(e.data.message)
+                } else {
+                    setWordExists('')
+                    setWord({name: '', definition: ''})
+                }
+                setWordError({})
+            }, e => {
+                setWordExists('')
+                setWordError(e.response.data)
+            })
     }
 
     async function handleSubmitCategory(e) {
 
         e.preventDefault()
-        const response = await userService.createCategoryForUser(userContext.id, {name: category})
-        const createdCategory = await response.data
-        setWordsCategory([...wordsCategory, createdCategory])
-        setCategory('')
+        let response
+        try {
+            response = await userService.createCategoryForUser(userContext.id, {name: category})
+            let responseData = await response.data
+
+            if (responseData.message) {
+                setCategoryExists(responseData.message)
+                return
+            }
+
+            setCategoryExists('')
+            setCategory('')
+            setCategoryError([])
+            setWordsCategory([...wordsCategory, responseData])
+        } catch (e) {
+            setCategoryError(e.response.data.name)
+        }
     }
 
     function renderCategories() {
@@ -100,8 +130,16 @@ export default function () {
                 </div>
                 <div className={styles.grid}>
                     <div className={styles.middle}>
+                        {categoryExists && <h2 style={{
+                            color: 'red',
+                            fontWeight: 700,
+                        }}>{categoryExists}</h2>}
                         <h3>Create categories and add new unknown words and the definitions you wanna learn for
                             them!</h3>
+                        {!!categoryError.length &&
+                        categoryError.map(e =>
+                            <span style={errorStyles}>{e}<br/></span>
+                        )}
                         <form>
                             <label>
                                 Add a category and get started with learning!
@@ -136,9 +174,14 @@ export default function () {
                         <form onSubmit={handleSubmitWord}>
                             <label>Select a category and add a word to it with its definition:
                                 <br/>
+                                {wordExists && <h2 style={{
+                                    color: 'red',
+                                    fontWeight: 700,
+                                }}>{wordExists}</h2>}
                                 {renderCategories()}
                             </label>
                             <br/>
+                            {wordError.name && <h2>{wordError.name.map(e=> <span style={errorStyles}>{e}</span>)}</h2>}
                             <label>
                                 Word:
                                 <br/>
@@ -151,6 +194,7 @@ export default function () {
                                 }
                                 }/>
                             </label>
+                            {wordError.definition && <h2>{wordError.definition.map(e=> <span style={errorStyles}>{e}</span>)}</h2>}
                             <label>
                                 Definition:
                                 <br/>

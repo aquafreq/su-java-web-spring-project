@@ -16,6 +16,7 @@ export default function () {
     const [comment, setComment] = useState('')
     const [content, setContent] = useState({})
     const [isLoading, setIsLoading] = useState(true)
+    const [commentError, setCommentError] = useState('')
     const userContext = useContext(UserContext)
 
     useEffect(() => {
@@ -24,8 +25,6 @@ export default function () {
 
     function fetchData() {
         const urlString = history.location.pathname
-
-        debugger
 
         contentService
             .getContent(urlString)
@@ -105,17 +104,27 @@ export default function () {
             userId: userContext.id || 'Anonymous',
         }
 
-        setIsLoading(true)
+        // setIsLoading(true)
 
-        contentService
-            .addCommentToContent(urlPath, userComment)
-            .then(c => {
-                setComments(prevState => [...prevState, c.data])
-                setComment('')
-            })
-            .finally(() => {
-                setIsLoading(false)
-            })
+        if (comment.trim()) {
+            if (comment.length > 255) {
+                setCommentError("The comment is too long!")
+            } else {
+                setCommentError('')
+                contentService
+                    .addCommentToContent(urlPath, userComment)
+                    .then(c => {
+                        setComments(prevState => [...prevState, c.data])
+                        setComment('')
+                    })
+            }
+        } else {
+            setCommentError("Please enter something!")
+        }
+
+        // .finally(() => {
+        //     setIsLoading(false)
+        // })
     }
 
 
@@ -134,12 +143,18 @@ export default function () {
                             <section className={styles['my-comment']}>
                                 <label>
                                     <p>Was it helpful ?</p>
+                                    {commentError && <em style={{
+                                        color: 'snow',
+                                        fontWeight: '600',
+                                        fontSize: '32px'
+                                    }}
+                                    >{commentError}</em>}
                                     <form>
-                                    <textarea
-                                        placeholder="Give us your thoughts..."
-                                        value={comment}
-                                        onChange={e => setComment(e.target.value)}
-                                    />
+                                        <textarea
+                                            placeholder="Give us your thoughts..."
+                                            value={comment}
+                                            onChange={e => setComment(e.target.value)}
+                                        />
                                         <input value="Send" type="submit" onClick={handleSubmitComment}/>
                                     </form>
                                 </label>

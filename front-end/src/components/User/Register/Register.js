@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {MDBAlert, MDBBtn} from "mdbreact"
 import errorStyles from '../../ErrorStyles.module.css'
 import Navigation from "../../Navigation/Navigation"
@@ -13,57 +13,74 @@ const Register = ({register}) => {
     const [password, setPassword] = useState('')
     const [email, setEmail] = useState('')
     const [error, setError] = useState('')
+    const [errors, setErrors] = useState({
+        username: '',
+        password: '',
+        email: '',
+    })
+
     const [isTouched, setIsTouched] = useState(false)
     const history = useHistory()
 
-    const errors = {
-        usernameError: username.length > 2 ? '' : 'Username must be more than 2 characters!',
-        passwordError: password.length > 2 ? '' : 'Password must be more than 2 characters!',
-        emailError: email.length > 3 && email.includes('@') ? '' : 'Email must be valid and above 3 characters!',
-    }
+    // const errors = {
+    //     usernameError: username.length > 2 ? '' : 'Username must be more than 2 characters!',
+    //     passwordError: password.length > 2 ? '' : 'Password must be more than 2 characters!',
+    //     emailError: email.length > 3 && email.includes('@') ? '' : 'Email must be valid and above 3 characters!',
+    // }
 
     return (
         <>
             <Navigation/>
             <div className={styles.container}>
                 <div>
+                    {isTouched && error &&
+                    <MDBAlert className={errorStyles['mdb-alert']}
+                              color="danger"> {error}</MDBAlert>}
                     <form>
                         <h1>Register</h1>
-                        {isTouched && errors.usernameError &&
-                        <MDBAlert className={errorStyles['mdb-alert']} color="danger"> {errors.usernameError}</MDBAlert>}
+                        {isTouched && errors.username &&
+                        <MDBAlert className={errorStyles['mdb-alert']}
+                                  color="danger"> {errors.username.join(' && ')}</MDBAlert>}
                         <div>
                             <input value={username} onChange={(ev) => setUsername(ev.target.value)}
                                    autoFocus
                                    type="text"
                                    placeholder="Username..."/>
                         </div>
-                        {isTouched && errors.passwordError &&
-                        <MDBAlert className={errorStyles['mdb-alert']} color="danger"> {errors.passwordError}</MDBAlert>}
+                        {isTouched && errors.password &&
+                        <MDBAlert className={errorStyles['mdb-alert']}
+                                  color="danger"> {errors.password}</MDBAlert>}
                         <div>
                             <input value={password} onChange={(ev) => setPassword(ev.target.value)}
                                    type="password"
                                    placeholder="Password..."/>
                         </div>
-                        {isTouched && errors.emailError && <MDBAlert className={errorStyles['mdb-alert']} color="danger"> {errors.emailError}</MDBAlert>}
+                        {isTouched && errors.email &&
+                        <MDBAlert className={errorStyles['mdb-alert']} color="danger"> {errors.email}</MDBAlert>}
                         <div>
                             <input value={email} onChange={(ev) => setEmail(ev.target.value)}
                                    type="email" placeholder="Email..."/>
                         </div>
-                        <MDBBtn onClick={async (e) => {
+                        <MDBBtn onClick={e => {
                             e.preventDefault()
-                            setIsTouched(true)
-                            if (!errors.usernameError && !errors.passwordError && !errors.emailError) {
-                                const error = await register(username, password, email)
-                                debugger
-                                if (error) {
-                                    setError(error.response.data)
-                                    setUsername('')
-                                    setPassword('')
-                                    setEmail('')
-                                }
-                            }
+
+                            register(username, password, email)
+                                .then(e => {
+                                    if (e.data.message) {
+                                        setError(e.data.message)
+                                        setErrors({})
+                                        setIsTouched(true)
+                                    } else {
+                                        history.push('/login')
+                                    }
+                                }, e => {
+                                    setError('')
+                                    setErrors(e.response.data)
+                                    setIsTouched(true)
+                                })
                         }
-                        } gradient="purple">Register</MDBBtn>
+                        } gradient="purple">Register
+                        </MDBBtn>
                     </form>
                     <RegisterLoginNav path={history.location.pathname}/>
                 </div>

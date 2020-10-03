@@ -78,8 +78,10 @@ public class GrammarCategoryServiceTests extends BaseTest {
     public void create_withValidData_shouldCreateAndIncreaseSize() {
         GrammarCategoryServiceModel categoryServiceModel = new GrammarCategoryServiceModel();
         categoryServiceModel.setName("aaa");
-        GrammarCategoryServiceModel categoryServiceModel1 = service.create(categoryServiceModel);
+        GrammarCategoryServiceModel categoryServiceModel1 =
+                service.create(categoryServiceModel);
 
+        assert categoryServiceModel1 != null;
         assertEquals("aaa", categoryServiceModel1.getName());
         assertEquals(1, repository.count());
     }
@@ -169,7 +171,8 @@ public class GrammarCategoryServiceTests extends BaseTest {
     public void uploadContent_whenValidContent_shouldReturnContent() {
         GrammarCategoryServiceModel grammarCategoryServiceModel = new GrammarCategoryServiceModel();
         grammarCategoryServiceModel.setName("A A A");
-        GrammarCategoryServiceModel categoryServiceModel = service.create(grammarCategoryServiceModel);
+        GrammarCategoryServiceModel categoryServiceModel =
+                service.create(grammarCategoryServiceModel);
 
 
         ContentServiceModel serviceModel = new ContentServiceModel();

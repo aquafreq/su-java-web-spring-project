@@ -8,6 +8,8 @@ import com.example.english.service.CategoryWordsService;
 import com.example.english.service.WordService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,26 +30,29 @@ public class CategoryWordsServiceImpl implements CategoryWordsService {
         return modelMapper.map(repository.save(categoryWords), CategoryWordsServiceModel.class);
     }
 
+//    @CacheEvict(cacheNames = "user-categories", allEntries = true)
     @Override
     public void removeCategoryById(String categoryId) {
         repository.deleteById(categoryId);
     }
 
+//    @CachePut("user-words")
     @Override
     public void deleteWordsInCategory(String categoryId, List<String> words) {
         repository.findById(categoryId)
                 .ifPresent(c -> {
                     c.getWords()
                             .removeAll(
-                            wordService
-                                    .getWordsById(words)
-                                    .stream()
-                                    .map(w -> modelMapper.map(w, Word.class))
-                                    .collect(Collectors.toList())
-                    );
+                                    wordService
+                                            .getWordsById(words)
+                                            .stream()
+                                            .map(w -> modelMapper.map(w, Word.class))
+                                            .collect(Collectors.toList())
+                            );
                 });
     }
 
+    @CachePut("user-words")
     @Override
     public void removeWordFromCategory(String categoryId, String wordId) {
         Word map = modelMapper.map(wordService.getWordByIdOrName(wordId), Word.class);

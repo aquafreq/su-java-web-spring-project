@@ -2,12 +2,10 @@ package com.example.english.data.entity;
 
 import com.example.english.data.entity.enumerations.LevelOfLanguage;
 import lombok.*;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.validator.constraints.Length;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,21 +15,21 @@ import static com.example.english.constants.ContentConstants.*;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
+//        (name = "`content`")
 @NoArgsConstructor
+@Builder
 @AllArgsConstructor
-@RequiredArgsConstructor
 public class Content extends BaseEntity {
 
     @NonNull
     @Column(unique = true, nullable = false)
-    @NotBlank(message = CONTENT_CANNOT_BE_EMPTY)
+    @NotBlank(message = TITLE_OF_CONTENT_CANNOT_BE_EMPTY)
     private String title;
 
-    @NonNull
     @Enumerated(EnumType.STRING)
     private LevelOfLanguage difficulty;
-//    @Lob
-    @Column(columnDefinition = "LONGTEXT")
+
+    @Column(columnDefinition = "TEXT")
     @NonNull
     @NotBlank(message = CONTENT_DESCRIPTION_REQUIRED)
     private String description;
@@ -42,7 +40,7 @@ public class Content extends BaseEntity {
     @ToString.Exclude
     private User author;
 
-    private LocalDateTime created = LocalDateTime.now();
+    private final LocalDateTime created = LocalDateTime.now();
 
     @ManyToOne()
     @JoinColumn(name = "category_id")
@@ -51,30 +49,6 @@ public class Content extends BaseEntity {
 
     @OneToMany
     @ToString.Exclude
-    private List<Comment> comments = new ArrayList<>();
-
-    public Content setAuthor(User author) {
-        this.author = author;
-        return this;
-    }
-
-    public Content setTitle(String title) {
-        this.title = title;
-        return this;
-    }
-
-    public Content setDifficulty(LevelOfLanguage difficulty) {
-        this.difficulty = difficulty;
-        return this;
-    }
-
-    public Content setDescription(String description) {
-        this.description = description;
-        return this;
-    }
-
-    public Content setCreated(LocalDateTime created) {
-        this.created = created;
-        return this;
-    }
+    @Builder.Default
+    private final List<Comment> comments = new ArrayList<>();
 }

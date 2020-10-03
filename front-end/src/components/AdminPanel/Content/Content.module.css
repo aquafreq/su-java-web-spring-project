@@ -9,10 +9,18 @@
     color: black;
 }
 
+.main-container article {
+    color: blanchedalmond;
+    font-weight: 500;
+}
+
 .main-container h2 {
     text-decoration: black;
     text-decoration-line: underline;
     text-decoration-width: 6px;
+    font-weight: 700;
+    color: palegoldenrod;
+    padding: 10px;
     font-family: "Malgun Gothic Semilight", serif;
     font-size: 34px;
 }

@@ -1,6 +1,7 @@
 package com.example.english.data.model.response;
 
 
+import com.example.english.data.entity.enumerations.UserActivity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,6 +21,7 @@ public class UserResponseModel extends RepresentationModel<UserResponseModel> {
     private String username;
     private String email;
     private boolean isEnabled;
+    private UserActivity activity;
     private List<RoleResponseModel> authorities;
 
     @Override

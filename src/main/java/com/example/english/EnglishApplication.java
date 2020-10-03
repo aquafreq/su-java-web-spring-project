@@ -9,7 +9,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableCaching
 @EnableScheduling
 public class EnglishApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(EnglishApplication.class, args);
     }

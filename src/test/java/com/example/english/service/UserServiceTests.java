@@ -70,6 +70,7 @@ public class UserServiceTests extends BaseTest {
 
     @Autowired
     WordRepository wordRepository;
+    LogService logService;
 
     @Before
     public void init() {
@@ -85,7 +86,8 @@ public class UserServiceTests extends BaseTest {
                 passwordEncoder,
                 categoryWordsService,
                 wordService,
-                modelMapper
+                modelMapper,
+                logService
         );
 
         user = new User();
@@ -394,8 +396,7 @@ public class UserServiceTests extends BaseTest {
         CategoryWordsServiceModel serviceModel1 = new CategoryWordsServiceModel();
         serviceModel1.setName("zxc");
 
-        when(categoryWordsService.addCategory(anyString()))
-                .thenReturn(serviceModel1);
+        when(categoryWordsService.addCategory(anyString())).thenReturn(serviceModel1);
 
         CategoryWordsServiceModel serviceModel = service.addCategoryForUser(save.getId(), USERNAME);
 
@@ -659,4 +660,19 @@ public class UserServiceTests extends BaseTest {
 
         assertEquals(0, map.getUserProfile().getCategoriesWithWords().size());
     }
+
+    @Test
+    public void getUserIdByUsername_whenValidId_shouldReturnUser(){
+        User save = repository.save(user);
+        String id = service.getUserIdByUsername(save.getUsername());
+        assertEquals(save.getId(),id);
+    }
+
+    @Test
+    public void getUserIdByUsername_whenInvalidId_shouldReturnNoValueError(){
+        assertThrows(NoSuchElementException.class, () -> service.getUserByName("z"));
+    }
+
+
+
 }

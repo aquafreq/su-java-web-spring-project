@@ -2,6 +2,7 @@ package com.example.english.data.model.service;
 
 import com.example.english.data.entity.enumerations.LevelExperience;
 import com.example.english.data.entity.enumerations.LevelOfLanguage;
+import com.example.english.data.entity.enumerations.UserActivity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +16,7 @@ public class UserProfileServiceModel {
     private String id;
     private String username;
     private String email;
+    private UserActivity activity;
     private LevelExperience levelExperience;
     private LevelOfLanguage levelOfLanguage;
     private LocalDate birthDate;

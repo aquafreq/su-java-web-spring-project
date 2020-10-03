@@ -2,25 +2,18 @@ package com.example.english.service.impl;
 
 import com.example.english.data.entity.Comment;
 import com.example.english.data.entity.Content;
-import com.example.english.data.entity.GrammarCategory;
 import com.example.english.data.entity.User;
 import com.example.english.data.model.service.CommentServiceModel;
 import com.example.english.data.model.service.ContentServiceModel;
-import com.example.english.data.model.service.GrammarCategoryServiceModel;
 import com.example.english.data.model.service.UserServiceModel;
 import com.example.english.data.repository.ContentRepository;
 import com.example.english.exceptions.NoContentFound;
 import com.example.english.service.CommentService;
 import com.example.english.service.ContentService;
-import com.example.english.service.GrammarCategoryService;
 import com.example.english.service.UserService;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 import static com.example.english.constants.ContentConstants.NO_CONTENT_FOUND_FOR_CATEGORY;
 
@@ -34,14 +27,18 @@ public class ContentServiceImpl implements ContentService {
 
     @Override
     public ContentServiceModel createContent(ContentServiceModel contentServiceModel) {
+        Content byTitle = repository.findByTitle(contentServiceModel.getTitle());
+
         UserServiceModel userById = userService.getUserById(contentServiceModel.getAuthor().getId());
 
         User map = modelMapper.map(userById, User.class);
-        Content c = new Content()
-                .setAuthor(map)
-                .setTitle(contentServiceModel.getTitle())
-                .setDescription(contentServiceModel.getDescription())
-                .setDifficulty(contentServiceModel.getDifficulty());
+
+        Content c = Content.builder()
+                .author(map)
+                .title(contentServiceModel.getTitle())
+                .description(contentServiceModel.getDescription())
+                .difficulty(contentServiceModel.getDifficulty())
+                .build();
 
         return modelMapper.map(repository.save(c), ContentServiceModel.class);
     }

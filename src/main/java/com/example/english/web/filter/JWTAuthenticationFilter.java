@@ -70,14 +70,23 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         User user = ((User) auth.getPrincipal());
 
+        //set principal id
         String token = Jwts.builder()
-                .setSubject(user.getUsername())
+                .setSubject(user.getId())
                 .claim("authorities", user.getAuthorities())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(Keys.hmacShaKeyFor(SECRET.getBytes()), SignatureAlgorithm.HS256)
                 .compact();
 
+        Cookie userId = new Cookie("userId", user.getId());
+//        Cookie username = new Cookie("username", user.getUsername());
+//        Cookie roles = new Cookie("roles", user.getAuthorities()
+//                .stream().map(Role::getAuthority)
+//                .collect(Collectors.joining("@")));
+        res.addCookie(userId);
+//        res.addCookie(username);
+//        res.addCookie(roles);
         res.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
     }
 }

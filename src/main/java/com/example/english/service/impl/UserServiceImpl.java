@@ -1,18 +1,16 @@
 package com.example.english.service.impl;
 
 import com.example.english.data.entity.*;
-import com.example.english.data.model.service.CategoryWordsServiceModel;
-import com.example.english.data.model.service.UserProfileServiceModel;
-import com.example.english.data.model.service.UserServiceModel;
-import com.example.english.data.model.service.WordServiceModel;
+import com.example.english.data.entity.enumerations.UserActivity;
+import com.example.english.data.model.service.*;
 import com.example.english.data.repository.UserRepository;
-import com.example.english.service.CategoryWordsService;
-import com.example.english.service.RoleService;
-import com.example.english.service.UserService;
-import com.example.english.service.WordService;
+import com.example.english.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.example.english.constants.CategoryConstants.NO_SUCH_CATEGORY;
 import static com.example.english.constants.UserConstants.*;
 
 @Service
@@ -34,6 +33,7 @@ public class UserServiceImpl implements UserService {
     private final CategoryWordsService categoryWordsService;
     private final WordService wordService;
     private final ModelMapper modelMapper;
+    private final LogService logService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -45,11 +45,11 @@ public class UserServiceImpl implements UserService {
     public Optional<User> register(UserServiceModel userServiceModel) throws IllegalArgumentException {
 
         if (userRepository.findByUsername(userServiceModel.getUsername()).isPresent()) {
-            throw new IllegalArgumentException("Such username already exists!");
+            throw new IllegalArgumentException(SUCH_USERNAME_ALREADY_EXISTS);
         }
 
         if (userRepository.findByEmail(userServiceModel.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("Such email already exists!");
+            throw new IllegalArgumentException(SUCH_EMAIL_ALREADY_EXISTS);
         }
 
         userServiceModel.setPassword(passwordEncoder.encode(userServiceModel.getPassword()));
@@ -69,6 +69,7 @@ public class UserServiceImpl implements UserService {
             });
         }
 
+        //event
         return Optional.of(userRepository.saveAndFlush(user));
     }
 
@@ -194,13 +195,22 @@ public class UserServiceImpl implements UserService {
             user.setUsername(editUsername);
         }
 
+
         if (!editEmail.equals(user.getEmail())) {
             user.setEmail(editEmail);
         }
 
         Set<CategoryWords> oldCategoryWords = user.getUserProfile().getCategoriesWithWords();
+        UserActivity activity = user.getUserProfile().getActivity();
+        int activityPoints = user.getUserProfile().getActivityPoints();
+
         user.setUserProfile(modelMapper.map(userProfileServiceModel, UserProfile.class));
-        user.getUserProfile().setCategoriesWithWords(oldCategoryWords);
+
+        user.getUserProfile()
+                .setActivityPoints(activityPoints)
+                .setActivity(activity)
+                .setCategoriesWithWords(oldCategoryWords);
+
         User save = userRepository.save(user);
 
         return modelMapper.map(save.getUserProfile(), UserProfileServiceModel.class)
@@ -210,8 +220,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserProfileServiceModel getUserProfileByUserId(String id) {
-        User user = userRepository.findById(id)
-                .orElseThrow();
+        User user = userRepository.findById(id).orElseThrow();
 
         UserProfileServiceModel map = modelMapper.map(user.getUserProfile(), UserProfileServiceModel.class);
         return map.setUsername(user.getUsername()).setEmail(user.getEmail());
@@ -219,8 +228,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public CategoryWordsServiceModel addCategoryForUser(String userId, String categoryName) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("No such user"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException(NO_SUCH_USER));
+
+        if (user.getUserProfile().getCategoriesWithWords()
+                .stream().anyMatch(c -> c.getName().equals(categoryName)))
+            throw new IllegalArgumentException(categoryName + " already exists, add another one or delete this one!");
 
         CategoryWordsServiceModel serviceModel =
                 categoryWordsService.addCategory(categoryName);
@@ -248,6 +260,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public WordServiceModel addWordToUserCategoryWords(WordServiceModel wordServiceModel, String categoryId, String userId) {
         User user = userRepository.findById(userId).orElseThrow();
+
+        if (user
+                .getUserProfile()
+                .getCategoriesWithWords()
+                .stream()
+                .anyMatch(c -> {
+                    if (c.getId().equals(categoryId)) {
+                        return c.getWords()
+                                .stream()
+                                .anyMatch(w -> w.getName().equals(wordServiceModel.getName()));
+                    }
+
+                    return false;
+                }))
+            throw new IllegalArgumentException("The word exists in this category already!");
+
         Word map1 = modelMapper.map(wordService.createWord(wordServiceModel), Word.class);
 
         CategoryWords categoryWords = user.getUserProfile()
@@ -255,7 +283,7 @@ public class UserServiceImpl implements UserService {
                 .stream()
                 .filter(c -> c.getId().equals(categoryId))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("No such category"));
+                .orElseThrow(() -> new IllegalArgumentException(NO_SUCH_CATEGORY));
 
         categoryWords
                 .getWords()
@@ -339,6 +367,42 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toSet());
 
         user.getUserProfile().setCategoriesWithWords(collect);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void updateUserActivity() {
+        userRepository
+                .findAll()
+                .stream()
+                .map(this::calculateUserActivity)
+                .forEach(userRepository::save);
+    }
+
+    @Override
+    public String getUserIdByUsername(String name) {
+        return userRepository.findByUsername(name).orElseThrow().getId();
+    }
+
+    private User calculateUserActivity(User user) {
+        int browsingCount = logService.getBrowsingLogs(user.getUsername()).size();
+        UserActivity userActivity;
+
+        int activityPoints = Math.max(0, user.getUserProfile().getActivityPoints() + browsingCount - MINIMUM_VISIT_COUNTS);
+
+        if (activityPoints < 10)
+            userActivity = UserActivity.LOW;
+        else if (browsingCount < 20)
+            userActivity = UserActivity.AVERAGE;
+        else if (browsingCount < 30)
+            userActivity = UserActivity.FREQUENT;
+        else
+            userActivity = UserActivity.HIGH;
+
+        user.getUserProfile().setActivityPoints(activityPoints);
+        user.getUserProfile().setActivity(userActivity);
+
+        return user;
     }
 
     private CategoryWords getCategoryFromSavedUser(String categoryName, User user) {

@@ -60,6 +60,7 @@ public class ContentServiceTests extends BaseTest {
     CategoryWordsService categoryWordsService;
     @MockBean
     WordService wordService;
+    LogService logService;
 
     @Before
     public void init() {
@@ -71,7 +72,8 @@ public class ContentServiceTests extends BaseTest {
                 passwordEncoder,
                 categoryWordsService,
                 wordService,
-                modelMapper);
+                modelMapper,
+                logService);
 
         service = new ContentServiceImpl(modelMapper,
                 commentService,

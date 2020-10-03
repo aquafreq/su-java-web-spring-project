@@ -10,6 +10,7 @@ import com.example.english.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
@@ -68,11 +69,11 @@ public class AdminUserController {
         return CollectionModel.wrap(userResponseModels);
     }
 
-    @PreAuthorize(value = "hasAnyRole('ADMIN','ROOT_ADMIN')")
-    @GetMapping(value = "/user/roles", produces = "application/json")
-    public List<String> getUserRoles(String id) {
-        return userService.getUserRoles(id);
-    }
+//    @PreAuthorize(value = "hasAnyRole('ADMIN','ROOT_ADMIN')")
+//    @GetMapping(value = "/user/roles", produces = "application/json")
+//    public List<String> getUserRoles(String id) {
+//        return userService.getUserRoles(id);
+//    }
 
     @PreAuthorize(value = "hasAnyRole('ADMIN','ROOT_ADMIN')")
     @GetMapping(value = "/role/all", produces = "application/json")
@@ -102,7 +103,7 @@ public class AdminUserController {
         return ResponseEntity.ok(userResponseModel);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'ROOT_ADMIN')")
+    @PreAuthorize(value = "hasAnyRole('ADMIN', 'ROOT_ADMIN')")
     @GetMapping("/user/details/{id}")
     public ResponseEntity<UserDetailsResponseModel> getUserDetails(@PathVariable String id) {
         UserServiceModel userServiceModel = userService.getUserDetailsById(id);
@@ -118,7 +119,7 @@ public class AdminUserController {
 
         map.setIsEnabled(userServiceModel.isEnabled());
         map.setRegistrationDate(userServiceModel.getRegistrationDate().toString()
-        .replace("T"," "));
+                .replace("T", " "));
         return ResponseEntity.ok(map);
     }
 
@@ -126,8 +127,7 @@ public class AdminUserController {
     @GetMapping(value = "/user/{id}", produces = "application/hal+json")
     public ResponseEntity<UserResponseModel> getUser(@PathVariable String id) {
         UserResponseModel responseModel =
-                modelMapper.map(userService.getUserById(id),
-                        UserResponseModel.class);
+                modelMapper.map(userService.getUserById(id), UserResponseModel.class);
 
         List<String> filteredRoles = filterRole("ROLE_ROOT_ADMIN");
         mapUserLinks(filteredRoles).accept(responseModel);
@@ -143,6 +143,7 @@ public class AdminUserController {
                 .collect(Collectors.toList());
     }
 
+    //thin controllers
     private Consumer<UserResponseModel> mapUserLinks(List<String> allRoles) {
         return u -> {
             String id = u.getId();

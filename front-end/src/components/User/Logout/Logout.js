@@ -2,8 +2,9 @@ import React, {useEffect} from 'react'
 import {Redirect} from "react-router-dom";
 
 const Logout = ({logout}) => {
-    useEffect(() => logout)
-    return <Redirect to="/" Redirect/>
+    // useEffect(() =>
+        logout()
+    return <Redirect to="/login" Redirect/>
 }
 
 export default Logout;

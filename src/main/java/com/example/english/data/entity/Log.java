@@ -1,8 +1,6 @@
 package com.example.english.data.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import java.time.LocalDateTime;
@@ -11,11 +9,12 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @Entity
+@Builder
+@AllArgsConstructor
 public class Log extends BaseEntity{
     private String username;
-    private String id;
-    //ko e prail
-    private String action;
-    //kiga
+    private String userId;
+    private String url;
+    private String method;
     private LocalDateTime occurrence;
 }

@@ -12,6 +12,10 @@
     border: 7px solid mediumpurple;
 }
 
+.profile h3 {
+    color: #c51162;
+}
+
 .profile aside fieldset {
     margin: 5px;
 }

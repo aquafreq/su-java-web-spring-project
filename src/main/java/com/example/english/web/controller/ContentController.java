@@ -1,5 +1,6 @@
 package com.example.english.web.controller;
 
+import com.example.english.annotations.Validate;
 import com.example.english.data.entity.enumerations.LevelOfLanguage;
 import com.example.english.data.model.binding.CommentBindingModel;
 import com.example.english.data.model.binding.ContentBindingModel;
@@ -11,7 +12,10 @@ import com.example.english.data.model.service.GrammarCategoryServiceModel;
 import com.example.english.service.ContentService;
 import com.example.english.service.GrammarCategoryService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/content")
 @RequiredArgsConstructor
@@ -31,6 +36,7 @@ public class ContentController {
     private final ContentService contentService;
     private final ModelMapper modelMapper;
 
+    @Validate
     @PreAuthorize(value = "hasAnyRole('ADMIN', 'MODERATOR', 'ROOT_ADMIN')")
     @PostMapping("/category/create")
     public ResponseEntity<GrammarCategoryResponseModel> createCategory(@RequestBody GrammarCategoryBindingModel grammarCategoryBindingModel, UriComponentsBuilder builder) {
@@ -44,13 +50,12 @@ public class ContentController {
     }
 
     @GetMapping(value = "/category/all-categories", produces = "application/json")
-    public List<GrammarNameResponseModel> getAllGrammarCategories() {
-        return grammarCategoryService
+    public ResponseEntity<List<GrammarCategoryResponseModel>> getAllGrammarCategories() {
+        return ResponseEntity.ok(grammarCategoryService
                 .getAll()
                 .stream()
-//                .map(GrammarCategoryServiceModel::getName)
-                .map(m -> modelMapper.map(m, GrammarNameResponseModel.class))
-                .collect(Collectors.toList());
+                .map(m -> modelMapper.map(m, GrammarCategoryResponseModel.class))
+                .collect(Collectors.toList()));
     }
 
     @GetMapping("/category/{name}")
@@ -62,6 +67,7 @@ public class ContentController {
         return ResponseEntity.ok(responseModel);
     }
 
+    @Validate
     @PreAuthorize(value = "hasAnyRole('ROOT_ADMIN', 'ADMIN', 'MODERATOR')")
     @PostMapping("/create")
     public ResponseEntity<ContentResponseModel> createContent(
@@ -91,6 +97,7 @@ public class ContentController {
         return ResponseEntity.ok(responseModel);
     }
 
+    @Validate
     @PostMapping(value = "/category/{category}/{content}")
     public ResponseEntity<CommentResponseModel> addComment(
             @PathVariable String category,
@@ -111,6 +118,7 @@ public class ContentController {
     }
 
     @GetMapping("/category/levels")
+    @Cacheable("levelsOfLanguage")
     public List<String> getLevelOfLanguages() {
         return Arrays.stream(LevelOfLanguage.values())
                 .map(Enum::name)

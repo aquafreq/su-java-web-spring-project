@@ -9,20 +9,20 @@ import Navigation from "../Navigation/Navigation"
 import RegisterLoginNav from "../Navigation/RegisterLoginNav"
 import {Loading} from "../Loading/Loading";
 
-const Home = ({isAuthenticated}) => {
+const Home = () => {
     const history = useHistory()
     const [categories, setCategories] = useState([])
-    const [isLoading, setIsLoading] = useState(false)
+    // const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
         const fetchCategories = async () => {
             const categoriesResponse = await contentService.fetchCategories()
             const categories = await categoriesResponse.data
             setCategories(categories)
-            setIsLoading(false)
+            // setTimeout(() => setIsLoading(false), 400)
         }
 
-        setIsLoading(true)
+        // setIsLoading(true)
         fetchCategories()
     }, [])
 
@@ -47,16 +47,15 @@ const Home = ({isAuthenticated}) => {
     return (
         <>
             <Navigation/>
-            {isLoading ? <Loading/> :
-                <div className={styles['home-container']}>
-                    <h1>Welcome to Hello-English</h1>
-                    <h3>Get started by choosing a category you'd wish to get better with</h3>
-                    <h4>Don't mind the car in the background <div>☺</div></h4>
-                    {renderCategories()}
-                    <RegisterLoginNav path={history.location.pathname}/>
-                    <div/>
-                </div>
-            }
+            <div className={styles['home-container']}>
+                <h1>Welcome to Hello-English</h1>
+                <h3>Get started by choosing a category you'd wish to get better with</h3>
+                <h4>Don't mind the car in the background <div>☺</div></h4>
+                <br/>
+                {renderCategories()}
+                <RegisterLoginNav path={history.location.pathname}/>
+                <div/>
+            </div>
             <Footer/>
         </>
     )

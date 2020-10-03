@@ -6,6 +6,7 @@ import com.example.english.data.repository.RoleRepository;
 import com.example.english.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -33,6 +34,7 @@ public class RoleServiceImpl implements RoleService {
         return roleRepository.findByAuthority(name);
     }
 
+    @Cacheable("user-roles")
     @Override
     public List<RoleServiceModel> getAllRoles() {
         return roleRepository

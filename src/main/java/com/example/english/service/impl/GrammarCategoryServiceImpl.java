@@ -2,21 +2,18 @@ package com.example.english.service.impl;
 
 import com.example.english.data.entity.Content;
 import com.example.english.data.entity.GrammarCategory;
-import com.example.english.data.model.response.GrammarCategoryResponseModel;
 import com.example.english.data.model.service.ContentServiceModel;
 import com.example.english.data.model.service.GrammarCategoryServiceModel;
-import com.example.english.data.model.service.UserServiceModel;
 import com.example.english.data.repository.GrammarCategoryRepository;
 import com.example.english.service.ContentService;
 import com.example.english.service.GrammarCategoryService;
-import com.example.english.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 
@@ -34,13 +31,28 @@ public class GrammarCategoryServiceImpl implements GrammarCategoryService {
 
     @Override
     public GrammarCategoryServiceModel create(GrammarCategoryServiceModel map) {
-        GrammarCategory map1 = modelMapper.map(map, GrammarCategory.class);
-        return modelMapper.map(grammarCategoryRepository.save(map1), GrammarCategoryServiceModel.class);
+        if (grammarCategoryRepository.findByName(map.getName()).isPresent())
+            throw new IllegalArgumentException(map.getName() + " already exists");
+
+        GrammarCategory category = grammarCategoryRepository.save(modelMapper.map(map, GrammarCategory.class));
+
+        return modelMapper.map(category, GrammarCategoryServiceModel.class);
+    }
+
+    @Override
+    public Collection<GrammarCategoryServiceModel> getAll() {
+        return getAllGrammarCategoryServiceModels();
+    }
+
+    private Collection<GrammarCategoryServiceModel> getAllGrammarCategoryServiceModels() {
+        return grammarCategoryRepository.findAll()
+                .stream()
+                .map(x -> modelMapper.map(x, GrammarCategoryServiceModel.class))
+                .collect(Collectors.toList());
     }
 
     @Override
     public GrammarCategoryServiceModel getGrammarCategory(String name) {
-        //just in case
         GrammarCategory category = grammarCategoryRepository.findByName(name)
                 .orElseGet(() ->
                         grammarCategoryRepository
@@ -62,21 +74,17 @@ public class GrammarCategoryServiceImpl implements GrammarCategoryService {
     }
 
     @Override
-    public Collection<GrammarCategoryServiceModel> getAll() {
-        return grammarCategoryRepository.findAll()
-                .stream()
-                .map(x -> modelMapper.map(x, GrammarCategoryServiceModel.class))
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public ContentServiceModel uploadContent(ContentServiceModel serviceModel) {
-        ContentServiceModel serviceContent = contentService.createContent(serviceModel);
-        Content map1 = modelMapper.map(serviceContent, Content.class);
-
         GrammarCategory grammarCategory = grammarCategoryRepository
                 .findById(serviceModel.getCategory().getId())
-                .orElseThrow();
+                .orElseThrow(() -> new NoSuchElementException("No such category!"));
+
+        if (grammarCategory.getContent().stream().anyMatch(a -> a.getTitle().equals(serviceModel.getTitle())))
+            throw new IllegalArgumentException(serviceModel.getTitle() + " already exists in this category!");
+
+        ContentServiceModel serviceContent = contentService.createContent(serviceModel);
+
+        Content map1 = modelMapper.map(serviceContent, Content.class);
 
         map1.setCategory(grammarCategory);
         grammarCategory.getContent().add(map1);

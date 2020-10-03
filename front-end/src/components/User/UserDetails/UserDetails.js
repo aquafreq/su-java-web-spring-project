@@ -15,16 +15,14 @@ export default function (props) {
     }, [])
 
     const fetchUser = async () => {
-        debugger
         const {pathname} = history.location
         const response = await userService.userDetails(pathname)
         const userData = await response.data
-        debugger
+        userData.hobbies = userData.hobbies.join(', ')
         setUser(userData)
     }
 
     function renderUser() {
-        debugger
         return (
             <section>
                 <fieldset>
@@ -36,6 +34,7 @@ export default function (props) {
                     <p>Born: {user.birthDate}</p>
                     <p>Hobbies: {user.hobbies}</p>
                     <p>Nationality: {user.nationality}</p>
+                    <p>Activity: {user.userProfileActivity}</p>
                     <p>Level of experience: {user.levelExperience}</p>
                     <p>Level of language: {user.levelOfLanguage}</p>
                 </fieldset>

@@ -117,7 +117,7 @@ export default function () {
                     <th>Id</th>
                     <th>Username</th>
                     <th>Email</th>
-                    <th>Profile</th>
+                    <th>Details</th>
                     <th>Enable/Disable a user</th>
                     <th>Current roles</th>
                     <th>Add role</th>
@@ -134,9 +134,7 @@ export default function () {
                             <td>
                                 <button onClick={(() => {
                                     const url = u._links.self.href
-                                    history.push(
-                                        `/user/details/${url.substring(url.lastIndexOf('/') + 1)}`,
-                                        url)
+                                    history.push(`/user/details/${url.substring(url.lastIndexOf('/') + 1)}`, url)
                                 })}>Link
                                 </button>
                             </td>

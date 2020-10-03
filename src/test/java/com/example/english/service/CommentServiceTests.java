@@ -19,9 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class CommentServiceTests extends BaseTest {
-    // test coverage shows 100% on method and line,
-    // with only one of the tests
-
     @Autowired
     CommentRepository commentRepository;
 
@@ -42,6 +39,7 @@ public class CommentServiceTests extends BaseTest {
     CategoryWordsService categoryWordsService;
     @MockBean
     WordService wordService;
+    LogService logService;
 
     @Before
     public void init() {
@@ -51,7 +49,8 @@ public class CommentServiceTests extends BaseTest {
                 passwordEncoder,
                 categoryWordsService,
                 wordService,
-                modelMapper);
+                modelMapper,
+                logService);
 
         service = new CommentServiceImpl(commentRepository, modelMapper, userService);
     }

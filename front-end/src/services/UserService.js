@@ -23,6 +23,7 @@ const userService = {
     fetchAllRoles: () => axios.get('/admin/role/all'),
     updateUser: (url, user) => axios.patch(url, user),
     userProfile: url => axios.get(url),
+    fetchUserCategoryWords: url => axios.get(url),
     createCategoryForUser: (userId, category) =>
         axios.post(`/user/profile/${userId}/create-category`, category),
     createWordForCategory: (userId, categoryId, word) =>
@@ -30,9 +31,11 @@ const userService = {
     fetchUserCategories: (id) => axios.get(`/user/profile/${id}/categories`),
     savePassword: (url, password) => axios.patch(url, password),
     userDetails: pathname => axios.get('admin' + pathname),
-    fetchUserCategoryWords: url => axios.get(url),
     deleteWordFromCategory: (url, name, wordName) => axios.delete(url+'/delete-word', {data: {name, wordName}}),
     deleteCategory: (url, id) => axios.delete(url+ '/delete-category', {data: {id}}),
+    fetchLogs : () => axios.get('/logs/all'),
+    fetchUserLogs : username => axios.get('/logs/'+username),
+    getCurrentUserById : id => axios.get('/auth/'+id),
 }
 
 export default userService
